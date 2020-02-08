@@ -5,6 +5,7 @@ class Canvas extends React.Component{
     constructor(props){
         super(props);
         this.drawSurfaceRef = React.createRef();
+        this.drawDot = this.drawDot.bind(this);
     }
     componentDidMount(){
         this.drawSurfaceCtx = this.drawSurfaceRef.current.getContext('2d');
@@ -17,13 +18,16 @@ class Canvas extends React.Component{
                     height = { window.innerHeight * .9 }
                     width = { window.innerWidth * .9 }
                     ref={ this.drawSurfaceRef } 
-                    onClick={ () => this.drawDot() }
+                    onClick={ this.drawDot }
                 />
             </div>
         )
     }
-    drawDot(){
-        this.drawSurfaceCtx.fillRect(10, 10, 100, 100);
+    drawDot(event){
+        event.preventDefault();
+        let mouseX = event.clientX;
+        let mouseY = event.clientY
+        this.drawSurfaceCtx.fillRect(mouseX, mouseY, mouseX+10, mouseY+10);
     }
 }
 

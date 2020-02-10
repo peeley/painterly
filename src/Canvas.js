@@ -26,8 +26,8 @@ class Canvas extends React.Component{
     drawDot(event){
         event.preventDefault();
         let mouseX = event.clientX;
-        let mouseY = event.clientY
-        this.drawSurfaceCtx.fillRect(mouseX, mouseY, mouseX+10, mouseY+10);
+        let mouseY = event.clientY;
+        this.drawSurfaceCtx.fillRect(mouseX, mouseY, 10, 10);
     }
 }
 

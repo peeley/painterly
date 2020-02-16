@@ -1,11 +1,12 @@
 import React from 'react';
 import './Canvas.css';
+import { Brush } from './Brush.js';
 
 class Canvas extends React.Component{
     constructor(props){
         super(props);
         this.drawSurfaceRef = React.createRef();
-        this.drawDot = this.drawDot.bind(this);
+        this.brush = new Brush();
     }
     componentDidMount(){
         this.drawSurfaceCtx = this.drawSurfaceRef.current.getContext('2d');
@@ -17,17 +18,13 @@ class Canvas extends React.Component{
                 <canvas id="drawSurface" 
                     height = { window.innerHeight * .9 }
                     width = { window.innerWidth * .9 }
-                    ref={ this.drawSurfaceRef } 
-                    onClick={ this.drawDot }
+                    ref={ this.drawSurfaceRef }
+                    onMouseDown = {(event) => this.brush.handleEvent(event, this.drawSurfaceCtx)}
+                    onMouseMove = {(event) => this.brush.handleEvent(event, this.drawSurfaceCtx)}
+                    onMouseUp = {(event) => this.brush.handleEvent(event, this.drawSurfaceCtx)}
                 />
             </div>
         )
-    }
-    drawDot(event){
-        event.preventDefault();
-        let mouseX = event.clientX;
-        let mouseY = event.clientY;
-        this.drawSurfaceCtx.fillRect(mouseX, mouseY, 10, 10);
     }
 }
 

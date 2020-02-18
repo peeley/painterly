@@ -1,5 +1,3 @@
-
-
 export class Brush {
     constructor(){
         this.mouseDown = false;
@@ -13,7 +11,7 @@ export class Brush {
             let mouseY = event.clientY;
             context.fillRect(mouseX, mouseY, this.dotSize, this.dotSize);
         }
-        else if(event.type === "mouseup"){
+        else if(event.type === "mouseup" || event.type === "mouseleave"){
             this.mouseDown = false;
         }
         else if(this.mouseDown && event.type === "mousemove"){

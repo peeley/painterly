@@ -19,10 +19,16 @@ class Canvas extends React.Component{
                     height = { window.innerHeight * .9 }
                     width = { window.innerWidth * .9 }
                     ref={ this.drawSurfaceRef }
-                    onMouseDown = {(event) => this.brush.handleEvent(event, this.drawSurfaceCtx)}
-                    onMouseMove = {(event) => this.brush.handleEvent(event, this.drawSurfaceCtx)}
-                    onMouseLeave = {(event) => this.brush.handleEvent(event, this.drawSurfaceCtx)}
-                    onMouseUp = {(event) => this.brush.handleEvent(event, this.drawSurfaceCtx)}
+                    onMouseDown = {(event) => 
+                        this.brush.handleEvent(event, this.drawSurfaceCtx)}
+                    onMouseMove = {(event) => 
+                        this.brush.handleEvent(event, this.drawSurfaceCtx)}
+                    onMouseLeave = {(event) => 
+                        this.brush.handleEvent(event, this.drawSurfaceCtx)}
+                    onMouseUp = {(event) => 
+                        this.brush.handleEvent(event, this.drawSurfaceCtx)}
+                    onWheel = {(event) =>
+                        this.brush.handleEvent(event, this.drawSurfaceCtx)}
                 />
             </div>
         )

@@ -14,10 +14,10 @@ export class Brush {
             this.lastY = event.clientY;
         }
         else if(event.type === "wheel"){
-            if(event.deltaY < 0 && this.dotSize > 3){
+            if(event.deltaY > 0 && this.dotSize > 3){
                 this.dotSize -= 3; 
             }
-            else if(event.deltaY >0 && this.dotSize < 30){
+            else if(event.deltaY < 0 && this.dotSize < 30){
                 this.dotSize += 3;
             }
         }

@@ -1,8 +1,9 @@
 import React from 'react';
-import './Canvas.css';
+import './Painting.css';
 import { Brush } from './Brush.js';
+import { Canvas } from './Canvas.js';
 
-class Canvas extends React.Component{
+class Painting extends React.Component{
     constructor(props){
         super(props);
         this.drawSurfaceRef = React.createRef();
@@ -14,7 +15,7 @@ class Canvas extends React.Component{
     }
     render(){
         return(
-            <div className="Canvas"
+            <div
                 onMouseDown = {(event) => 
                     this.brush.handleEvent(event, this.drawSurfaceCtx)}
                 onMouseMove = {(event) => 
@@ -26,14 +27,10 @@ class Canvas extends React.Component{
                 onWheel = {(event) =>
                     this.brush.handleEvent(event, this.drawSurfaceCtx)}
             >
-                <canvas id="drawSurface" 
-                    height = { window.innerHeight * .9 }
-                    width = { window.innerWidth * .9 }
-                    ref={ this.drawSurfaceRef }
-                />
+                <Canvas surfaceRef={this.drawSurfaceRef}/>
             </div>
         )
     }
 }
 
-export default Canvas;
+export default Painting;

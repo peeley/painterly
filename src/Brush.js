@@ -2,7 +2,7 @@ export class Brush {
     constructor(){
         this.mouseDown = false;
         this.dotSize = 3;
-        this.color = "#00FF00";
+        this.color = "#42445A";
         this.handleEvent = this.handleEvent.bind(this);
         this.setColor = this.setColor.bind(this);
         this.getColor = this.getColor.bind(this);

@@ -1,5 +1,5 @@
 import React from 'react';
-import '@simonwep/pickr/dist/themes/classic.min.css';   // 'classic' theme
+import '@simonwep/pickr/dist/themes/nano.min.css';   // 'classic' theme
 import Pickr from '@simonwep/pickr';
 
 export class Palette extends React.Component{
@@ -8,13 +8,13 @@ export class Palette extends React.Component{
         this.handleChange = this.handleChange.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
         this.state = {
-            color: "#000000"
+            color: "#42445A"
         }
 	}
 	componentDidMount(){
         this.palette = Pickr.create({
             el: '.colorPalette',
-			theme: 'classic', // or 'monolith', or 'nano'
+			theme: 'nano', // or 'monolith', or 'nano'
 
 			swatches: [
 				'rgba(244, 67, 54, 1)',
@@ -42,18 +42,13 @@ export class Palette extends React.Component{
 
 				// Input / output Options
 				interaction: {
-					hex: true,
-					rgba: true,
-					hsla: true,
-					hsva: true,
-					cmyk: true,
 					input: true,
 					clear: true,
 					save: true
 				}
 			}
 		});
-		this.palette.on('change', this.handleChange);
+		this.palette.on('save', this.handleChange);
     }
     handleChange(newColor, instance){
         this.setState({

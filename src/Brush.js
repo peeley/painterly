@@ -1,11 +1,13 @@
 export class Brush {
     constructor(){
         this.mouseDown = false;
-        this.dotSize = 3;
+        this.dotSize = 1;
         this.color = "#42445A";
         this.handleEvent = this.handleEvent.bind(this);
         this.setColor = this.setColor.bind(this);
         this.getColor = this.getColor.bind(this);
+        this.getStrokeWidth = this.getStrokeWidth.bind(this);
+        this.setStrokeWidth = this.setStrokeWidth.bind(this);
         this.lastX = null;
         this.lastY = null;
         this.joinType = 'round';
@@ -15,6 +17,12 @@ export class Brush {
     }
     getColor(){
         return this.color;
+    }
+    setStrokeWidth(width){
+        this.dotSize = width;
+    }
+    getStrokeWidth(){
+        return this.dotSize;
     }
     handleEvent(event, context){
         if(event.type === "mousedown"){

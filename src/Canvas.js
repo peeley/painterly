@@ -8,6 +8,7 @@ class Canvas extends React.Component{
         super(props);
         this.drawSurfaceRef = React.createRef();
         this.updateBrushColor = this.updateBrushColor.bind(this);
+        this.updateStrokeWidth = this.updateStrokeWidth.bind(this);
         this.brush = new Brush();
     }
     componentDidMount(){
@@ -17,10 +18,16 @@ class Canvas extends React.Component{
     updateBrushColor(color){
         this.brush.setColor(color);
     }
+    updateStrokeWidth(width){
+        this.brush.setStrokeWidth(width);
+    }
     render(){
         return(
             <div className="Canvas">
-                <Palette updateColor={this.updateBrushColor} />
+                <Palette 
+                    updateColor={this.updateBrushColor} 
+                    updateStrokeWidth={this.updateStrokeWidth}
+                />
                 <canvas id="drawSurface" 
                     onMouseDown = {(event) => 
                         this.brush.handleEvent(event, this.drawSurfaceCtx)}

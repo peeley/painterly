@@ -5,9 +5,11 @@ import Pickr from '@simonwep/pickr';
 export class Palette extends React.Component{
     constructor(props){
         super(props);
-        this.handleChange = this.handleChange.bind(this);
+        this.handleColorChange = this.handleColorChange.bind(this);
+        this.handleStrokeWidthChange = this.handleStrokeWidthChange.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
         this.state = {
+            strokeWidth: 1,
             color: "#42445A"
         }
 	}
@@ -48,18 +50,34 @@ export class Palette extends React.Component{
 				}
 			}
 		});
-		this.palette.on('save', this.handleChange);
+		this.palette.on('save', this.handleColorChange);
     }
-    handleChange(newColor, instance){
+    handleColorChange(newColor, instance){
         this.setState({
             color: newColor.toRGBA().toString()
         });
         this.props.updateColor(this.state.color);
     }
+    handleStrokeWidthChange(event){
+        this.setState({
+            strokeWidth: event.target.value
+        });
+        this.props.updateStrokeWidth(this.state.strokeWidth);
+        event.preventDefault();
+    }
     render(){
         return (
-			<div className="colorPalette" >
-			</div>
+            <div>
+                <div className="colorPalette" >
+                </div>
+                <div className="strokeWidthSlider">
+                    <input type="range" min="1" max="30"
+                        className="slider"
+                        value={this.state.strokeWidth}
+                        onChange={this.handleStrokeWidthChange}     
+                    />
+                </div>
+            </div>
         );
     }
 }

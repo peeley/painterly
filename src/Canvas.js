@@ -9,11 +9,11 @@ class Canvas extends React.Component{
         this.drawSurfaceRef = React.createRef();
         this.updateBrushColor = this.updateBrushColor.bind(this);
         this.updateStrokeWidth = this.updateStrokeWidth.bind(this);
-        this.brush = new Brush();
     }
     componentDidMount(){
         this.drawSurfaceCtx = this.drawSurfaceRef.current.getContext('2d');
         this.drawSurfaceCtx.fillStyle = 'black';
+        this.brush = new Brush(this.drawSurfaceRef);
     }
     updateBrushColor(color){
         this.brush.setColor(color);

@@ -1,5 +1,5 @@
 export class Brush {
-    constructor(){
+    constructor(drawSurfaceObj){
         this.mouseDown = false;
         this.dotSize = 1;
         this.color = "#42445A";
@@ -9,6 +9,9 @@ export class Brush {
         this.getStrokeWidth = this.getStrokeWidth.bind(this);
         this.setStrokeWidth = this.setStrokeWidth.bind(this);
         this.joinType = 'round';
+        let rect = drawSurfaceObj.current.getBoundingClientRect();
+        this.topOffset = rect.top;
+        this.leftOffset = rect.left;
     }
     setColor(color){
         this.color = color;
@@ -26,7 +29,8 @@ export class Brush {
         if(event.type === "mousedown"){
             this.mouseDown = true;
             context.beginPath();
-            context.moveTo(event.clientX, event.clientY);
+            context.moveTo(event.clientX - this.leftOffset, 
+                           event.clientY - this.topOffset);
         }
         else if(event.type === "wheel"){
             if(event.deltaY > 0 && this.dotSize > 1){
@@ -40,11 +44,11 @@ export class Brush {
             this.mouseDown = false;
         }
         else if(this.mouseDown && event.type === "mousemove"){
-            console.log(this.color);
             context.lineWidth = this.dotSize;
             context.lineJoin = this.joinType;
             context.strokeStyle = this.color;
-            context.lineTo(event.clientX, event.clientY);
+            context.lineTo(event.clientX - this.leftOffset, 
+                           event.clientY - this.topOffset);
             context.stroke();
         }
     }   

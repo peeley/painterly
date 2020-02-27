@@ -63,6 +63,7 @@ export class Palette extends React.Component{
             strokeWidth: event.target.value
         });
         this.props.updateStrokeWidth(this.state.strokeWidth);
+        console.log(this.state.strokeWidth);
         event.preventDefault();
     }
     render(){
@@ -71,7 +72,7 @@ export class Palette extends React.Component{
                 <div className="colorPalette" >
                 </div>
                 <div className="strokeWidthSlider">
-                    <input type="range" min="1" max="30"
+                    <input type="range" min="0" max="30"
                         className="slider"
                         value={this.state.strokeWidth}
                         onChange={this.handleStrokeWidthChange}     

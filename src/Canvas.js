@@ -37,8 +37,6 @@ class Canvas extends React.Component{
                         this.brush.handleEvent(event, this.drawSurfaceCtx)}
                     onMouseUp = {(event) => 
                         this.brush.handleEvent(event, this.drawSurfaceCtx)}
-                    onWheel = {(event) =>
-                        this.brush.handleEvent(event, this.drawSurfaceCtx)}
                     height = { window.innerHeight * .9 }
                     width = { window.innerWidth * .9 }
                     ref={ this.drawSurfaceRef }

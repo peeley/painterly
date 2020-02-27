@@ -8,9 +8,8 @@ export class Brush {
         this.getColor = this.getColor.bind(this);
         this.getStrokeWidth = this.getStrokeWidth.bind(this);
         this.setStrokeWidth = this.setStrokeWidth.bind(this);
-        this.lastX = null;
-        this.lastY = null;
         this.joinType = 'round';
+        this.lineVertices = [];
     }
     setColor(color){
         this.color = color;
@@ -27,8 +26,8 @@ export class Brush {
     handleEvent(event, context){
         if(event.type === "mousedown"){
             this.mouseDown = true;
-            this.lastX = event.clientX;
-            this.lastY = event.clientY;
+            context.beginPath();
+            context.moveTo(event.clientX, event.clientY);
         }
         else if(event.type === "wheel"){
             if(event.deltaY > 0 && this.dotSize > 1){
@@ -46,14 +45,8 @@ export class Brush {
             context.lineWidth = this.dotSize;
             context.lineJoin = this.joinType;
             context.strokeStyle = this.color;
-            let mouseX = event.clientX;
-            let mouseY = event.clientY;
-            context.beginPath();
-            context.moveTo(this.lastX, this.lastY);
-            context.lineTo(mouseX, mouseY);
+            context.lineTo(event.clientX, event.clientY);
             context.stroke();
-            this.lastX = mouseX;
-            this.lastY = mouseY;
         }
     }   
 }

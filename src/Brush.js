@@ -9,7 +9,6 @@ export class Brush {
         this.getStrokeWidth = this.getStrokeWidth.bind(this);
         this.setStrokeWidth = this.setStrokeWidth.bind(this);
         this.joinType = 'round';
-        this.lineVertices = [];
     }
     setColor(color){
         this.color = color;

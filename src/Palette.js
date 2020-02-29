@@ -50,7 +50,10 @@ export class Palette extends React.Component{
 				}
 			}
 		});
-		this.palette.on('save', this.handleColorChange);
+		this.palette.on('save', (color, instance) => {
+            this.palette.hide();
+            this.handleColorChange(color, instance);
+        });
     }
     handleColorChange(newColor, instance){
         this.setState({

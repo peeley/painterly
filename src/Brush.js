@@ -1,5 +1,5 @@
 export class Brush {
-    constructor(drawSurfaceObj){
+    constructor(drawSurfaceRef){
         this.mouseDown = false;
         this.dotSize = 1;
         this.color = "#42445A";
@@ -9,7 +9,7 @@ export class Brush {
         this.getStrokeWidth = this.getStrokeWidth.bind(this);
         this.setStrokeWidth = this.setStrokeWidth.bind(this);
         this.joinType = 'round';
-        let rect = drawSurfaceObj.current.getBoundingClientRect();
+        let rect = drawSurfaceRef.current.getBoundingClientRect();
         this.topOffset = rect.top;
         this.leftOffset = rect.left;
     }

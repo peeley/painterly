@@ -21,10 +21,10 @@ class Canvas extends React.Component{
         });
     }
     updateToolColor(color){
-        this.toolController.setColor(color);
+        this.state.toolController.setColor(color);
     }
     updateStrokeWidth(width){
-        this.toolController.setStrokeWidth(width);
+        this.state.toolController.setStrokeWidth(width);
     }
     render(){
         return(

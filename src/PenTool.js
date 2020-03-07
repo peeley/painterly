@@ -1,23 +1,13 @@
-export class Brush {
+import { Tool } from './Tool.js';
+
+export class PenTool extends Tool {
     constructor(drawSurfaceRef){
-        this.mouseDown = false;
+        super(drawSurfaceRef);
         this.dotSize = 1;
-        this.color = "#42445A";
         this.handleEvent = this.handleEvent.bind(this);
-        this.setColor = this.setColor.bind(this);
-        this.getColor = this.getColor.bind(this);
         this.getStrokeWidth = this.getStrokeWidth.bind(this);
         this.setStrokeWidth = this.setStrokeWidth.bind(this);
         this.joinType = 'round';
-        let rect = drawSurfaceRef.current.getBoundingClientRect();
-        this.topOffset = rect.top;
-        this.leftOffset = rect.left;
-    }
-    setColor(color){
-        this.color = color;
-    }
-    getColor(){
-        return this.color;
     }
     setStrokeWidth(width){
         this.dotSize = width;
@@ -53,4 +43,3 @@ export class Brush {
         }
     }   
 }
-

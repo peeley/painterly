@@ -2,6 +2,7 @@ import React from 'react';
 import './Canvas.css';
 import { Palette } from './Palette.js';
 import { ToolController } from './ToolController.js';
+import { ToolList } from './ToolList.js';
 
 class Canvas extends React.Component{
     constructor(props){
@@ -9,10 +10,15 @@ class Canvas extends React.Component{
         this.drawSurfaceRef = React.createRef();
         this.updateToolColor = this.updateToolColor.bind(this);
         this.updateStrokeWidth = this.updateStrokeWidth.bind(this);
+        this.state = {
+            toolController: { selectNewTool: () => {console.log('fjs')}}
+        };
     }
     componentDidMount(){
         this.drawSurfaceCtx = this.drawSurfaceRef.current.getContext('2d');
-        this.toolController = new ToolController(this.drawSurfaceRef);
+        this.setState({
+            toolController: new ToolController(this.drawSurfaceRef)
+        });
     }
     updateToolColor(color){
         this.toolController.setColor(color);
@@ -24,22 +30,22 @@ class Canvas extends React.Component{
         return(
             <div className="Canvas">
                 <Palette 
-                    TooleColor={this.updateToolColor} 
                     updateStrokeWidth={this.updateStrokeWidth}
                     updateColor={this.updateToolColor}
                 />
+                <ToolList selectTool={this.state.toolController.selectNewTool}/>
                 <canvas id="drawSurface" 
                     onMouseDown = {(event) => 
-                        this.toolController.handleEvent(event, 
+                        this.state.toolController.handleEvent(event, 
                             this.drawSurfaceCtx)}
                     onMouseMove = {(event) => 
-                        this.toolController.handleEvent(event, 
+                        this.state.toolController.handleEvent(event, 
                             this.drawSurfaceCtx)}
                     onMouseLeave = {(event) => 
-                        this.toolController.handleEvent(event, 
+                        this.state.toolController.handleEvent(event, 
                             this.drawSurfaceCtx)}
                     onMouseUp = {(event) => 
-                        this.toolController.handleEvent(event, 
+                        this.state.toolController.handleEvent(event, 
                             this.drawSurfaceCtx)}
                     height = { window.innerHeight * .9 }
                     width = { window.innerWidth * .9 }

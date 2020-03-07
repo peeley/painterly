@@ -15,4 +15,5 @@ export class Tool {
     getColor(){
         return this.color;
     }
+    handleEvent(event, context){}
 }

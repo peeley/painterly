@@ -14,6 +14,7 @@ export class RectTool extends Tool {
             this.startY = event.clientY - this.topOffset;
         }
         else if(event.type === "mouseup"){
+            context.fillStyle = this.color;
             let width = (event.clientX - this.leftOffset) - this.startX;
             let height = (event.clientY - this.topOffset) - this.startY;
             context.fillRect(this.startX, this.startY, width, height);

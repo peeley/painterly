@@ -19,6 +19,9 @@ export class PenTool extends Tool {
         if(event.type === "mousedown"){
             this.mouseDown = true;
             context.beginPath();
+            context.lineCap = 'round';
+            context.lineJoin = this.joinType;
+            context.strokeStyle = this.color;
             context.moveTo(event.clientX - this.leftOffset, 
                            event.clientY - this.topOffset);
         }
@@ -35,8 +38,6 @@ export class PenTool extends Tool {
         }
         else if(this.mouseDown && event.type === "mousemove"){
             context.lineWidth = this.dotSize;
-            context.lineJoin = this.joinType;
-            context.strokeStyle = this.color;
             context.lineTo(event.clientX - this.leftOffset, 
                            event.clientY - this.topOffset);
             context.stroke();

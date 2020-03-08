@@ -18,6 +18,7 @@ export class PenTool extends Tool {
     handleEvent(event, context){
         if(event.type === "mousedown"){
             this.mouseDown = true;
+            context.save();
             context.beginPath();
             context.lineCap = 'round';
             context.lineJoin = this.joinType;

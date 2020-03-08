@@ -10,6 +10,7 @@ class Canvas extends React.Component{
         this.drawSurfaceRef = React.createRef();
         this.updateToolColor = this.updateToolColor.bind(this);
         this.updateStrokeWidth = this.updateStrokeWidth.bind(this);
+        this.handleInput = this.handleInput.bind(this);
         this.state = {
             toolController: { selectNewTool: () => {console.log('fjs')}}
         };
@@ -19,12 +20,21 @@ class Canvas extends React.Component{
         this.setState({
             toolController: new ToolController(this.drawSurfaceRef)
         });
+        document.addEventListener('keydown', (event) => {
+            if(event.ctrlKey && event.key === 'z'){
+                // TODO : create undo method, clean up keypress listener
+            }
+        });
     }
     updateToolColor(color){
         this.state.toolController.setColor(color);
     }
     updateStrokeWidth(width){
         this.state.toolController.setStrokeWidth(width);
+    }
+    handleInput(event){
+        this.state.toolController.handleEvent(event, this.drawSurfaceCtx);
+        event.preventDefault();
     }
     render(){
         return(
@@ -35,18 +45,10 @@ class Canvas extends React.Component{
                 />
                 <ToolList selectTool={this.state.toolController.selectNewTool}/>
                 <canvas id="drawSurface" 
-                    onMouseDown = {(event) => 
-                        this.state.toolController.handleEvent(event, 
-                            this.drawSurfaceCtx)}
-                    onMouseMove = {(event) => 
-                        this.state.toolController.handleEvent(event, 
-                            this.drawSurfaceCtx)}
-                    onMouseLeave = {(event) => 
-                        this.state.toolController.handleEvent(event, 
-                            this.drawSurfaceCtx)}
-                    onMouseUp = {(event) => 
-                        this.state.toolController.handleEvent(event, 
-                            this.drawSurfaceCtx)}
+                    onMouseDown = {this.handleInput}
+                    onMouseMove = {this.handleInput}                    
+                    onMouseLeave = {this.handleInput}
+                    onMouseUp = {this.handleInput}
                     height = { window.innerHeight * .9 }
                     width = { window.innerWidth * .9 }
                     ref={ this.drawSurfaceRef }

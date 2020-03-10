@@ -34,7 +34,7 @@ export class PenTool extends Tool {
                 this.dotSize += 1;
             }
         }
-        else if(event.type === "mouseup" || event.type === "mouseleave"){
+        else if(event.type === "mouseup"){
             this.mouseDown = false;
         }
         else if(this.mouseDown && event.type === "mousemove"){

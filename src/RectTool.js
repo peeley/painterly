@@ -7,7 +7,6 @@ export class RectTool extends Tool {
         this.startY = null;
     }
     handleEvent(event, context){
-        console.log('rect event');
         if(event.type === "mousedown"){
             context.beginPath();
             this.startX = event.clientX - this.leftOffset;

@@ -12,7 +12,7 @@ class Canvas extends React.Component{
         this.updateStrokeWidth = this.updateStrokeWidth.bind(this);
         this.handleInput = this.handleInput.bind(this);
         this.state = {
-            toolController: { selectNewTool: () => {console.log('fjs')}}
+            toolController: { selectNewTool: () => {}}
         };
     }
     componentDidMount(){
@@ -39,17 +39,19 @@ class Canvas extends React.Component{
     render(){
         return(
             <div className="Canvas">
-                <Palette 
-                    updateStrokeWidth={this.updateStrokeWidth}
-                    updateColor={this.updateToolColor}
-                />
-                <ToolList selectTool={this.state.toolController.selectNewTool}/>
+                <div className="controlBar">
+                    <Palette 
+                        updateStrokeWidth={this.updateStrokeWidth}
+                        updateColor={this.updateToolColor}
+                    />
+                    <ToolList selectTool={this.state.toolController.selectNewTool}/>
+                </div>
                 <canvas id="drawSurface" 
                     onMouseDown = {this.handleInput}
                     onMouseMove = {this.handleInput}                    
                     onMouseLeave = {this.handleInput}
                     onMouseUp = {this.handleInput}
-                    height = { window.innerHeight * .9 }
+                    height = { window.innerHeight * .85 }
                     width = { window.innerWidth * .9 }
                     ref={ this.drawSurfaceRef }
                 />

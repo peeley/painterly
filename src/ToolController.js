@@ -6,24 +6,35 @@ import { RectTool } from './RectTool.js';
 export class ToolController extends React.Component{
     constructor(props){
         super(props);
+        this.toolSet = {
+            'pen': new PenTool(),
+            'rect': new RectTool()
+        }
+        this.selectedTool = this.toolSet['pen'];
+        this.props.handleToolSelect(this.selectedTool);
+        this.handleChange = this.handleChange.bind(this);
         this.selectNewTool = this.selectNewTool.bind(this);
+        this.setStrokeWidth = this.setStrokeWidth.bind(this);
+        this.setColor = this.setColor.bind(this);
         this.state = {
-            selected: "pen"
+            selectedName: "pen"
         };
+    }
+    shouldComponentUpdate(nextProps, nextState){
+        if(nextProps.surface && nextProps.surface.current){
+            for(let toolName in this.toolSet){
+                this.toolSet[toolName].setOffsets(nextProps.surface);
+            }
+            return true;
+        }
+        return false;
     }
     handleChange(event){
         let toolName = event.target.value;
         this.setState({
-            selected: toolName
+            selectedName: toolName
         });
-        this.props.selectTool(toolName);
-    }
-    componentDidMount(){
-        this.toolSet = {
-            'pen': new PenTool(this.props.surface),
-            'rect': new RectTool(this.props.surface)
-        }
-        this.selectedTool = this.toolSet['pen'];
+        this.selectNewTool(toolName);
     }
     selectNewTool(toolName){
         this.selectedTool = this.toolSet[toolName];
@@ -33,7 +44,9 @@ export class ToolController extends React.Component{
         this.selectedTool.setStrokeWidth(width);
     }
     setColor(color){
-        this.selectedTool.setColor(color);
+        for(let toolName in this.toolSet){
+            this.toolSet[toolName].setColor(color);
+        }
     }
     render(){
         return(
@@ -43,12 +56,12 @@ export class ToolController extends React.Component{
                     updateColor={this.setColor}
                 />
                 <input type="radio" value="pen" id="pen" 
-                    checked={this.state.selected === "pen"} 
+                    checked={this.state.selectedName === "pen"} 
                     onChange={this.handleChange} />
                 <label htmlFor="pen"> Pen </label>
 
                 <input type="radio" value="rect" id="rect" 
-                    checked={this.state.selected === "rect"} 
+                    checked={this.state.selectedName === "rect"} 
                     onChange={this.handleChange} />
                 <label htmlFor="rect"> Rect </label>
             </div>

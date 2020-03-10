@@ -1,13 +1,15 @@
 
 export class Tool {
-    constructor(drawSurfaceRef){
-        let rect = drawSurfaceRef.current.getBoundingClientRect();
-        this.topOffset = rect.top;
-        this.leftOffset = rect.left;
+    constructor(){
         this.mouseDown = false;
         this.color = "#42445A";
         this.setColor = this.setColor.bind(this);
         this.getColor = this.getColor.bind(this);
+    }
+    setOffsets(drawSurface){
+        let rect = drawSurface.current.getBoundingClientRect();
+        this.topOffset = rect.top;
+        this.leftOffset = rect.left;
     }
     setColor(color){
         this.color = color;

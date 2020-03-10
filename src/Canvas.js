@@ -24,7 +24,8 @@ class Canvas extends React.Component{
         });
     }
     handleInput(event){
-        this.state.tool.handleEvent(event, this.state.drawSurface);
+        let context = this.state.drawSurface.current.getContext('2d');
+        this.state.tool.handleEvent(event, context);
         event.preventDefault();
     }
     render(){

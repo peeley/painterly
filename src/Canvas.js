@@ -22,7 +22,7 @@ class Canvas extends React.Component{
             if(event.ctrlKey && event.key === 'z'){
                 this.undo();
             }
-            if(event.ctrlKey && event.key === 'r'){
+            if(event.ctrlKey && event.key === 'y'){
                 this.redo();
             }
         });
@@ -34,7 +34,11 @@ class Canvas extends React.Component{
     }
     handleInput(event){
         let context = this.state.drawSurface.current.getContext('2d');
-        this.state.tool.handleEvent(event, context);
+        let newItem = this.state.tool.handleEvent(event, context);
+        if(newItem != null){
+            this.state.versionHistory.push(newItem);
+            console.log(`versionHistory: ${JSON.stringify(this.state.versionHistory)}`);
+        }
         event.preventDefault();
     }
     undo(){

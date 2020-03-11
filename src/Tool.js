@@ -22,7 +22,6 @@ export class Tool {
             type: this.strokeType,
             color: this.getColor(),
             strokeWidth: this.getStrokeWidth(),
-            coords: []
         }
     }
     setOffsets(drawSurface){

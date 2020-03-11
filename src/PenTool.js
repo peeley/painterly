@@ -18,7 +18,7 @@ export class PenTool extends Tool {
             let xCoord = event.clientX - this.leftOffset;
             let yCoord = event.clientY - this.topOffset;
             context.moveTo(xCoord, yCoord);
-            this.currentStroke.coords.push((xCoord, yCoord));
+            this.currentStroke.coords = [(xCoord, yCoord)];
         }
         else if(event.type === "wheel"){
             if(event.deltaY > 0 && this.strokeWidth > 1){

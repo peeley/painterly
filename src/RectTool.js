@@ -1,8 +1,8 @@
 import { Tool } from './Tool.js';
 
 export class RectTool extends Tool {
-    constructor(strokeType){
-        super(strokeType);
+    constructor(){
+        super('rect');
         this.startX = null;
         this.startY = null;
     }

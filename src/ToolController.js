@@ -7,8 +7,8 @@ export class ToolController extends React.Component{
     constructor(props){
         super(props);
         this.toolSet = {
-            'pen': new PenTool('pen'),
-            'rect': new RectTool('rect')
+            'pen': new PenTool(),
+            'rect': new RectTool()
         }
         this.selectedTool = this.toolSet['pen'];
         this.props.handleToolSelect(this.selectedTool);

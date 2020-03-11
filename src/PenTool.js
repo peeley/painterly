@@ -1,8 +1,8 @@
 import { Tool } from './Tool.js';
 
 export class PenTool extends Tool {
-    constructor(strokeType){
-        super(strokeType);
+    constructor(){
+        super('pen');
         this.strokeWidth = 1;
         this.handleEvent = this.handleEvent.bind(this);
         this.joinType = 'round';

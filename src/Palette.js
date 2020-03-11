@@ -66,7 +66,6 @@ export class Palette extends React.Component{
             strokeWidth: event.target.value
         });
         this.props.updateStrokeWidth(this.state.strokeWidth);
-        console.log(this.state.strokeWidth);
         event.preventDefault();
     }
     render(){

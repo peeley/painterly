@@ -7,6 +7,8 @@ class Canvas extends React.Component{
         super(props);
         this.handleInput = this.handleInput.bind(this);
         this.handleToolSelect = this.handleToolSelect.bind(this);
+        this.undo = this.undo.bind(this);
+        this.redo = this.redo.bind(this);
         this.state = {
             drawSurface: React.createRef()
         };
@@ -14,7 +16,10 @@ class Canvas extends React.Component{
     componentDidMount(){
         document.addEventListener('keydown', (event) => {
             if(event.ctrlKey && event.key === 'z'){
-                // TODO : create undo method, clean up keypress listener
+                this.undo();
+            }
+            if(event.ctrlKey && event.key === 'r'){
+                this.redo();
             }
         });
     }
@@ -28,6 +33,12 @@ class Canvas extends React.Component{
         this.state.tool.handleEvent(event, context);
         event.preventDefault();
     }
+    undo(){
+        console.log('undo!');
+    }
+    redo(){
+        console.log('redo!');
+    }
     render(){
         return(
             <div className="Canvas">
@@ -35,6 +46,8 @@ class Canvas extends React.Component{
                     surface={this.state.drawSurface}
                     handleToolSelect={this.handleToolSelect}
                 />
+                <button onClick={this.undo}>Undo</button>
+                <button onClick={this.redo}>Redo</button>
                 <canvas id="drawSurface" 
                     onMouseDown = {this.handleInput}
                     onMouseMove = {this.handleInput}                    

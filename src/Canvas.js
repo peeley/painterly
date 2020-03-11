@@ -9,8 +9,12 @@ class Canvas extends React.Component{
         this.handleToolSelect = this.handleToolSelect.bind(this);
         this.undo = this.undo.bind(this);
         this.redo = this.redo.bind(this);
+        this.redrawCanvas = this.redrawCanvas.bind(this);
         this.state = {
-            drawSurface: React.createRef()
+            tool: null,
+            drawSurface: React.createRef(),
+            versionHistory: [],
+            versionPointer: 0
         };
     }
     componentDidMount(){
@@ -35,9 +39,20 @@ class Canvas extends React.Component{
     }
     undo(){
         console.log('undo!');
+        if(this.state.versionPointer > 0){
+            this.setState({ versionPointer: this.state.versionPointer - 1});
+        }
+        this.redrawCanvas();
     }
     redo(){
         console.log('redo!');
+        if(this.state.versionPointer < this.state.versionHistory.length - 1){
+            this.setState({ versionPointer: this.state.versionPointer + 1});
+        }
+        this.redrawCanvas();
+    }
+    redrawCanvas(){
+        // TODO: redraw canvas after undo/redo based on versionHistory state
     }
     render(){
         return(

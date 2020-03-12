@@ -4,13 +4,18 @@ import { PenTool } from './PenTool.js';
 import { RectTool } from './RectTool.js';
 
 export class ToolController extends React.Component{
+    /* TODO : update when static fields are widely compatible
     static toolSet = {
         'pen': new PenTool(),
         'rect': new RectTool()
-    }
+    } */
     constructor(props){
         super(props);
-        this.selectedTool = this.ToolController.toolSet['pen'];
+        this.toolSet = {
+            'pen': new PenTool(),
+            'rect': new RectTool()
+        }
+        this.selectedTool = this.toolSet['pen'];
         this.props.handleToolSelect(this.selectedTool);
         this.handleChange = this.handleChange.bind(this);
         this.selectNewTool = this.selectNewTool.bind(this);
@@ -22,8 +27,8 @@ export class ToolController extends React.Component{
     }
     componentDidUpdate(prevProps){
         if(this.props.surface.current){
-            for(let toolName in this.ToolController.toolSet){
-                this.ToolController.toolSet[toolName].setOffsets(this.props.surface);
+            for(let toolName in this.toolSet){
+                this.toolSet[toolName].setOffsets(this.props.surface);
             }
         }
     }
@@ -35,20 +40,20 @@ export class ToolController extends React.Component{
         this.selectNewTool(toolName);
     }
     selectNewTool(toolName){
-        this.selectedTool = this.ToolController.toolSet[toolName];
+        this.selectedTool = this.toolSet[toolName];
         this.props.handleToolSelect(this.selectedTool);
     }
     setStrokeWidth(width){
         this.selectedTool.setStrokeWidth(width);
     }
     setColor(color){
-        for(let toolName in this.ToolController.toolSet){
-            this.ToolController.toolSet[toolName].setColor(color);
+        for(let toolName in this.toolSet){
+            this.toolSet[toolName].setColor(color);
         }
     }
     static redoStroke(stroke, context){
         console.log(`dispatching redo to ${stroke.type}`);
-        this.ToolController.toolSet[stroke.type].redoStroke(stroke, context);
+        this.toolSet[stroke.type].redoStroke(stroke, context);
     }
     render(){
         return(

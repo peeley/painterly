@@ -1,4 +1,5 @@
-import { ToolController } from './ToolController.js';
+import { PenTool } from './PenTool.js';
+import { RectTool } from './RectTool.js';
 
 export class VersionController {
     constructor(){
@@ -13,8 +14,8 @@ export class VersionController {
         this.currentVersion += 1;
     }
     undo(drawSurface){
-        console.log(drawSurface);
         console.log('undo!');
+        console.log(this.currentVersion, this.versionHistory.length);
         if(this.currentVersion > 0){
             this.currentVersion = this.currentVersion - 1;
         }
@@ -29,13 +30,29 @@ export class VersionController {
     }
     redrawCanvas(drawSurface){
         let context = drawSurface.current.getContext('2d')
-        //context.clear();
+        this.clearCanvas(context);
         let versionCounter = 0;
+        console.log(this.currentVersion, this.versionHistory.length);
         while(versionCounter < this.currentVersion){
+            console.log('iterating');
             let stroke = this.versionHistory[versionCounter];
-            ToolController.redoStroke(stroke, context);
+            switch(stroke.type){
+                case 'pen':
+                    PenTool.redoStroke(stroke, context);
+                    break;
+                case 'rect':
+                    RectTool.redoStroke(stroke, context);
+                    break
+                default:
+                    console.log('unknown stroke type');
+            }
             versionCounter++;
         }
         // TODO: redraw canvas after undo/redo based on versionHistory state
+    }
+    clearCanvas(context){
+        const width = context.canvas.width;
+        const height = context.canvas.height;
+        context.clearRect(0, 0, width, height);
     }
 }

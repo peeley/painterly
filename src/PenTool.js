@@ -44,7 +44,7 @@ export class PenTool extends Tool {
             this.currentStroke.coords.push((xCoord, yCoord));
         }
     }   
-    redoStroke(stroke, context){
+    static redoStroke(stroke, context){
         console.log('redoing pen stroke!');
     }
 }

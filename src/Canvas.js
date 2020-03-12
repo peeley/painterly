@@ -50,7 +50,7 @@ class Canvas extends React.Component{
                 }}>
                     Undo
                 </button>
-                <button onClick={ () => {
+                <button onClick={ (event) => {
                     this.versionController.redo(this.state.drawSurface)
                 }}>Redo</button>
                 <canvas id="drawSurface" 

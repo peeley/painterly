@@ -30,5 +30,7 @@ export class RectTool extends Tool {
             // dimensions/appearance
         }
     }   
-
+    static redoStroke(stroke, context){
+        console.log('redoing rect stroke');
+    }
 }

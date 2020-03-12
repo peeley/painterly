@@ -4,7 +4,7 @@ import { RectTool } from './RectTool.js';
 export class VersionController {
     constructor(){
         this.versionHistory = [];
-        this.currentVersion = 0
+        this.currentVersion = 0;
         this.undo = this.undo.bind(this);
         this.redo = this.redo.bind(this);
         this.redrawCanvas = this.redrawCanvas.bind(this);
@@ -14,28 +14,23 @@ export class VersionController {
         this.currentVersion += 1;
     }
     undo(drawSurface){
-        console.log('undo!');
-        console.log(this.currentVersion, this.versionHistory.length);
         if(this.currentVersion > 0){
             this.currentVersion -= 1;
+            this.redrawCanvas(drawSurface);
         }
-        this.redrawCanvas(drawSurface);
     }
     redo(drawSurface){
-        console.log('redo!');
-        if(this.currentVersion < this.versionHistory.length - 1){
+        if(this.currentVersion < this.versionHistory.length){
             this.currentVersion += 1;
+            this.redrawCanvas(drawSurface);
         }
-        this.redrawCanvas(drawSurface);
     }
     redrawCanvas(drawSurface){
         let context = drawSurface.current.getContext('2d')
         this.clearCanvas(context);
-        let versionCounter = 0;
-        console.log(this.currentVersion, this.versionHistory.length);
-        while(versionCounter < this.currentVersion){
-            console.log('iterating');
-            let stroke = this.versionHistory[versionCounter];
+        let versionCounter = 1;
+        while(versionCounter <= this.currentVersion){
+            let stroke = this.versionHistory[versionCounter-1];
             switch(stroke.type){
                 case 'pen':
                     PenTool.redoStroke(stroke, context);
@@ -46,9 +41,8 @@ export class VersionController {
                 default:
                     console.log('unknown stroke type');
             }
-            versionCounter++;
+            versionCounter += 1;
         }
-        // TODO: redraw canvas after undo/redo based on versionHistory state
     }
     clearCanvas(context){
         const width = context.canvas.width;

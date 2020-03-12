@@ -19,7 +19,7 @@ export class PenTool extends Tool {
             let xCoord = event.clientX - this.leftOffset;
             let yCoord = event.clientY - this.topOffset;
             context.moveTo(xCoord, yCoord);
-            this.currentStroke.coords = [(xCoord, yCoord)];
+            this.currentStroke.coords = [[xCoord, yCoord]];
         }
         else if(event.type === "wheel"){
             if(event.deltaY > 0 && this.strokeWidth > 1){
@@ -41,7 +41,7 @@ export class PenTool extends Tool {
             let yCoord = event.clientY - this.topOffset;
             context.lineTo(xCoord, yCoord);
             context.stroke();
-            this.currentStroke.coords.push((xCoord, yCoord));
+            this.currentStroke.coords.push([xCoord, yCoord]);
         }
     }   
     static redoStroke(stroke, context){
@@ -51,8 +51,9 @@ export class PenTool extends Tool {
         context.save();
         context.strokeStyle = color;
         context.lineWidth = width;
+        context.beginPath();
         context.moveTo(startCoords[0], startCoords[1]);
-        for(let coord in stroke.coords.slice(1, stroke.coords.length-1)){
+        for(let coord of stroke.coords.slice(1)){
             context.lineTo(coord[0], coord[1]);
         }
         context.stroke();

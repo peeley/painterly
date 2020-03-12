@@ -44,4 +44,7 @@ export class Tool {
         return this.strokeWidth;
     }
     handleEvent(event, context){}
+    redoStroke(stroke, context){
+        console.log('ERROR: Abstract tool redo method called');
+    }
 }

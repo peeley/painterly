@@ -3,6 +3,7 @@ import { Tool } from './Tool.js';
 export class PenTool extends Tool {
     constructor(){
         super('pen');
+        this.toolName = 'pen';
         this.strokeWidth = 1;
         this.handleEvent = this.handleEvent.bind(this);
         this.joinType = 'round';
@@ -43,4 +44,7 @@ export class PenTool extends Tool {
             this.currentStroke.coords.push((xCoord, yCoord));
         }
     }   
+    redoStroke(stroke, context){
+        console.log('redoing pen stroke!');
+    }
 }

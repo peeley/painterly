@@ -1,29 +1,26 @@
 import React from 'react';
 import './Canvas.css';
 import { ToolController } from './ToolController.js';
+import { VersionController } from './VersionController.js';
 
 class Canvas extends React.Component{
     constructor(props){
         super(props);
         this.handleInput = this.handleInput.bind(this);
         this.handleToolSelect = this.handleToolSelect.bind(this);
-        this.undo = this.undo.bind(this);
-        this.redo = this.redo.bind(this);
-        this.redrawCanvas = this.redrawCanvas.bind(this);
+        this.versionController = new VersionController();
         this.state = {
             tool: null,
             drawSurface: React.createRef(),
-            versionHistory: [],
-            versionPointer: 0
         };
     }
     componentDidMount(){
         document.addEventListener('keydown', (event) => {
             if(event.ctrlKey && event.key === 'z'){
-                this.undo();
+                this.versionController.undo(this.state.drawSurface);
             }
             if(event.ctrlKey && event.key === 'y'){
-                this.redo();
+                this.versionController.redo(this.state.drawSurface);
             }
         });
     }
@@ -36,27 +33,10 @@ class Canvas extends React.Component{
         let context = this.state.drawSurface.current.getContext('2d');
         let newItem = this.state.tool.handleEvent(event, context);
         if(newItem != null){
-            this.state.versionHistory.push(newItem);
-            console.log(`versionHistory: ${JSON.stringify(this.state.versionHistory)}`);
+            this.versionController.push(newItem);
+            console.log(`${JSON.stringify(this.versionController.versionHistory)}`);
         }
         event.preventDefault();
-    }
-    undo(){
-        console.log('undo!');
-        if(this.state.versionPointer > 0){
-            this.setState({ versionPointer: this.state.versionPointer - 1});
-        }
-        this.redrawCanvas();
-    }
-    redo(){
-        console.log('redo!');
-        if(this.state.versionPointer < this.state.versionHistory.length - 1){
-            this.setState({ versionPointer: this.state.versionPointer + 1});
-        }
-        this.redrawCanvas();
-    }
-    redrawCanvas(){
-        // TODO: redraw canvas after undo/redo based on versionHistory state
     }
     render(){
         return(
@@ -65,8 +45,14 @@ class Canvas extends React.Component{
                     surface={this.state.drawSurface}
                     handleToolSelect={this.handleToolSelect}
                 />
-                <button onClick={this.undo}>Undo</button>
-                <button onClick={this.redo}>Redo</button>
+                <button onClick={(event) => {
+                    this.versionController.undo(this.state.drawSurface)
+                }}>
+                    Undo
+                </button>
+                <button onClick={ () => {
+                    this.versionController.redo(this.state.drawSurface)
+                }}>Redo</button>
                 <canvas id="drawSurface" 
                     onMouseDown = {this.handleInput}
                     onMouseMove = {this.handleInput}                    

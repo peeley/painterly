@@ -3,6 +3,7 @@ import { Tool } from './Tool.js';
 export class RectTool extends Tool {
     constructor(){
         super('rect');
+        this.toolName = 'rect';
         this.startX = null;
         this.startY = null;
     }

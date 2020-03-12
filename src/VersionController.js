@@ -10,6 +10,10 @@ export class VersionController {
         this.redrawCanvas = this.redrawCanvas.bind(this);
     }
     push(item){
+        if(this.currentVersion !== this.versionHistory.length){
+            this.versionHistory = this.versionHistory.slice(
+                                    0, this.currentVersion);
+        }
         this.versionHistory.push(item);
         this.currentVersion += 1;
     }

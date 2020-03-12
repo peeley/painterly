@@ -45,6 +45,18 @@ export class PenTool extends Tool {
         }
     }   
     static redoStroke(stroke, context){
+        const color = stroke.color;
+        const width = stroke.strokeWidth;
+        const startCoords = stroke.coords[0];
+        context.save();
+        context.strokeStyle = color;
+        context.lineWidth = width;
+        context.moveTo(startCoords[0], startCoords[1]);
+        for(let coord in stroke.coords.slice(1, stroke.coords.length-1)){
+            context.lineTo(coord[0], coord[1]);
+        }
+        context.stroke();
+        context.restore();
         console.log('redoing pen stroke!');
     }
 }

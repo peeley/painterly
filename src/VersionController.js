@@ -17,14 +17,14 @@ export class VersionController {
         console.log('undo!');
         console.log(this.currentVersion, this.versionHistory.length);
         if(this.currentVersion > 0){
-            this.currentVersion = this.currentVersion - 1;
+            this.currentVersion -= 1;
         }
         this.redrawCanvas(drawSurface);
     }
     redo(drawSurface){
         console.log('redo!');
         if(this.currentVersion < this.versionHistory.length - 1){
-            this.currentVersion = this.currentVersion + 1;
+            this.currentVersion += 1;
         }
         this.redrawCanvas(drawSurface);
     }

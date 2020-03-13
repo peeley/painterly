@@ -31,6 +31,13 @@ export class RectTool extends Tool {
         }
     }   
     static redoStroke(stroke, context){
-        console.log('redoing rect stroke');
+        const color = stroke.color;
+        const [x, y] = stroke.coords;
+        const width = stroke.width;
+        const height = stroke.height;
+        context.save();
+        context.fillStyle = color;
+        context.fillRect(x, y, width, height);
+        context.restore();
     }
 }

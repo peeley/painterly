@@ -4,16 +4,16 @@
     - Image insertion
     - Text
     - Charts/infographics
-- UI/UX overhaul
-    - theming
-    - keybinds/ergonomics
 - Add backend & database
     - Join sessions
     - Save photos
     - User auth/accounts and organizations
 
 # In Progress
-
+- UI/UX overhaul
+    - theming
+    - keybinds/ergonomics
+    
 # Done
 - Draw on canvas w/ pen, see changes instantly
     - Edit color, width of stroke

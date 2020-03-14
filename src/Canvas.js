@@ -16,11 +16,16 @@ class Canvas extends React.Component{
     }
     componentDidMount(){
         document.addEventListener('keydown', (event) => {
-            if(event.ctrlKey && event.key === 'z'){
-                this.versionController.undo(this.state.drawSurface);
-            }
-            if(event.ctrlKey && event.key === 'y'){
-                this.versionController.redo(this.state.drawSurface);
+            if(event.ctrlKey){
+                switch(event.key){
+                    case 'z':
+                        this.versionController.undo(this.state.drawSurface);
+                        break;
+                    case 'y':
+                        this.versionController.redo(this.state.drawSurface);
+                        break;
+                    default:
+                }
             }
         });
     }

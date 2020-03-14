@@ -1,6 +1,4 @@
 # TODO
-- Make clearing screen an undo-able action
-    - Create stroke object for clear?
 - Add new tool types
     - Shapes
     - Image insertion
@@ -11,11 +9,12 @@
     - Save photos to acct
     - User auth/accounts and organizations
 - Utility bar at top to download sketch, share link, edit title, etc.
+- Zoom in on, pan over sketch
 
 # In Progress
-- UI/UX overhaul
-    - theming
-    - keybinds/ergonomics
+- Make clearing screen an undo-able action
+    - Create stroke object for clear?
+- Indicator for certain tools
     
 # Done
 - Draw on canvas w/ pen, see changes instantly
@@ -23,3 +22,6 @@
 - Undo/redo functionality, version history
     - Redraw canvas after undo/redo
     - Make sure undo then draw isn't fucked
+- UI/UX overhaul *ongoing*
+    - theming
+    - keybinds/ergonomics

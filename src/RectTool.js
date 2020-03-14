@@ -6,28 +6,35 @@ export class RectTool extends Tool {
         this.toolName = 'rect';
         this.startX = null;
         this.startY = null;
+        this.mouseDown = false;
     }
     handleEvent(event, context){
         if(event.type === "mousedown"){
             context.beginPath();
+            this.mouseDown = true;
             this.startX = event.clientX - this.leftOffset;
             this.startY = event.clientY - this.topOffset;
             this.currentStroke.coords = [this.startX, this.startY];
         }
-        else if(event.type === "mouseup"){
+        else if(event.type === "mouseup" || 
+                (this.mouseDown && event.type === "mousemove")){
             context.fillStyle = this.color;
-            let width = (event.clientX - this.leftOffset) - this.startX;
-            let height = (event.clientY - this.topOffset) - this.startY;
+            const width = (event.clientX - this.leftOffset) - this.startX;
+            const height = (event.clientY - this.topOffset) - this.startY;
             context.fillRect(this.startX, this.startY, width, height);
             this.currentStroke.width = width;
             this.currentStroke.height = height;
-            let finishedStroke = this.currentStroke;
-            this.resetStroke();
+            const finishedStroke = this.currentStroke;
+            if(event.type === "mouseup"){
+                finishedStroke.indicator = false;
+                this.resetStroke();
+                this.mouseDown = false;
+            }
+            else{
+                finishedStroke.indicator = true;
+                console.log(finishedStroke);
+            }
             return finishedStroke;
-        }
-        else if(this.mouseDown && event.type === "mousemove"){
-            // TODO : add some kind of shadow/indicator for rectangle
-            // dimensions/appearance
         }
     }   
     static redoStroke(stroke, context){

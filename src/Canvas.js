@@ -41,8 +41,8 @@ class Canvas extends React.Component{
         if(newItem != null){
             this.versionController.push(newItem);
             this.clearCanvas();
-            this.versionController.redrawCanvas(this.state.drawSurface);
             console.log(`${JSON.stringify(this.versionController.versionHistory)}`);
+            this.versionController.redrawCanvas(this.state.drawSurface);
         }
         event.preventDefault();
     }

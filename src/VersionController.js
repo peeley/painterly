@@ -50,7 +50,13 @@ export class VersionController {
                 default:
                     console.log('unknown stroke type');
             }
-            versionCounter += 1;
+            if(stroke.indicator){
+                this.versionHistory.splice(versionCounter-1, 1);
+                this.currentVersion -= 1;
+            }
+            else{
+                versionCounter += 1;
+            }
         }
     }
     clearCanvas(context){

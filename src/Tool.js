@@ -6,6 +6,7 @@ export class Tool {
         this.color = "#42445A";
         this.currentStroke = {
             type: this.strokeType,
+            indicator: false,
             color: this.color,
             strokeWidth: 1,
             coords: []

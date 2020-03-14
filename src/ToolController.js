@@ -51,10 +51,6 @@ export class ToolController extends React.Component{
             this.toolSet[toolName].setColor(color);
         }
     }
-    static redoStroke(stroke, context){
-        console.log(`dispatching redo to ${stroke.type}`);
-        this.toolSet[stroke.type].redoStroke(stroke, context);
-    }
     render(){
         return(
             <div className="row controlBar">

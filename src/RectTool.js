@@ -32,7 +32,6 @@ export class RectTool extends Tool {
             }
             else{
                 finishedStroke.indicator = true;
-                console.log(finishedStroke);
             }
             return finishedStroke;
         }

@@ -14,7 +14,6 @@
 # In Progress
 - Make clearing screen an undo-able action
     - Create stroke object for clear?
-- Indicator for certain tools
     
 # Done
 - Draw on canvas w/ pen, see changes instantly
@@ -25,3 +24,4 @@
 - UI/UX overhaul *ongoing*
     - theming
     - keybinds/ergonomics
+- Indicator/shadow for certain tools

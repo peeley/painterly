@@ -1,4 +1,6 @@
 # TODO
+- Make clearing screen an undo-able action
+    - Create stroke object for clear?
 - Add new tool types
     - Shapes
     - Image insertion
@@ -19,4 +21,4 @@
     - Edit color, width of stroke
 - Undo/redo functionality, version history
     - Redraw canvas after undo/redo
-    - *Note* : make sure undo then draw isn't fucked
+    - Make sure undo then draw isn't fucked

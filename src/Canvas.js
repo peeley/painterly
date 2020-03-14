@@ -45,32 +45,34 @@ class Canvas extends React.Component{
     }
     render(){
         return(
-            <div className="container Canvas">
+            <div className="container col px-5 Canvas">
                 <div className="row pl-5">
                     <ToolController 
                         surface={this.state.drawSurface}
                         handleToolSelect={this.handleToolSelect}
                     />
-                    <button onClick={(event) => {
-                        this.versionController.undo(this.state.drawSurface)
-                    }}>
-                        Undo
-                    </button>
-                    <button onClick={ (event) => {
-                        this.versionController.redo(this.state.drawSurface)
-                    }}>Redo</button>
-                    <button onClick={ (event) => {
-                        let ctx = this.state.drawSurface.current.getContext('2d');
-                        this.versionController.clearCanvas(ctx);
-                    }}>Clear</button>
+                    <div className="versionButtons pt-2 pl-5">
+                        <button onClick={(event) => {
+                            this.versionController.undo(this.state.drawSurface)
+                        }}>
+                            Undo
+                        </button>
+                        <button onClick={ (event) => {
+                            this.versionController.redo(this.state.drawSurface)
+                        }}>Redo</button>
+                        <button onClick={ (event) => {
+                            let ctx = this.state.drawSurface.current.getContext('2d');
+                            this.versionController.clearCanvas(ctx);
+                        }}>Clear</button>
+                    </div>
                 </div>
                 <canvas className="row" id="drawSurface" 
                     onMouseDown = {this.handleInput}
                     onMouseMove = {this.handleInput}                    
                     onMouseLeave = {this.handleInput}
                     onMouseUp = {this.handleInput}
-                    height = { window.innerHeight * .85 }
-                    width = { window.innerWidth * .9 }
+                    height = { window.innerHeight * .9 }
+                    width = { window.innerWidth * .95 }
                     ref={ this.state.drawSurface }
                 />
             </div>

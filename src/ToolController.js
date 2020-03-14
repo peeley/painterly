@@ -62,7 +62,7 @@ export class ToolController extends React.Component{
                     updateStrokeWidth={this.setStrokeWidth}
                     updateColor={this.setColor}
                 />
-                <div className="row toolList pt-2">
+                <div className="border border-dark row toolList pt-2">
                     <div className="pr-3">
                         <input type="radio" value="pen" id="pen" 
                             checked={this.state.selectedName === "pen"} 

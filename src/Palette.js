@@ -9,7 +9,7 @@ export class Palette extends React.Component{
         this.handleStrokeWidthChange = this.handleStrokeWidthChange.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
         this.state = {
-            strokeWidth: 1,
+            strokeWidth: 3,
             color: "#42445A"
         }
 	}
@@ -54,6 +54,7 @@ export class Palette extends React.Component{
             this.palette.hide();
             this.handleColorChange(color, instance);
         });
+        this.props.updateStrokeWidth(this.state.strokeWidth);
     }
     handleColorChange(newColor, instance){
         this.setState({
@@ -71,10 +72,11 @@ export class Palette extends React.Component{
     render(){
         return (
             <div className="row">
-                <div className="colorPalette" >
+                <div className="border border-dark">
+                    <div className="colorPalette"/>
                 </div>
                 <div className="strokeWidthSlider pt-2 pl-3 pr-5">
-                    <input type="range" min="0" max="30"
+                    <input type="range" min="1" max="30"
                         className="slider"
                         value={this.state.strokeWidth}
                         onChange={this.handleStrokeWidthChange}     

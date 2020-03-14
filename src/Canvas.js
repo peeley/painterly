@@ -9,6 +9,7 @@ class Canvas extends React.Component{
         this.handleInput = this.handleInput.bind(this);
         this.handleToolSelect = this.handleToolSelect.bind(this);
         this.versionController = new VersionController();
+        this.clearCanvas = this.clearCanvas.bind(this);
         this.state = {
             tool: null,
             drawSurface: React.createRef(),
@@ -39,9 +40,15 @@ class Canvas extends React.Component{
         let newItem = this.state.tool.handleEvent(event, context);
         if(newItem != null){
             this.versionController.push(newItem);
+            this.clearCanvas();
+            this.versionController.redrawCanvas(this.state.drawSurface);
             console.log(`${JSON.stringify(this.versionController.versionHistory)}`);
         }
         event.preventDefault();
+    }
+    clearCanvas(){
+        let ctx = this.state.drawSurface.current.getContext('2d');
+        this.versionController.clearCanvas(ctx);
     }
     render(){
         return(
@@ -60,10 +67,12 @@ class Canvas extends React.Component{
                         <button onClick={ (event) => {
                             this.versionController.redo(this.state.drawSurface)
                         }}>Redo</button>
-                        <button onClick={ (event) => {
-                            let ctx = this.state.drawSurface.current.getContext('2d');
-                            this.versionController.clearCanvas(ctx);
-                        }}>Clear</button>
+                        <button onClick={ (event) => { 
+                            this.clearCanvas();
+                            this.versionController.wipeHistory()
+                        }}>
+                            Clear
+                        </button>
                     </div>
                 </div>
                 <canvas className="row" id="drawSurface" 

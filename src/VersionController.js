@@ -8,6 +8,7 @@ export class VersionController {
         this.undo = this.undo.bind(this);
         this.redo = this.redo.bind(this);
         this.redrawCanvas = this.redrawCanvas.bind(this);
+        this.wipeHistory = this.wipeHistory.bind(this);
     }
     push(item){
         if(this.currentVersion !== this.versionHistory.length){
@@ -28,6 +29,10 @@ export class VersionController {
             this.currentVersion += 1;
             this.redrawCanvas(drawSurface);
         }
+    }
+    wipeHistory(){
+        this.versionHistory = [];
+        this.currentVersion = 0;
     }
     redrawCanvas(drawSurface){
         let context = drawSurface.current.getContext('2d')

@@ -29,7 +29,7 @@ export class PenTool extends Tool {
                 this.strokeWidth += 1;
             }
         }
-        else if(event.type === "mouseup" || event.type === "mouseleave"){
+        else if(event.type === "mouseup" || (event.type === "mouseleave" && this.mouseDown)){
             this.mouseDown = false;
             let finishedStroke = this.currentStroke;
             this.resetStroke();

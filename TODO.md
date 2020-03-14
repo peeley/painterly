@@ -8,8 +8,9 @@
     - Charts/infographics
 - Add backend & database
     - Join sessions
-    - Save photos
+    - Save photos to acct
     - User auth/accounts and organizations
+- Utility bar at top to download sketch, share link, edit title, etc.
 
 # In Progress
 - UI/UX overhaul

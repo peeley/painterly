@@ -45,20 +45,26 @@ class Canvas extends React.Component{
     }
     render(){
         return(
-            <div className="Canvas">
-                <ToolController 
-                    surface={this.state.drawSurface}
-                    handleToolSelect={this.handleToolSelect}
-                />
-                <button onClick={(event) => {
-                    this.versionController.undo(this.state.drawSurface)
-                }}>
-                    Undo
-                </button>
-                <button onClick={ (event) => {
-                    this.versionController.redo(this.state.drawSurface)
-                }}>Redo</button>
-                <canvas id="drawSurface" 
+            <div className="container Canvas">
+                <div className="row pl-5">
+                    <ToolController 
+                        surface={this.state.drawSurface}
+                        handleToolSelect={this.handleToolSelect}
+                    />
+                    <button onClick={(event) => {
+                        this.versionController.undo(this.state.drawSurface)
+                    }}>
+                        Undo
+                    </button>
+                    <button onClick={ (event) => {
+                        this.versionController.redo(this.state.drawSurface)
+                    }}>Redo</button>
+                    <button onClick={ (event) => {
+                        let ctx = this.state.drawSurface.current.getContext('2d');
+                        this.versionController.clearCanvas(ctx);
+                    }}>Clear</button>
+                </div>
+                <canvas className="row" id="drawSurface" 
                     onMouseDown = {this.handleInput}
                     onMouseMove = {this.handleInput}                    
                     onMouseLeave = {this.handleInput}

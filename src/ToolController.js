@@ -57,20 +57,25 @@ export class ToolController extends React.Component{
     }
     render(){
         return(
-            <div className="controlBar">
+            <div className="row controlBar">
                 <Palette 
                     updateStrokeWidth={this.setStrokeWidth}
                     updateColor={this.setColor}
                 />
-                <input type="radio" value="pen" id="pen" 
-                    checked={this.state.selectedName === "pen"} 
-                    onChange={this.handleChange} />
-                <label htmlFor="pen"> Pen </label>
-
-                <input type="radio" value="rect" id="rect" 
-                    checked={this.state.selectedName === "rect"} 
-                    onChange={this.handleChange} />
-                <label htmlFor="rect"> Rect </label>
+                <div className="row toolList pt-2">
+                    <div className="pr-3">
+                        <input type="radio" value="pen" id="pen" 
+                            checked={this.state.selectedName === "pen"} 
+                            onChange={this.handleChange} />
+                        <label htmlFor="pen"> Pen </label>
+                    </div>
+                    <div className="pr-5">
+                        <input type="radio" value="rect" id="rect" 
+                            checked={this.state.selectedName === "rect"} 
+                            onChange={this.handleChange} />
+                        <label htmlFor="rect"> Rect </label>
+                    </div>
+                </div>
             </div>
         );
     }

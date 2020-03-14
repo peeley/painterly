@@ -70,10 +70,10 @@ export class Palette extends React.Component{
     }
     render(){
         return (
-            <div>
+            <div className="row">
                 <div className="colorPalette" >
                 </div>
-                <div className="strokeWidthSlider">
+                <div className="strokeWidthSlider pt-2 pl-3 pr-5">
                     <input type="range" min="0" max="30"
                         className="slider"
                         value={this.state.strokeWidth}

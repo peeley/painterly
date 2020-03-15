@@ -9,6 +9,8 @@ export class PenTool extends Tool {
         this.joinType = 'round';
     }
     handleEvent(event, context){
+        const xCoord = event.clientX - this.leftOffset;
+        const yCoord = event.clientY - this.topOffset;
         if(event.type === "mousedown"){
             this.mouseDown = true;
             context.save();
@@ -16,32 +18,24 @@ export class PenTool extends Tool {
             context.lineCap = 'round';
             context.lineJoin = this.joinType;
             context.strokeStyle = this.color;
-            let xCoord = event.clientX - this.leftOffset;
-            let yCoord = event.clientY - this.topOffset;
             context.moveTo(xCoord, yCoord);
             this.currentStroke.coords = [[xCoord, yCoord]];
-        }
-        else if(event.type === "wheel"){
-            if(event.deltaY > 0 && this.strokeWidth > 1){
-                this.strokeWidth -= 1; 
-            }
-            else if(event.deltaY < 0 && this.strokeWidth < 30){
-                this.strokeWidth += 1;
-            }
         }
         else if((event.type === "mouseup" || event.type === "mouseleave") && this.mouseDown){
             this.mouseDown = false;
             let finishedStroke = this.currentStroke;
+            finishedStroke.indicator = false;
             this.resetStroke();
             return finishedStroke;
         }
         else if(this.mouseDown && event.type === "mousemove"){
             context.lineWidth = this.strokeWidth;
-            let xCoord = event.clientX - this.leftOffset;
-            let yCoord = event.clientY - this.topOffset;
             context.lineTo(xCoord, yCoord);
-            context.stroke();
             this.currentStroke.coords.push([xCoord, yCoord]);
+            let indicatorStroke = this.currentStroke;
+            indicatorStroke.indicator = true;
+            return indicatorStroke;
+
         }
     }   
     static redoStroke(stroke, context){
@@ -58,6 +52,5 @@ export class PenTool extends Tool {
         }
         context.stroke();
         context.restore();
-        console.log('redoing pen stroke!');
     }
 }

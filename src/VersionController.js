@@ -36,8 +36,10 @@ export class VersionController {
     }
     redrawCanvas(drawSurface){
         let context = drawSurface.current.getContext('2d')
-        this.clearCanvas(context);
         let versionCounter = 1;
+        const width = context.canvas.width;
+        const height = context.canvas.height;
+        context.clearRect(0, 0, width, height);
         while(versionCounter <= this.currentVersion){
             let stroke = this.versionHistory[versionCounter-1];
             switch(stroke.type){
@@ -58,10 +60,5 @@ export class VersionController {
                 versionCounter += 1;
             }
         }
-    }
-    clearCanvas(context){
-        const width = context.canvas.width;
-        const height = context.canvas.height;
-        context.clearRect(0, 0, width, height);
     }
 }

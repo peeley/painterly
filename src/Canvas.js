@@ -46,8 +46,10 @@ class Canvas extends React.Component{
         event.preventDefault();
     }
     clearCanvas(){
-        let ctx = this.state.drawSurface.current.getContext('2d');
-        this.versionController.clearCanvas(ctx);
+        let context = this.state.drawSurface.current.getContext('2d');
+        const width = context.canvas.width;
+        const height = context.canvas.height;
+        context.clearRect(0, 0, width, height);
     }
     render(){
         return(

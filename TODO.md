@@ -4,16 +4,14 @@
     - Image insertion
     - Text
     - Charts/infographics
-- Add backend & database
-    - Join sessions
-    - Save photos to acct
-    - User auth/accounts and organizations
 - Utility bar at top to download sketch, share link, edit title, etc.
 - Zoom in on, pan over sketch
 
 # In Progress
-- Make clearing screen an undo-able action
-    - Create stroke object for clear?
+- Add backend & database
+    - Join sessions
+    - Save photos to acct
+    - User auth/accounts and organizations
     
 # Done
 - Draw on canvas w/ pen, see changes instantly
@@ -25,3 +23,6 @@
     - theming
     - keybinds/ergonomics
 - Indicator/shadow for certain tools
+- Make clearing screen an undo-able action *Note- didn't do, makes for worse
+  user experience overall, feels like not what you'd predict.*
+    - Create stroke object for clear?

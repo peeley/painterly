@@ -18,7 +18,7 @@ class CreatePaintingsTable extends Migration
             $table->foreignId('user_id');
             $table->timestamps();
             $table->string('title');
-            $table->json('strokes');
+            $table->json('strokes')->default('{}');
         });
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Auth\Middleware\Authenticate;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,4 +21,5 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/paint', 'PaintingController@index')->name('paint');
+Route::get('/painting', 'PaintingController@index')->middleware('auth');
+Route::get('/painting/{painting}', 'PaintingController@get');

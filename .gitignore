@@ -5,11 +5,31 @@
 /.pnp
 .pnp.js
 
+# production
+public/build
+public/storage
+
+# misc
+resources/js/.DS_Store
+resources/js/.env.local
+resources/js/.env.development.local
+resources/js/.env.test.local
+resources/js/.env.production.local
+
+.env
+.env.backup
+.env.example
+/vendor
+package-lock.json
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
 # testing
 /coverage
-
-# production
-/build
 
 # misc
 .DS_Store

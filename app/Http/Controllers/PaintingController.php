@@ -20,4 +20,11 @@ class PaintingController extends Controller
     public function show(\App\Painting $painting){
         return view('app');
     }
+    public function getStrokes(\App\Painting $painting){
+        return $painting->strokes;
+    }
+    public function edit(Request $request, \App\Painting $painting){
+        dd($request->input());
+        return $painting->strokes;
+    }
 }

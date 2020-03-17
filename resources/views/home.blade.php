@@ -17,7 +17,11 @@
                     You are logged in!
                     <ul>
                         @foreach ($paintings as $painting)
-                            <li>{{ $painting->title }} </li>
+                            <li>
+                                <a href = {{ env('APP_URL') . "/painting/" . $painting->id }} >
+                                    {{$painting->title }}
+                                </a>
+                            </li>
                         @endforeach
                     </ul>
                 </div>

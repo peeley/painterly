@@ -17,7 +17,7 @@ resources/js/.env.development.local
 resources/js/.env.test.local
 resources/js/.env.production.local
 
-.env
+*.env*
 .env.backup
 .env.example
 vendor/

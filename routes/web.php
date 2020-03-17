@@ -22,4 +22,4 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/painting', 'PaintingController@index')->middleware('auth');
-Route::get('/painting/{painting}', 'PaintingController@get');
+Route::get('/painting/{painting}', 'PaintingController@show');

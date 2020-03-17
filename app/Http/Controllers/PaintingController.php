@@ -17,9 +17,7 @@ class PaintingController extends Controller
         return redirect("/painting/{$painting->id}");
     }
     
-    public function get(\App\Painting $painting){
-        return $painting;
+    public function show(\App\Painting $painting){
+        return view('app');
     }
-
-
 }

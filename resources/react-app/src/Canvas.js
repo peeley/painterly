@@ -14,6 +14,7 @@ class Canvas extends React.Component{
             tool: null,
             drawSurface: React.createRef(),
         };
+        console.log(`painting id: ${props.match.params.paintingId}`);
     }
     componentDidMount(){
         document.addEventListener('keydown', (event) => {

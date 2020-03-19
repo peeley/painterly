@@ -6,7 +6,7 @@ function App() {
     return (
         <Router>
             <Switch>
-                <Route path="/painting/:paintingId" component={Canvas} />
+                <Route path="/painting/:id" component={Canvas} />
             </Switch>
         </Router>
     );

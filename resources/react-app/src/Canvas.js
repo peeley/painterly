@@ -12,9 +12,20 @@ class Canvas extends React.Component{
         this.clearCanvas = this.clearCanvas.bind(this);
         this.state = {
             tool: null,
+            loading: true,
             drawSurface: React.createRef(),
         };
-        console.log(`painting id: ${props.match.params.paintingId}`);
+        fetch(`http://localhost:8000/api/p/${props.match.params.id}`)
+        .then( response => {
+            console.log(response);
+            return response.json()
+        })
+        .then( data => {
+            console.log(data);
+            this.versionController.versionHistory = data;
+            this.versionController.currentVersion = data.length;
+            this.versionController.redrawCanvas(this.state.drawSurface);
+        });
     }
     componentDidMount(){
         document.addEventListener('keydown', (event) => {
@@ -41,18 +52,12 @@ class Canvas extends React.Component{
         let newItem = this.state.tool.handleEvent(event, context);
         if(newItem != null){
             this.versionController.push(newItem);
-            fetch('http://localhost:8000/api/p/1', {
+            fetch(`http://localhost:8000/api/p/${this.props.match.params.id}`, {
                 method: 'POST',
                 body: JSON.stringify(this.versionController.versionHistory),
                 headers: {
                     'Content-Type' : 'application/json'
                 }
-            })
-            .then( response => {
-                return response.json()
-            })
-            .then( data => {
-                console.log(data)
             });
             this.clearCanvas();
             this.versionController.redrawCanvas(this.state.drawSurface);

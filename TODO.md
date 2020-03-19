@@ -6,6 +6,7 @@
     - Charts/infographics
 - Utility bar at top to download sketch, share link, edit title, etc.
 - Zoom in on, pan over sketch
+- Allow for other users in sessions to see strokes in progress (indicators)
 
 # In Progress
 - Add backend & database

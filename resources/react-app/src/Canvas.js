@@ -10,21 +10,13 @@ class Canvas extends React.Component{
         this.handleToolSelect = this.handleToolSelect.bind(this);
         this.versionController = new VersionController();
         this.clearCanvas = this.clearCanvas.bind(this);
+        this.pushCanvas = this.pushCanvas.bind(this);
+        this.getCanvas = this.getCanvas.bind(this);
         this.state = {
             tool: null,
             loading: true,
             drawSurface: React.createRef(),
         };
-        fetch(`http://localhost:8000/api/p/${props.match.params.id}`)
-        .then( response => {
-            return response.json()
-        })
-        .then( data => {
-            for(const item of data){
-                this.versionController.push(item);
-            }
-            this.versionController.redrawCanvas(this.state.drawSurface);
-        });
     }
     componentDidMount(){
         document.addEventListener('keydown', (event) => {
@@ -52,19 +44,7 @@ class Canvas extends React.Component{
         if(newItem != null){
             this.versionController.push(newItem);
             if(!newItem.indicator){
-                fetch(`http://localhost:8000/api/p/${this.props.match.params.id}`, {
-                    method: 'POST',
-                    body: JSON.stringify(this.versionController.versionHistory),
-                    headers: {
-                        'Content-Type' : 'application/json'
-                    }
-                })
-                .then( response => {
-                    return response.json()
-                })
-                .then( data => {
-                    console.log(data)
-                });
+                this.pushCanvas();
             }
             this.clearCanvas();
             this.versionController.redrawCanvas(this.state.drawSurface);
@@ -76,6 +56,33 @@ class Canvas extends React.Component{
         const width = context.canvas.width;
         const height = context.canvas.height;
         context.clearRect(0, 0, width, height);
+    }
+    pushCanvas(){
+        fetch(`http://localhost:8000/api/p/${this.props.match.params.id}`, {
+            method: 'POST',
+            body: JSON.stringify(this.versionController.versionHistory),
+            headers: {
+                'Content-Type' : 'application/json'
+            }
+        })
+        .then( response => {
+            return response.json()
+        })
+        .then( data => {
+            console.log(data)
+        });
+    }
+    getCanvas(){
+        fetch(`http://localhost:8000/api/p/${this.props.match.params.id}`)
+        .then( response => {
+            return response.json()
+        })
+        .then( data => {
+            for(const item of data){
+                this.versionController.push(item);
+            }
+            this.versionController.redrawCanvas(this.state.drawSurface);
+        });
     }
     render(){
         return(

@@ -41,6 +41,19 @@ class Canvas extends React.Component{
         let newItem = this.state.tool.handleEvent(event, context);
         if(newItem != null){
             this.versionController.push(newItem);
+            fetch('http://localhost:8000/api/p/1', {
+                method: 'POST',
+                body: JSON.stringify(this.versionController.versionHistory),
+                headers: {
+                    'Content-Type' : 'application/json'
+                }
+            })
+            .then( response => {
+                return response.json()
+            })
+            .then( data => {
+                console.log(data)
+            });
             this.clearCanvas();
             this.versionController.redrawCanvas(this.state.drawSurface);
         }

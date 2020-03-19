@@ -26,7 +26,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('edit-painting', function($user, $painting) {
-            return $user->id === $painting->userId;
+            return $user->id === (int) $painting->user_id;
         });
     }
 }

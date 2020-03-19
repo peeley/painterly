@@ -9,6 +9,7 @@
 public/build
 public/hot
 public/storage
+public/
 
 # misc
 resources/js/.DS_Store

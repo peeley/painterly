@@ -12,6 +12,7 @@ export class VersionController {
     }
     push(item){
         if(this.currentVersion !== this.versionHistory.length){
+            console.log('slicing history');
             this.versionHistory = this.versionHistory.slice(
                                     0, this.currentVersion);
         }
@@ -20,10 +21,13 @@ export class VersionController {
     }
     undo(drawSurface){
         console.log(`undo: current ${this.currentVersion} total ${this.versionHistory.length}`);
+        console.log(`history before: ${JSON.stringify(this.versionHistory)}`);
         if(this.currentVersion > 0){
             this.currentVersion -= 1;
             this.redrawCanvas(drawSurface);
         }
+        console.log(`historya after: ${JSON.stringify(this.versionHistory)}`);
+        console.log(`\n`);
     }
     redo(drawSurface){
         if(this.currentVersion < this.versionHistory.length){

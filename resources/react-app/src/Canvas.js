@@ -20,9 +20,12 @@ class Canvas extends React.Component{
             return response.json()
         })
         .then( data => {
+            console.log(`server hist: ${JSON.stringify(data)}`);
             for(const item of data){
                 this.versionController.push(item);
             }
+            console.log(`synced hist: ${this.versionController.versionHistory.length}`);
+            console.log(`current version fater: ${this.versionController.currentVersion}`);
             this.versionController.redrawCanvas(this.state.drawSurface);
         });
     }
@@ -57,13 +60,6 @@ class Canvas extends React.Component{
                 headers: {
                     'Content-Type' : 'application/json'
                 }
-            })
-            .then( response => {
-                console.log(`write response: ${JSON.stringify(response)}`);
-                return response.json()
-            })
-            .then( data => {
-                console.log(`write data: ${JSON.stringify(data)}`);
             });
             this.clearCanvas();
             this.versionController.redrawCanvas(this.state.drawSurface);

@@ -28,6 +28,6 @@ class PaintingController extends Controller
         Gate::authorize('edit-painting', $painting);
         $painting->strokes = $request->getContent();
         $painting->save();
-        return response()->json([ 'debug' => 'saved!' ]);
+        return response()->json($painting->strokes);
     }
 }

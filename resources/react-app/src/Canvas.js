@@ -17,13 +17,12 @@ class Canvas extends React.Component{
         };
         fetch(`http://localhost:8000/api/p/${props.match.params.id}`)
         .then( response => {
-            console.log(response);
             return response.json()
         })
         .then( data => {
-            console.log(data);
-            this.versionController.versionHistory = data;
-            this.versionController.currentVersion = data.length;
+            for(const item of data){
+                this.versionController.push(item);
+            }
             this.versionController.redrawCanvas(this.state.drawSurface);
         });
     }
@@ -58,6 +57,13 @@ class Canvas extends React.Component{
                 headers: {
                     'Content-Type' : 'application/json'
                 }
+            })
+            .then( response => {
+                console.log(`write response: ${JSON.stringify(response)}`);
+                return response.json()
+            })
+            .then( data => {
+                console.log(`write data: ${JSON.stringify(data)}`);
             });
             this.clearCanvas();
             this.versionController.redrawCanvas(this.state.drawSurface);

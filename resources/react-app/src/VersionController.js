@@ -19,6 +19,7 @@ export class VersionController {
         this.currentVersion += 1;
     }
     undo(drawSurface){
+        console.log(`undo: current ${this.currentVersion} total ${this.versionHistory.length}`);
         if(this.currentVersion > 0){
             this.currentVersion -= 1;
             this.redrawCanvas(drawSurface);

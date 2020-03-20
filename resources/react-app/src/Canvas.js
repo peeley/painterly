@@ -32,6 +32,7 @@ class Canvas extends React.Component{
                 }
             }
         });
+        this.getCanvas();
     }
     handleToolSelect(tool){
         this.setState({
@@ -83,6 +84,9 @@ class Canvas extends React.Component{
             }
             this.versionController.redrawCanvas(this.state.drawSurface);
         });
+        this.setState({
+            loading: false
+        });
     }
     render(){
         return(
@@ -116,8 +120,7 @@ class Canvas extends React.Component{
                     onMouseUp = {this.handleInput}
                     height = { window.innerHeight * .9 }
                     width = { window.innerWidth * .95 }
-                    ref={ this.state.drawSurface }
-                />
+                    ref={ this.state.drawSurface } />
             </div>
         )
     }

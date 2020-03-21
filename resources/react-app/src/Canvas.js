@@ -67,8 +67,7 @@ class Canvas extends React.Component{
             }
         })
         .then( response => {
-            console.log(`push response: ${JSON.stringify
-                (response)}`);
+            console.log(`push response: ${JSON.stringify(response)}`);
             return response.json();
         })
         .then( data => {

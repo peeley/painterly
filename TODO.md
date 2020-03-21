@@ -9,6 +9,7 @@
 - Allow for other users in sessions to see strokes in progress (indicators)
 - Synchronise canvas after clearing backend
 - Edit build script to detect changes in React app, build automatically
+- Distinguish between permissions to view/edit sketch
 
 # In Progress
 - Add backend & database

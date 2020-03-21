@@ -18,7 +18,7 @@ class PaintingController extends Controller
     }
     
     public function show(\App\Painting $painting){
-        return view('app');
+        return view('app', ['title' => $painting->title]);
     }
     public function getStrokes(\App\Painting $painting){
         return $painting->strokes;

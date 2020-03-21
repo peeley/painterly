@@ -15,6 +15,7 @@
                     @endif
 
                     You are logged in!
+                    <a href= {{ env('APP_URL') . "/painting" }}>Create New Painting</a>
                     <ul>
                         @foreach ($paintings as $painting)
                             <li>

@@ -7,6 +7,8 @@
 - Utility bar at top to download sketch, share link, edit title, etc.
 - Zoom in on, pan over sketch
 - Allow for other users in sessions to see strokes in progress (indicators)
+- Synchronise canvas after clearing backend
+- Edit build script to detect changes in React app, build automatically
 
 # In Progress
 - Add backend & database

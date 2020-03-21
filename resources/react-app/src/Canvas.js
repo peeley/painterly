@@ -67,10 +67,12 @@ class Canvas extends React.Component{
             }
         })
         .then( response => {
-            return response.json()
+            console.log(`push response: ${JSON.stringify
+                (response)}`);
+            return response.json();
         })
         .then( data => {
-            console.log(data)
+            console.log(`push response data: ${JSON.stringify(data)}`);
         });
     }
     getCanvas(){

@@ -12,8 +12,7 @@ class PaintingController extends Controller
     public function index(){
         $user = Auth::user();
         $painting = $user->paintings()->create([
-            'title' => 'Blank painting',
-            'strokes' => '{}'
+            'strokes' => json_encode([])
         ]);
         return redirect("/painting/{$painting->id}");
     }
@@ -25,6 +24,9 @@ class PaintingController extends Controller
         return $painting->strokes;
     }
     public function editStrokes(Request $request, \App\Painting $painting){
+        if(!Auth::check()){
+            return response()->json(['debug' => 'redirected']);
+        }
         Gate::authorize('edit-painting', $painting);
         $painting->strokes = $request->getContent();
         $painting->save();

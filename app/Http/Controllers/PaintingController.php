@@ -21,14 +21,14 @@ class PaintingController extends Controller
         return view('app', ['title' => $painting->title]);
     }
     public function getStrokes(\App\Painting $painting){
-        return $painting->strokes;
+        return $painting;
     }
     public function editStrokes(Request $request, \App\Painting $painting){
         if(!Auth::check()){
             return response()->json(['debug' => 'redirected']);
         }
         Gate::authorize('edit-painting', $painting);
-        $painting->strokes = $request->getContent();
+        $painting->strokes = json_decode($request->getContent());
         $painting->save();
         return response()->json($painting->strokes);
     }

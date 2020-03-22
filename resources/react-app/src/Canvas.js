@@ -14,6 +14,7 @@ class Canvas extends React.Component{
         this.getCanvas = this.getCanvas.bind(this);
         this.state = {
             tool: null,
+            title: null,
             loading: true,
             drawSurface: React.createRef(),
         };
@@ -67,11 +68,11 @@ class Canvas extends React.Component{
             }
         })
         .then( response => {
-            console.log(`push response: ${JSON.stringify(response)}`);
+            //console.log(`push response: ${JSON.stringify(response)}`);
             return response.json();
         })
         .then( data => {
-            console.log(`push response data: ${JSON.stringify(data)}`);
+            //console.log(`push response data: ${JSON.stringify(data)}`);
         });
     }
     getCanvas(){
@@ -80,7 +81,10 @@ class Canvas extends React.Component{
             return response.json()
         })
         .then( data => {
-            for(const item of data){
+            this.setState({
+                title: data.title
+            });
+            for(const item of data.strokes){
                 this.versionController.push(item);
             }
             this.versionController.redrawCanvas(this.state.drawSurface);
@@ -92,6 +96,10 @@ class Canvas extends React.Component{
     render(){
         return(
             <div className="container col px-5 Canvas">
+                <div className="row">
+                    <h3>{this.state.title}</h3>
+                    <button type="button" className="btn btn-sm">Button</button>
+                </div>
                 <div className="row pl-5">
                     <ToolController 
                         surface={this.state.drawSurface}

@@ -97,7 +97,10 @@ class Canvas extends React.Component{
     render(){
         return(
             <div className="container col px-5 Canvas">
-                <MenuBar title={this.state.title} />
+                <MenuBar 
+                    title={this.state.title}
+                    surface={this.state.drawSurface} 
+                />
                 <div className="row pl-5">
                     <ToolController 
                         surface={this.state.drawSurface}

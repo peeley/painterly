@@ -12,7 +12,7 @@ class PaintingController extends Controller
     public function index(){
         $user = Auth::user();
         $painting = $user->paintings()->create([
-            'strokes' => json_encode([])
+            'strokes' => []
         ]);
         return redirect("/painting/{$painting->id}");
     }

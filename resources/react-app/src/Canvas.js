@@ -2,6 +2,7 @@ import React from 'react';
 import './Canvas.css';
 import { ToolController } from './ToolController.js';
 import { VersionController } from './VersionController.js';
+import { MenuBar } from './MenuBar.js';
 
 class Canvas extends React.Component{
     constructor(props){
@@ -96,10 +97,7 @@ class Canvas extends React.Component{
     render(){
         return(
             <div className="container col px-5 Canvas">
-                <div className="row">
-                    <h3>{this.state.title}</h3>
-                    <button type="button" className="btn btn-sm">Button</button>
-                </div>
+                <MenuBar title={this.state.title} />
                 <div className="row pl-5">
                     <ToolController 
                         surface={this.state.drawSurface}

@@ -11,9 +11,7 @@ class PaintingController extends Controller
 {
     public function index(){
         $user = Auth::user();
-        $painting = $user->paintings()->create([
-            'strokes' => []
-        ]);
+        $painting = $user->paintings()->create();
         return redirect("/painting/{$painting->id}");
     }
     

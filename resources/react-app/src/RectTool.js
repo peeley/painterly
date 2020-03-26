@@ -8,7 +8,7 @@ export class RectTool extends Tool {
         this.startY = null;
         this.mouseDown = false;
     }
-    handleEvent(event, context){
+    handleEvent = (event, context) => {
         if(event.type === "mousedown"){
             context.beginPath();
             this.mouseDown = true;

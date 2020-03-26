@@ -5,10 +5,6 @@ export class VersionController {
     constructor(){
         this.versionHistory = [];
         this.currentVersion = 0;
-        this.undo = this.undo.bind(this);
-        this.redo = this.redo.bind(this);
-        this.redrawCanvas = this.redrawCanvas.bind(this);
-        this.wipeHistory = this.wipeHistory.bind(this);
     }
     push(item){
         if(this.currentVersion !== this.versionHistory.length){
@@ -19,7 +15,7 @@ export class VersionController {
         this.versionHistory.push(item);
         this.currentVersion += 1;
     }
-    undo(drawSurface){
+    undo = (drawSurface) => {
         console.log(`undo: current ${this.currentVersion} total ${this.versionHistory.length}`);
         console.log(`history before: ${JSON.stringify(this.versionHistory)}`);
         if(this.currentVersion > 0){
@@ -29,17 +25,17 @@ export class VersionController {
         console.log(`historya after: ${JSON.stringify(this.versionHistory)}`);
         console.log(`\n`);
     }
-    redo(drawSurface){
+    redo = (drawSurface) => {
         if(this.currentVersion < this.versionHistory.length){
             this.currentVersion += 1;
             this.redrawCanvas(drawSurface);
         }
     }
-    wipeHistory(){
+    wipeHistory = () => {
         this.versionHistory = [];
         this.currentVersion = 0;
     }
-    redrawCanvas(drawSurface){
+    redrawCanvas = (drawSurface) => {
         let context = drawSurface.current.getContext('2d')
         let versionCounter = 1;
         const width = context.canvas.width;

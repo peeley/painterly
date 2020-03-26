@@ -4,11 +4,10 @@ export class PenTool extends Tool {
     constructor(){
         super('pen');
         this.toolName = 'pen';
-        this.handleEvent = this.handleEvent.bind(this);
         this.strokeWidth = 3;
         this.joinType = 'round';
     }
-    handleEvent(event, context){
+    handleEvent = (event, context) => {
         const xCoord = event.clientX - this.leftOffset;
         const yCoord = event.clientY - this.topOffset;
         if(event.type === "mousedown"){

@@ -7,12 +7,7 @@ import { MenuBar } from './MenuBar.js';
 class Canvas extends React.Component{
     constructor(props){
         super(props);
-        this.handleInput = this.handleInput.bind(this);
-        this.handleToolSelect = this.handleToolSelect.bind(this);
         this.versionController = new VersionController();
-        this.clearCanvas = this.clearCanvas.bind(this);
-        this.pushCanvas = this.pushCanvas.bind(this);
-        this.getCanvas = this.getCanvas.bind(this);
         this.state = {
             tool: null,
             title: null,
@@ -36,12 +31,12 @@ class Canvas extends React.Component{
         });
         this.getCanvas();
     }
-    handleToolSelect(tool){
+    handleToolSelect = tool => {
         this.setState({
             tool: tool
         });
     }
-    handleInput(event){
+    handleInput = event => {
         let context = this.state.drawSurface.current.getContext('2d');
         let newItem = this.state.tool.handleEvent(event, context);
         if(newItem != null){
@@ -54,13 +49,13 @@ class Canvas extends React.Component{
         }
         event.preventDefault();
     }
-    clearCanvas(){
+    clearCanvas = () => {
         let context = this.state.drawSurface.current.getContext('2d');
         const width = context.canvas.width;
         const height = context.canvas.height;
         context.clearRect(0, 0, width, height);
     }
-    pushCanvas(){
+    pushCanvas = () => {
         fetch(`http://localhost:8000/api/p/${this.props.match.params.id}`, {
             method: 'POST',
             body: JSON.stringify(this.versionController.versionHistory),
@@ -76,7 +71,7 @@ class Canvas extends React.Component{
             //console.log(`push response data: ${JSON.stringify(data)}`);
         });
     }
-    getCanvas(){
+    getCanvas = () => {
         fetch(`http://localhost:8000/api/p/${this.props.match.params.id}`)
         .then( response => {
             return response.json()

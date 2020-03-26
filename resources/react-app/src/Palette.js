@@ -5,9 +5,6 @@ import Pickr from '@simonwep/pickr';
 export class Palette extends React.Component{
     constructor(props){
         super(props);
-        this.handleColorChange = this.handleColorChange.bind(this);
-        this.handleStrokeWidthChange = this.handleStrokeWidthChange.bind(this);
-        this.componentDidMount = this.componentDidMount.bind(this);
         this.state = {
             strokeWidth: 3,
             color: "#42445A"
@@ -56,13 +53,13 @@ export class Palette extends React.Component{
         });
         this.props.updateStrokeWidth(this.state.strokeWidth);
     }
-    handleColorChange(newColor, instance){
+    handleColorChange = (newColor, instance) => {
         this.setState({
             color: newColor.toRGBA().toString()
         });
         this.props.updateColor(this.state.color);
     }
-    handleStrokeWidthChange(event){
+    handleStrokeWidthChange = (event) => {
         this.setState({
             strokeWidth: event.target.value
         });

@@ -17,10 +17,6 @@ export class ToolController extends React.Component{
         }
         this.selectedTool = this.toolSet['pen'];
         this.props.handleToolSelect(this.selectedTool);
-        this.handleChange = this.handleChange.bind(this);
-        this.selectNewTool = this.selectNewTool.bind(this);
-        this.setStrokeWidth = this.setStrokeWidth.bind(this);
-        this.setColor = this.setColor.bind(this);
         this.state = {
             selectedName: "pen"
         };
@@ -32,21 +28,21 @@ export class ToolController extends React.Component{
             }
         }
     }
-    handleChange(event){
+    handleChange = (event) => {
         let toolName = event.target.value;
         this.setState({
             selectedName: toolName
         });
         this.selectNewTool(toolName);
     }
-    selectNewTool(toolName){
+    selectNewTool = (toolName) => {
         this.selectedTool = this.toolSet[toolName];
         this.props.handleToolSelect(this.selectedTool);
     }
-    setStrokeWidth(width){
+    setStrokeWidth = (width) => {
         this.selectedTool.setStrokeWidth(width);
     }
-    setColor(color){
+    setColor = (color) => {
         for(let toolName in this.toolSet){
             this.toolSet[toolName].setColor(color);
         }

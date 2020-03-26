@@ -5,6 +5,7 @@ export class MenuBar extends React.Component {
         super(props);
         this.state = {
             title: props.title,
+            titleSelected: false,
             imgLink: ""
         }
     }
@@ -22,10 +23,25 @@ export class MenuBar extends React.Component {
             imgLink: imgUrl
         });
     }
+    postTitle = () => {
+        this.setState({
+            titleSelected: false
+        });
+    }
     render(){
         return (
             <div className="row">
-                <h3>{this.state.title}</h3>
+                { this.state.titleSelected ?
+                    ( <div>
+                        <input type="text" 
+                            value={this.state.title}
+                            placeholder="Edit Title" />
+                        <button onClick={this.postTitle}>Save Title</button>
+                    </div> ) :
+                    ( <h3 onDoubleClick={() => this.setState({ titleSelected: true })}>
+                        {this.state.title}
+                    </h3> )
+                }
                 <a className="btn btn-primary btn-sm" 
                     onMouseEnter={this.updateImgLink}
                     href={this.state.imgLink} 

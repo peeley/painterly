@@ -4,9 +4,11 @@ export class ShareModal extends React.Component {
     constructor(props){
         super(props);
         this.shareLink = window.location.href;
+        this.linkTextArea = React.createRef();
     }
     copyLink = () => {
-        console.log(`share link: ${window.location.href}`);
+        this.linkTextArea.current.select();
+        document.execCommand('copy');
     }
     render(){
         return (
@@ -23,8 +25,8 @@ export class ShareModal extends React.Component {
                                 <h3>Share Link</h3>
                             </div>
                             <div className="row modal-body">
-                                <input id="linkTextArea" type="text" 
-                                    value={this.shareLink} readOnly />
+                                <input type="text" value={this.shareLink} 
+                                    ref={this.linkTextArea} readOnly />
                                 <button onClick={this.copyLink}>
                                     Copy
                                 </button>

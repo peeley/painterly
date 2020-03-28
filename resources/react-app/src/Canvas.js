@@ -69,7 +69,7 @@ class Canvas extends React.Component{
             }
             else if(response.status === 403){ // not authorized
                 alert('You do not have permissions to edit this item.');
-                this.versionController.undo();
+                this.versionController.undo(this.state.drawSurface);
             }
         })
     }
@@ -111,7 +111,9 @@ class Canvas extends React.Component{
                         </button>
                         <button onClick={ (event) => {
                             this.versionController.redo(this.state.drawSurface)
-                        }}>Redo</button>
+                        }}>
+                            Redo
+                        </button>
                         <button onClick={ (event) => { 
                             this.clearCanvas();
                             this.versionController.wipeHistory()
@@ -127,7 +129,7 @@ class Canvas extends React.Component{
                     onMouseUp = {this.handleInput}
                     height = { window.innerHeight * .9 }
                     width = { window.innerWidth * .95 }
-                    ref={ this.state.drawSurface } />
+                    ref = { this.state.drawSurface } />
             </div>
         )
     }

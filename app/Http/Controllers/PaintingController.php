@@ -23,7 +23,7 @@ class PaintingController extends Controller
     }
     public function editStrokes(Request $request, \App\Painting $painting){
         if(!Auth::check()){
-            return response()->json(['debug' => 'redirected']);
+            return response('Not Logged In', 401);
         }
         Gate::authorize('edit-painting', $painting);
         $painting->strokes = json_decode($request->getContent());

@@ -64,12 +64,14 @@ class Canvas extends React.Component{
             }
         })
         .then( response => {
-            //console.log(`push response: ${JSON.stringify(response)}`);
-            return response.json();
+            if(response.status === 401){ // not logged in
+                window.location.replace('http://localhost:8000/login');
+            }
+            else if(response.status === 403){ // not authorized
+                alert('You do not have permissions to edit this item.');
+                this.versionController.undo();
+            }
         })
-        .then( data => {
-            //console.log(`push response data: ${JSON.stringify(data)}`);
-        });
     }
     getCanvas = () => {
         fetch(`http://localhost:8000/api/p/${this.props.match.params.id}`)

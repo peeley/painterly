@@ -1,4 +1,5 @@
 import React from 'react';
+import { ShareModal } from './ShareModal.js';
 
 export class MenuBar extends React.Component {
     constructor(props){
@@ -28,9 +29,6 @@ export class MenuBar extends React.Component {
             titleSelected: false
         });
     }
-    copyLink = () => {
-        console.log(`share link: ${window.location.href}`);
-    }
     render(){
         return (
             <div className="row">
@@ -51,9 +49,7 @@ export class MenuBar extends React.Component {
                     download={`sketch.jpg`}>
                     Save
                 </a>
-                <button onClick={this.copyLink}>
-                    Share Link
-                </button>
+                <ShareModal />
             </div>
         );
     }

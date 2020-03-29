@@ -91,6 +91,18 @@ class Canvas extends React.Component{
             loading: false
         });
     }
+    zoomIn = () => {
+        let ctx = this.state.drawSurface.current.getContext('2d');
+        this.clearCanvas();
+        ctx.scale(2, 2);
+        this.versionController.redrawCanvas(this.state.drawSurface);
+    }
+    zoomOut = () => {
+        let ctx = this.state.drawSurface.current.getContext('2d');
+        this.clearCanvas();
+        ctx.scale(0.5, 0.5);
+        this.versionController.redrawCanvas(this.state.drawSurface);
+    }
     render(){
         return(
             <div className="container col px-5 Canvas">
@@ -119,6 +131,12 @@ class Canvas extends React.Component{
                             this.versionController.wipeHistory()
                         }}>
                             Clear
+                        </button>
+                        <button onClick={this.zoomIn}>
+                            Zoom In
+                        </button>
+                        <button onClick={this.zoomOut}>
+                            Zoom Out
                         </button>
                     </div>
                 </div>

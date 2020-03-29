@@ -13,6 +13,10 @@
 
 # In Progress
 - Zoom in on, pan over sketch
+    - Fix mouse coordinate offsets when zoomed
+    - Zoom in at mouse location
+    - Zoom hotkeys
+    - Reset button zoom level to default, zoom level indicators
     
 # Done
 - Draw on canvas w/ pen, see changes instantly

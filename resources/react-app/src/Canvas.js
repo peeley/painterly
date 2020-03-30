@@ -108,6 +108,7 @@ class Canvas extends React.Component{
         ctx.resetTransform();
         ctx.scale(this.scaleFactor, this.scaleFactor);
         this.versionController.redrawCanvas(this.state.drawSurface);
+        this.state.tool.setOffsets(this.state.drawSurface, this.scaleFactor);
     }
     render(){
         return(

@@ -14,6 +14,7 @@ class Canvas extends React.Component{
             loading: true,
             drawSurface: React.createRef(),
         };
+        this.scaleFactor = 1;
     }
     componentDidMount(){
         document.addEventListener('keydown', (event) => {
@@ -38,6 +39,8 @@ class Canvas extends React.Component{
     }
     handleInput = event => {
         let context = this.state.drawSurface.current.getContext('2d');
+        event.clientX /= this.scaleFactor;
+        event.clientY /= this.scaleFactor;
         let newItem = this.state.tool.handleEvent(event, context);
         if(newItem != null){
             this.versionController.push(newItem);
@@ -92,15 +95,18 @@ class Canvas extends React.Component{
         });
     }
     zoomIn = () => {
-        let ctx = this.state.drawSurface.current.getContext('2d');
-        this.clearCanvas();
-        ctx.scale(2, 2);
-        this.versionController.redrawCanvas(this.state.drawSurface);
+        this.scaleFactor *= 2;
+        this.scaleCanvas();
     }
     zoomOut = () => {
+        this.scaleFactor /= 2;
+        this.scaleCanvas();
+    }
+    scaleCanvas = () => {
         let ctx = this.state.drawSurface.current.getContext('2d');
         this.clearCanvas();
-        ctx.scale(0.5, 0.5);
+        ctx.resetTransform();
+        ctx.scale(this.scaleFactor, this.scaleFactor);
         this.versionController.redrawCanvas(this.state.drawSurface);
     }
     render(){

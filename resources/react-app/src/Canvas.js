@@ -18,6 +18,7 @@ class Canvas extends React.Component{
     }
     componentDidMount(){
         document.addEventListener('keydown', (event) => {
+            console.log(event.key);
             if(event.ctrlKey){
                 switch(event.key){
                     case 'z':
@@ -110,6 +111,14 @@ class Canvas extends React.Component{
             scaleFactor: 1
         }, () => this.scaleCanvas());
     }
+    handleZoom = (event) => {
+        if(event.deltaY < 0){
+            this.zoomIn();
+        }
+        else{
+            this.zoomOut();
+        }
+    }
     scaleCanvas = () => {
         let ctx = this.state.drawSurface.current.getContext('2d');
         this.clearCanvas();
@@ -165,6 +174,7 @@ class Canvas extends React.Component{
                     onMouseMove = {this.handleInput}                    
                     onMouseLeave = {this.handleInput}
                     onMouseUp = {this.handleInput}
+                    onWheel = {this.handleZoom}
                     height = { window.innerHeight * .9 }
                     width = { window.innerWidth * .95 }
                     ref = { this.state.drawSurface } />

@@ -13,8 +13,8 @@ class Canvas extends React.Component{
             title: null,
             loading: true,
             drawSurface: React.createRef(),
+            scaleFactor: 1
         };
-        this.scaleFactor = 1;
     }
     componentDidMount(){
         document.addEventListener('keydown', (event) => {
@@ -35,12 +35,13 @@ class Canvas extends React.Component{
     handleToolSelect = tool => {
         this.setState({
             tool: tool
-        });
+        }, () => this.state.tool.setOffsets(this.state.drawSurface, 
+                                            this.state.scaleFactor));
     }
     handleInput = event => {
         let context = this.state.drawSurface.current.getContext('2d');
-        event.clientX /= this.scaleFactor;
-        event.clientY /= this.scaleFactor;
+        event.clientX /= this.state.scaleFactor;
+        event.clientY /= this.state.scaleFactor;
         let newItem = this.state.tool.handleEvent(event, context);
         if(newItem != null){
             this.versionController.push(newItem);
@@ -95,20 +96,28 @@ class Canvas extends React.Component{
         });
     }
     zoomIn = () => {
-        this.scaleFactor *= 2;
-        this.scaleCanvas();
+        this.setState({
+            scaleFactor: this.state.scaleFactor * 2
+        }, () => this.scaleCanvas());
     }
     zoomOut = () => {
-        this.scaleFactor /= 2;
-        this.scaleCanvas();
+        this.setState({
+            scaleFactor: this.state.scaleFactor / 2
+        }, () => this.scaleCanvas());
+    }
+    resetZoom = () => {
+        this.setState({
+            scaleFactor: 1
+        }, () => this.scaleCanvas());
     }
     scaleCanvas = () => {
         let ctx = this.state.drawSurface.current.getContext('2d');
         this.clearCanvas();
         ctx.resetTransform();
-        ctx.scale(this.scaleFactor, this.scaleFactor);
+        ctx.scale(this.state.scaleFactor, this.state.scaleFactor);
         this.versionController.redrawCanvas(this.state.drawSurface);
-        this.state.tool.setOffsets(this.state.drawSurface, this.scaleFactor);
+        this.state.tool.setOffsets(this.state.drawSurface, 
+                                   this.state.scaleFactor);
     }
     render(){
         return(
@@ -142,8 +151,12 @@ class Canvas extends React.Component{
                         <button onClick={this.zoomIn}>
                             Zoom In
                         </button>
+                        <span>Zoom Level: {this.state.scaleFactor}x </span>
                         <button onClick={this.zoomOut}>
                             Zoom Out
+                        </button>
+                        <button onClick={this.resetZoom}>
+                            Reset Zoom
                         </button>
                     </div>
                 </div>

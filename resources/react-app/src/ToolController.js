@@ -2,6 +2,7 @@ import React from 'react';
 import { Palette } from './Palette.js';
 import { PenTool } from './PenTool.js';
 import { RectTool } from './RectTool.js';
+import { PanTool } from './PanTool.js';
 
 export class ToolController extends React.Component{
     /* TODO : update when static fields are widely compatible
@@ -13,7 +14,8 @@ export class ToolController extends React.Component{
         super(props);
         this.toolSet = {
             'pen': new PenTool(),
-            'rect': new RectTool()
+            'rect': new RectTool(),
+            'pan' : new PanTool(),
         }
         this.selectedTool = this.toolSet['pen'];
         this.props.handleToolSelect(this.selectedTool);
@@ -61,11 +63,17 @@ export class ToolController extends React.Component{
                             onChange={this.handleChange} />
                         <label htmlFor="pen"> Pen </label>
                     </div>
-                    <div className="pr-5">
+                    <div className="pr-3">
                         <input type="radio" value="rect" id="rect" 
                             checked={this.state.selectedName === "rect"} 
                             onChange={this.handleChange} />
                         <label htmlFor="rect"> Rect </label>
+                    </div>
+                    <div className="pr-5">
+                        <input type="radio" value="pan" id="pan" 
+                            checked={this.state.selectedName === "pan"} 
+                            onChange={this.handleChange} />
+                        <label htmlFor="pan"> Pan </label>
                     </div>
                 </div>
             </div>

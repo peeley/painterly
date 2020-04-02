@@ -41,13 +41,16 @@ class Canvas extends React.Component{
     }
     handleInput = event => {
         let context = this.state.drawSurface.current.getContext('2d');
+        if(event.buttons === 4){
+            console.log('panning');
+        }
         event.clientX /= this.state.scaleFactor;
         event.clientY /= this.state.scaleFactor;
         let newItem = this.state.tool.handleEvent(event, context);
         if(newItem != null){
             this.versionController.push(newItem);
             if(!newItem.indicator){
-                this.pushCanvas();
+                //this.pushCanvas();
             }
             this.clearCanvas();
             this.versionController.redrawCanvas(this.state.drawSurface);

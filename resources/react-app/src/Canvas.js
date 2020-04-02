@@ -42,7 +42,7 @@ class Canvas extends React.Component{
     handleInput = event => {
         let context = this.state.drawSurface.current.getContext('2d');
         if(event.buttons === 4){
-            console.log('panning');
+            // shortcut for panning
         }
         event.clientX /= this.state.scaleFactor;
         event.clientY /= this.state.scaleFactor;

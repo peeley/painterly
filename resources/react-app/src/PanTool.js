@@ -18,16 +18,14 @@ export class PanTool extends Tool {
             this.mouseDown = false;
         }
         else if(this.mouseDown && event.type === 'mousemove'){
-            console.log(event);
             const xCoord = event.clientX - this.leftOffset;
             const yCoord = event.clientY - this.topOffset;
             const deltaX = xCoord - this.lastX;
             const deltaY = yCoord - this.lastY;
-            console.log(xCoord, yCoord);
-            console.log(deltaX, deltaY);
             context.translate(deltaX, deltaY);
             this.lastX = xCoord;
             this.lastY = yCoord;
+            return { indicator: true };
         }
     }
 }

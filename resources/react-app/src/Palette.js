@@ -1,5 +1,5 @@
 import React from 'react';
-import '@simonwep/pickr/dist/themes/nano.min.css';   // 'classic' theme
+import '@simonwep/pickr/dist/themes/classic.min.css';   // 'classic' theme
 import Pickr from '@simonwep/pickr';
 
 export class Palette extends React.Component{
@@ -13,7 +13,7 @@ export class Palette extends React.Component{
 	componentDidMount(){
         this.palette = Pickr.create({
             el: '.colorPalette',
-			theme: 'nano', // or 'monolith', or 'nano'
+			theme: 'classic', // or 'monolith', or 'nano'
 
 			swatches: [
 				'rgba(244, 67, 54, 1)',

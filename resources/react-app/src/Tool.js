@@ -3,7 +3,7 @@ export class Tool {
     constructor(strokeType){
         this.strokeType = strokeType;
         this.mouseDown = false;
-        this.color = "#42445A";
+        this.color = "rgba(66, 68, 90, 1)";
         this.currentStroke = {
             type: this.strokeType,
             indicator: false,

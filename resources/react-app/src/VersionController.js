@@ -1,5 +1,6 @@
 import { PenTool } from './PenTool.js';
 import { RectTool } from './RectTool.js';
+import { FillTool } from './FillTool.js';
 
 export class VersionController {
     constructor(){
@@ -46,6 +47,9 @@ export class VersionController {
                     break;
                 case 'rect':
                     RectTool.redoStroke(stroke, context);
+                    break
+                case 'fill':
+                    FillTool.redoStroke(stroke, context);
                     break
                 default:
                     console.log('unknown stroke type');

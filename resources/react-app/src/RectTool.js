@@ -4,6 +4,7 @@ export class RectTool extends Tool {
     constructor(){
         super('rect');
         this.toolName = 'rect';
+        this.displayName = 'Rectangle';
         this.startX = null;
         this.startY = null;
         this.mouseDown = false;

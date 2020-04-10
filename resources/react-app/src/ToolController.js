@@ -51,6 +51,21 @@ export class ToolController extends React.Component{
             this.toolSet[toolName].setColor(color);
         }
     }
+    toolListJSX = () => {
+        let toolList = [];
+        for(let name in this.toolSet){
+            let displayName = this.toolSet[name].displayName;
+            toolList.push(
+                <div className="pr-3">
+                    <input type="radio" value={name} id={name} 
+                        checked={this.state.selectedName === name} 
+                        onChange={this.handleChange} />
+                    <label htmlFor={name}> {displayName} </label>
+                </div>
+            );
+        }
+        return toolList;
+    }
     render(){
         return(
             <div className="row controlBar">
@@ -58,31 +73,8 @@ export class ToolController extends React.Component{
                     updateStrokeWidth={this.setStrokeWidth}
                     updateColor={this.setColor}
                 />
-                <div className="border border-dark row toolList pt-2">
-                    <div className="pr-3">
-                        <input type="radio" value="pen" id="pen" 
-                            checked={this.state.selectedName === "pen"} 
-                            onChange={this.handleChange} />
-                        <label htmlFor="pen"> Pen </label>
-                    </div>
-                    <div className="pr-3">
-                        <input type="radio" value="rect" id="rect" 
-                            checked={this.state.selectedName === "rect"} 
-                            onChange={this.handleChange} />
-                        <label htmlFor="rect"> Rect </label>
-                    </div>
-                    <div className="pr-3">
-                        <input type="radio" value="fill" id="fill" 
-                            checked={this.state.selectedName === "fill"} 
-                            onChange={this.handleChange} />
-                        <label htmlFor="fill"> Fill </label>
-                    </div>
-                    <div className="pr-5">
-                        <input type="radio" value="pan" id="pan" 
-                            checked={this.state.selectedName === "pan"} 
-                            onChange={this.handleChange} />
-                        <label htmlFor="pan"> Pan </label>
-                    </div>
+                <div className="row toolList pt-2">
+                    {this.toolListJSX()}
                 </div>
             </div>
         );

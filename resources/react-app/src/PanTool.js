@@ -4,6 +4,7 @@ export class PanTool extends Tool {
     constructor(){
         super('pan');
         this.toolName = 'pan';
+        this.displayName = 'Pan';
         this.mouseDown = false;
         this.lastX = null;
         this.lastY = null;

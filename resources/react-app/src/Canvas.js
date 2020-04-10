@@ -156,7 +156,8 @@ class Canvas extends React.Component{
                         </button>
                         <button onClick={ (event) => { 
                             this.clearCanvas();
-                            this.versionController.wipeHistory()
+                            this.versionController.wipeHistory();
+                            this.pushCanvas();
                         }}>
                             Clear
                         </button>

@@ -4,6 +4,7 @@ export class PenTool extends Tool {
     constructor(){
         super('pen');
         this.toolName = 'pen';
+        this.displayName = 'Pen';
         this.strokeWidth = 3;
         this.joinType = 'round';
     }

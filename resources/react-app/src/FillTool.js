@@ -51,6 +51,7 @@ export class FillTool extends Tool {
     constructor(){
         super('fill');
         this.toolName = 'fill';
+        this.displayName = 'Fill';
     }
     handleEvent = (event, context) => {
         if(event.type === 'mousedown'){

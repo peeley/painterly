@@ -21,7 +21,6 @@ export class VersionController {
             this.currentVersion -= 1;
             this.redrawCanvas(drawSurface);
         }
-        console.log(`\n`);
     }
     redo = (drawSurface) => {
         if(this.currentVersion < this.versionHistory.length){

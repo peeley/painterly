@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Painting extends Model
 {
 
-    protected $fillable = ['title', 'strokes'];
+    protected $fillable = ['title', 'strokes', 'view_private', 'edit_private'];
 
     protected $casts = [
         'strokes' => 'array',
+        'view_private' => 'boolean',
+        'edit_private' => 'boolean',
         'user_id' => 'integer',
     ];
     

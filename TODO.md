@@ -1,15 +1,15 @@
 # TODO
 - Edit build script to detect changes in React app, build automatically
     - add debug .env flag for debug printing
-- Distinguish between permissions to view/edit sketch
 - User organizations
 - Automatically push changes in canvas to all viewers
     - possibly have others view stroke indicators - may not be performant
 - Fix panning to outside of boundaries, add background?
 - Bugfix - fill tool not properly assigning bytes to image data
-- From profile be able to delete painting, edit title, make private
 
 # In Progress
+- From home screen be able to delete painting, edit title, make private
+- Distinguish between permissions to view/edit sketch
 - Add new tool types
     - Shapes
     - Image insertion

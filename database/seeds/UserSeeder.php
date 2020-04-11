@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use \App\User;
 
-class UsersTableSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,8 +17,6 @@ class UsersTableSeeder extends Seeder
             'email' => 'poop@gmail.com',
             'password' => bcrypt('12341234')
         ]);
-        $painting = $user->paintings()->create();
         $user->save();
-        $painting->save();
     }
 }

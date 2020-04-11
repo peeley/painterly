@@ -28,7 +28,10 @@ class PaintingController extends Controller
                 return view('app', ['title' => $painting->title]);
             }
         }
-        return response('Forbidden', 403);
+        else{
+            return view('app', ['title' => $painting->title]);
+        }
+        return response('User does not have permission to view.', 403);
     }
     public function getStrokes(\App\Painting $painting){
         return $painting;

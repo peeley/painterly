@@ -17,18 +17,7 @@ class PaintingController extends Controller
     }
     
     public function show(\App\Painting $painting){
-        if($painting->view_private){
-            $perms = DB::table('permissions')
-                ->select('permissions')
-                ->where([
-                    ['user_id', Auth::id()],
-                    ['painting_id', $painting->id]])
-                ->first();
-            if($perms || $painting->user_id != Auth::id()){
-                return view('app', ['title' => $painting->title]);
-            }
-        }
-        else{
+        if($painting->userCanView(Auth::user())){
             return view('app', ['title' => $painting->title]);
         }
         return response('User does not have permission to view.', 403);

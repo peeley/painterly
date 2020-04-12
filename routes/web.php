@@ -22,6 +22,6 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/painting', 'PaintingController@index')->middleware('auth');
-Route::get('/painting/{painting}', 'PaintingController@show');
+Route::get('/painting/{painting}', 'PaintingController@show')->middleware('auth');
 Route::get('/api/p/{painting}', 'PaintingController@getStrokes');
-Route::post('/api/p/{painting}', 'PaintingController@editStrokes');
+Route::post('/api/p/{painting}', 'PaintingController@editStrokes')->middleware('auth');

@@ -19,4 +19,8 @@ class Painting extends Model
     public function user(){
         return $this->belongsTo('App\User');
     }
+
+    public function permissions(){
+        return $this->hasMany('App\Permission');
+    }
 }

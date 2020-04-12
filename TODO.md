@@ -9,12 +9,11 @@
 
 # In Progress
 - From home screen be able to delete painting, edit title, make private
-- Distinguish between permissions to view/edit sketch
 - Add new tool types
     - Shapes
     - Image insertion
     - Text
-    - Charts/infographics
+    - Charts/tables
     
 # Done
 - Draw on canvas w/ pen, see changes instantly
@@ -38,3 +37,4 @@
     - Zoom hotkeys
     - Reset button zoom level to default, zoom level indicators
 - Synchronise canvas after clearing backend
+- Distinguish between permissions to view/edit sketch

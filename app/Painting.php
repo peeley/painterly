@@ -30,6 +30,9 @@ class Painting extends Model
             return true;
         }
         else if($user){
+            if($this->user_id === $user->id){
+                return true;
+            }
             foreach($this->permissions as $perm){
                 if($perm->user_id === $user->id && $perm->permissions !== ""){
                     return true;

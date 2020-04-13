@@ -24,21 +24,4 @@ class Painting extends Model
     public function permissions(){
         return $this->hasMany('App\Permission');
     }
-
-    public function userCanView($user){
-        if(!$this->view_private){
-            return true;
-        }
-        else if($user){
-            if($this->user_id === $user->id){
-                return true;
-            }
-            foreach($this->permissions as $perm){
-                if($perm->user_id === $user->id && $perm->permissions !== ""){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 }

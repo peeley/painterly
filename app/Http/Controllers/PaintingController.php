@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
-use \App\Painting;
+use App\Painting;
 
 class PaintingController extends Controller
 {
@@ -17,10 +17,8 @@ class PaintingController extends Controller
     }
     
     public function show(\App\Painting $painting){
-        if($painting->userCanView(Auth::user())){
-            return view('app', ['title' => $painting->title]);
-        }
-        return response('User does not have permission to view.', 403);
+        Gate::authorize('view-painting', $painting);
+        return view('app', ['title' => $painting->title]);
     }
     public function getStrokes(\App\Painting $painting){
         return $painting;
@@ -33,5 +31,8 @@ class PaintingController extends Controller
         $painting->strokes = json_decode($request->getContent());
         $painting->save();
         return response()->json($painting->strokes);
+    }
+    public function deletePaintings(App\Painting $painting){
+        $painting->delete();    
     }
 }

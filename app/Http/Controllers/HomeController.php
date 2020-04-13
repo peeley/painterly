@@ -24,9 +24,7 @@ class HomeController extends Controller
      */
     public function index(){
         $user = Auth::user();
-
-        return view('home', [
-            'paintings' => $user->paintings
-        ]);
+        $content = view('home')->with('paintings', $user->paintings);
+        return response($content)->header('Cache-Control', 'no-store');
     }
 }

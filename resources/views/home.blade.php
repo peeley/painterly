@@ -15,13 +15,20 @@
                     @endif
 
                     You are logged in!
-                    <a href= {{ env('APP_URL') . "/painting" }}>Create New Painting</a>
+                    <form method="POST" action="/painting">
+                        @csrf
+                        <button type="submit">Create New Painting</button>
+                    </form>
                     <ul>
                         @foreach ($paintings as $painting)
                             <li>
                                 <a href = {{ env('APP_URL') . "/painting/" . $painting->id }} >
                                     {{$painting->title }}
                                 </a>
+                                <form method='POST' action={{ "/api/p/" . $painting->id }}>
+                                    @method('DELETE')
+                                    <button type="submit">Delete</button>
+                                </form>
                             </li>
                         @endforeach
                     </ul>

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
-use App\Painting;
+use \App\Painting;
 
 class PaintingController extends Controller
 {
@@ -32,7 +32,10 @@ class PaintingController extends Controller
         $painting->save();
         return response()->json($painting->strokes);
     }
-    public function deletePaintings(App\Painting $painting){
-        $painting->delete();    
+    public function deletePainting(\App\Painting $painting){
+        $painting->delete();
+        return view('home', [
+            'paintings' => Auth::user()->paintings
+        ]); 
     }
 }

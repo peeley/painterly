@@ -47,7 +47,7 @@ export class MenuBar extends React.Component {
                         <input type="submit" value="Save Title" />
                     </form> ) :
                     ( <h3 onDoubleClick={() => this.setState({ titleSelected: true })}>
-                        {this.state.title}
+                        { this.state.title }
                     </h3> )
                 }
                 <a className="btn btn-primary btn-sm" 

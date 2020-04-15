@@ -33,7 +33,7 @@ class Canvas extends React.Component{
         });
         this.getCanvas();
     }
-    handleToolSelect = tool => {
+    handleToolSelect = (tool) => {
         this.setState({
             tool: tool
         }, () => this.state.tool.setOffsets(this.state.drawSurface, 

@@ -1,12 +1,10 @@
 # TODO
-- Edit build script to detect changes in React app, build automatically
-    - add debug .env flag for debug printing
 - User organizations
 - Automatically push changes in canvas to all viewers
     - possibly have others view stroke indicators - may not be performant
 - Fix panning to outside of boundaries, add background?
 - Bugfix - fill tool not properly assigning bytes to image data
-- Configure CSRF token for requests coming from React
+- Refactor `fetch` calls in React to use `axios`
 
 # In Progress
 - From home screen be able to delete painting, edit title, make private
@@ -39,3 +37,5 @@
     - Reset button zoom level to default, zoom level indicators
 - Synchronise canvas after clearing backend
 - Distinguish between permissions to view/edit sketch
+- Edit build script to detect changes in React app, build automatically
+    - add debug .env flag for debug printing

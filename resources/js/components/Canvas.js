@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import './Canvas.css';
 import { ToolController } from './ToolController.js';
 import { VersionController } from './VersionController.js';
@@ -50,7 +51,7 @@ class Canvas extends React.Component{
         if(newItem != null){
             this.versionController.push(newItem);
             if(!newItem.indicator){
-                //this.pushCanvas();
+                this.pushCanvas();
             }
             this.clearCanvas();
             this.versionController.redrawCanvas(this.state.drawSurface);
@@ -64,13 +65,9 @@ class Canvas extends React.Component{
         context.clearRect(0, 0, width, height);
     }
     pushCanvas = () => {
-        fetch(`http://localhost:8000/api/p/${this.props.match.params.id}`, {
-            method: 'POST',
-            body: JSON.stringify(this.versionController.versionHistory),
-            headers: {
-                'Content-Type' : 'application/json'
-            }
-        })
+        axios.post(`http://localhost:8000/api/p/${this.props.match.params.id}`,
+            this.versionController.versionHistory,
+            { headers: { 'Content-Type' : 'application/json' }})
         .then( response => {
             if(response.status === 401){ // not logged in
                 window.location.replace('http://localhost:8000/login');
@@ -82,7 +79,7 @@ class Canvas extends React.Component{
         })
     }
     getCanvas = () => {
-        fetch(`http://localhost:8000/api/p/${this.props.match.params.id}`)
+        axois.get(`http://localhost:8000/api/p/${this.props.match.params.id}`)
         .then( response => {
             return response.json()
         })

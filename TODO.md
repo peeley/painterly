@@ -4,9 +4,9 @@
     - possibly have others view stroke indicators - may not be performant
 - Fix panning to outside of boundaries, add background?
 - Bugfix - fill tool not properly assigning bytes to image data
-- Refactor `fetch` calls in React to use `axios`
 
 # In Progress
+- Refactor `fetch` calls in React to use `axios`
 - From home screen be able to delete painting, edit title, make private
 - Add new tool types
     - Shapes

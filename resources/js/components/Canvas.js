@@ -5,7 +5,7 @@ import { ToolController } from './ToolController.js';
 import { VersionController } from './VersionController.js';
 import { MenuBar } from './MenuBar.js';
 
-class Canvas extends React.Component{
+class Canvas extends React.Component {
     constructor(props){
         super(props);
         this.versionController = new VersionController();

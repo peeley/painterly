@@ -56,7 +56,7 @@ export class ToolController extends React.Component{
         for(let name in this.toolSet){
             let displayName = this.toolSet[name].displayName;
             toolList.push(
-                <div className="pr-3">
+                <div className="pr-3" key={name}>
                     <input type="radio" value={name} id={name} 
                         checked={this.state.selectedName === name} 
                         onChange={this.handleChange} />

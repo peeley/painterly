@@ -79,15 +79,12 @@ class Canvas extends React.Component {
         })
     }
     getCanvas = () => {
-        axois.get(`http://localhost:8000/api/p/${this.props.match.params.id}`)
+        axios.get(`http://localhost:8000/api/p/${this.props.match.params.id}`)
         .then( response => {
-            return response.json()
-        })
-        .then( data => {
             this.setState({
-                title: data.title
+                title: response.data.title
             });
-            for(const item of data.strokes){
+            for(const item of response.data.strokes){
                 this.versionController.push(item);
             }
             this.versionController.redrawCanvas(this.state.drawSurface);

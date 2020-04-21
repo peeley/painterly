@@ -4,6 +4,7 @@
     - possibly have others view stroke indicators - may not be performant
 - Fix panning to outside of boundaries, add background?
 - Bugfix - fill tool not properly assigning bytes to image data
+- TESTING!
 
 # In Progress
 - From home screen be able to delete painting, edit title, make private

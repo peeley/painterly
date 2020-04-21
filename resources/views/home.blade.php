@@ -26,6 +26,7 @@
                                     {{$painting->title }}
                                 </a>
                                 <form method='POST' action={{ "/api/p/" . $painting->id }}>
+                                    @csrf
                                     @method('DELETE')
                                     <button type="submit">Delete</button>
                                 </form>

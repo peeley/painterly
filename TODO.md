@@ -6,7 +6,6 @@
 - Bugfix - fill tool not properly assigning bytes to image data
 
 # In Progress
-- Refactor `fetch` calls in React to use `axios`
 - From home screen be able to delete painting, edit title, make private
 - Add new tool types
     - Shapes
@@ -39,3 +38,4 @@
 - Distinguish between permissions to view/edit sketch
 - Edit build script to detect changes in React app, build automatically
     - add debug .env flag for debug printing
+- Refactor `fetch` calls in React to use `axios`

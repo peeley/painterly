@@ -34,8 +34,6 @@ class PaintingController extends Controller
     }
     public function deletePainting(\App\Painting $painting){
         $painting->delete();
-        return view('home', [
-            'paintings' => Auth::user()->paintings
-        ]); 
+        return redirect('/home');
     }
 }

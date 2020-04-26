@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { ShareModal } from './ShareModal.js';
 
 export class MenuBar extends React.Component {
@@ -33,7 +34,17 @@ export class MenuBar extends React.Component {
         this.setState({
             titleSelected: false
         });
-        // make POST to backend to update title, update browser page title
+        axios.put(`http://localhost:8000/api/p/${this.props.match.params.id}/title`,
+            { "title": this.title },
+            { headers: { 'Content-Type' : 'application/json'}})
+        .then(response => {
+            if(response.status === 401){ // not logged in
+                window.location.replace('http://localhost:8000/login');
+            }
+            else if(response.status === 403){ // not authorized
+                alert("You do not have permissions to edit this painting's title.");
+            }
+        });
     }
     render(){
         return (

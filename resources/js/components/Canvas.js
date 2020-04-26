@@ -131,6 +131,7 @@ class Canvas extends React.Component {
                 <MenuBar 
                     title={this.state.title}
                     surface={this.state.drawSurface} 
+                    paintingId={this.props.match.params.id}
                 />
                 <div className="row pl-5">
                     <ToolController 

@@ -39,7 +39,7 @@ class PaintingController extends Controller
         Gate::authorize('edit-painting', $painting);
         $painting->title = $request->input('title');
         $painting->save();
-        return response()->json($painting->strokes);
+        return response()->json($painting->title);
     }
     public function deletePainting(\App\Painting $painting){
         $painting->delete();

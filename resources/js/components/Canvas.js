@@ -65,7 +65,7 @@ class Canvas extends React.Component {
         context.clearRect(0, 0, width, height);
     }
     pushCanvas = () => {
-        axios.put(`http://localhost:8000/api/p/${this.props.match.params.id}`,
+        axios.put(`http://localhost:8000/api/p/${this.props.match.params.id}/strokes`,
             this.versionController.versionHistory,
             { headers: { 'Content-Type' : 'application/json' }})
         .then( response => {

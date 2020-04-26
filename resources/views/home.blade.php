@@ -21,15 +21,22 @@
                     </form>
                     <ul>
                         @foreach ($paintings as $painting)
-                            <li>
+                            <li class="row">
                                 <a href = {{ env('APP_URL') . "/painting/" . $painting->id }} >
                                     {{$painting->title }}
                                 </a>
-                                <form method='POST' action={{ "/api/p/" . $painting->id }}>
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit">Delete</button>
-                                </form>
+                                <div class="pl-5 dropdown show">
+                                    <a class="btn-sm btn-secondary dropdown-toggle" href="#" role="button"
+                                       id="paintingOptionsLink" data-toggle="dropdown"> Options </a>
+                                    <div class="dropdown-menu">
+                                        <form class="dropdown-item" method='POST' action={{ "/api/p/" . $painting->id }}
+                                            onsubmit="return confirm('Really delete painting?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit">Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </li>
                         @endforeach
                     </ul>

@@ -19,7 +19,7 @@ export class ShareModal extends React.Component {
     render(){
         return (
             <>
-                <button type="button" data-toggle="modal" 
+                <button className="btn btn-outline-primary btn-sm" type="button" data-toggle="modal" 
                     data-target="#shareModal">
                     Share Link
                 </button>

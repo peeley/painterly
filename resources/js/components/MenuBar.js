@@ -49,27 +49,36 @@ export class MenuBar extends React.Component {
     }
     render(){
         return (
-            <div className="row">
-                { this.state.titleSelected ?
-                    ( <form onSubmit={this.postTitle}>
-                        <input type="text" 
-                            value={this.state.title}
-                            onChange={this.handleTitleChange}
-                            placeholder="Edit Title" />
-                        <button type="submit">Save Title </button>
-                    </form> ) :
-                    ( <h3 onDoubleClick={() => this.setState({ titleSelected: true })}>
-                        { this.state.title }
-                    </h3> )
-                }
-                <a className="btn btn-primary btn-sm" 
-                    onMouseEnter={this.updateImgLink}
-                    href={this.state.imgLink} 
-                    download={this.state.title}>
-                    Save
-                </a>
-                <ShareModal />
-            </div>
+            <>
+                <div className="row">
+                    <div className="pr-3">
+                        <a href="http://localhost:8000/home" className="btn btn-outline-primary">Home</a>
+                    </div>
+                    <div>
+                        { this.state.titleSelected ?
+                            ( <form onSubmit={this.postTitle}>
+                                <input type="text" 
+                                    value={this.state.title}
+                                    onChange={this.handleTitleChange}
+                                    placeholder="Edit Title" />
+                                <button type="submit">Save Title </button>
+                            </form> ) :
+                            ( <h3 onDoubleClick={() => this.setState({ titleSelected: true })}>
+                                { this.state.title }
+                            </h3> )
+                        }
+                    </div>
+                </div>
+                <div className="row">
+                    <a className="btn btn-outline-primary btn-sm" 
+                        onMouseEnter={this.updateImgLink}
+                        href={this.state.imgLink} 
+                        download={this.state.title}>
+                        Save
+                    </a>
+                    <ShareModal />
+                </div>
+            </>
         );
     }
 }

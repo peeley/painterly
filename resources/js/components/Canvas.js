@@ -19,7 +19,6 @@ class Canvas extends React.Component {
     }
     componentDidMount(){
         document.addEventListener('keydown', (event) => {
-            console.log(event.key);
             if(event.ctrlKey){
                 switch(event.key){
                     case 'z':

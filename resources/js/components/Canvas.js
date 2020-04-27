@@ -64,12 +64,12 @@ class Canvas extends React.Component {
         context.clearRect(0, 0, width, height);
     }
     pushCanvas = () => {
-        axios.put(`http://localhost:8000/api/p/${this.props.match.params.id}/strokes`,
+        axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.match.params.id}/strokes`,
             this.versionController.versionHistory,
             { headers: { 'Content-Type' : 'application/json' }})
         .then( response => {
             if(response.status === 401){ // not logged in
-                window.location.replace('http://localhost:8000/login');
+                window.location.replace(`${process.env.MIX_APP_URL}/login`);
             }
             else if(response.status === 403){ // not authorized
                 alert('You do not have permissions to edit this item.');
@@ -78,7 +78,7 @@ class Canvas extends React.Component {
         })
     }
     getCanvas = () => {
-        axios.get(`http://localhost:8000/api/p/${this.props.match.params.id}`)
+        axios.get(`${process.env.MIX_APP_URL}/api/p/${this.props.match.params.id}`)
         .then( response => {
             this.setState({
                 title: response.data.title

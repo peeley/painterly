@@ -34,12 +34,12 @@ export class MenuBar extends React.Component {
         this.setState({
             titleSelected: false
         });
-        axios.put(`http://localhost:8000/api/p/${this.props.paintingId}/title`,
+        axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}/title`,
             { title: this.state.title },
             { headers: { 'Content-Type' : 'application/json'}})
         .then(response => {
             if(response.status === 401){ // not logged in
-                window.location.replace('http://localhost:8000/login');
+                window.location.replace(`${process.env.MIX_APP_URL}/login`);
             }
             else if(response.status === 403){ // not authorized
                 alert("You do not have permissions to edit this painting's title. ");
@@ -52,7 +52,8 @@ export class MenuBar extends React.Component {
             <>
                 <div className="row">
                     <div className="pr-3">
-                        <a href="http://localhost:8000/home" className="btn btn-outline-primary">Home</a>
+                    <a href={`${process.env.MIX_APP_URL}/home`}
+                        className="btn btn-outline-primary">Home</a>
                     </div>
                     <div>
                         { this.state.titleSelected ?

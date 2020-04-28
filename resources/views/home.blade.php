@@ -29,11 +29,11 @@
                                     <button class="btn-sm btn-secondary dropdown-toggle" type="button"
                                         data-toggle="dropdown"> Options </button>
                                     <div class="dropdown-menu" role="menu">
-                                        <form class="dropdown-item" method='POST' action={{ "/api/p/" . $painting->id }}
+                                        <form method='POST' action={{ "/api/p/" . $painting->id }}
                                             onsubmit="return confirm('Really delete painting?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit">Delete</button>
+                                            <button class="dropdown-item" type="submit">Delete</button>
                                         </form>
                                         <button class="dropdown-item" data-toggle="modal"
                                             data-target={{  "#titleModal" . $painting->id }} >

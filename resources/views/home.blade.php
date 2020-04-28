@@ -25,16 +25,35 @@
                                 <a href = {{ env('APP_URL') . "/painting/" . $painting->id }} >
                                     {{$painting->title }}
                                 </a>
-                                <div class="pl-5 dropdown show">
-                                    <a class="btn-sm btn-secondary dropdown-toggle" href="#" role="button"
-                                       id="paintingOptionsLink" data-toggle="dropdown"> Options </a>
-                                    <div class="dropdown-menu">
+                                <div class="pl-5 dropdown">
+                                    <button class="btn-sm btn-secondary dropdown-toggle" type="button"
+                                        data-toggle="dropdown"> Options </button>
+                                    <div class="dropdown-menu" role="menu">
                                         <form class="dropdown-item" method='POST' action={{ "/api/p/" . $painting->id }}
                                             onsubmit="return confirm('Really delete painting?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit">Delete</button>
                                         </form>
+                                        <button class="dropdown-item" data-toggle="modal"
+                                            data-target={{  "#titleModal" . $painting->id }} >
+                                            Edit Title
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="modal" role="dialog" id={{  "titleModal" . $painting->id }}>
+                                    <div class="modal-dialog" role="document" >
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Edit Title</h5>
+                                                <button type="close" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span>&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Form goes here
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </li>

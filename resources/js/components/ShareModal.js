@@ -30,17 +30,18 @@ export class ShareModal extends React.Component {
                             <div className="modal-header">
                                 <h3>Share Link</h3>
                             </div>
-                            <div className="row modal-body">
-                                <input className="col-9" 
-                                    type="text" value={this.shareLink} 
+                            <div className="modal-body row justify-content-center">
+                                <input className="col-8"
+                                    type="text" value={this.shareLink}
                                     ref={this.linkTextArea} readOnly />
-                                <button className="col-3" 
+                                <button className="btn btn-sm btn-outline-primary col-2"
                                     onClick={this.copyLink}>
                                     Copy
                                 </button>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" data-dismiss="modal"
+                                <button type="button" className="btn btn-sm btn-outline-secondary"
+                                    data-dismiss="modal"
                                     onClick={() => this.setState({ copied: false})} >
                                     Close
                                 </button>

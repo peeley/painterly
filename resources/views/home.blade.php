@@ -22,15 +22,15 @@
                     <ul>
                         @foreach ($paintings as $painting)
                             <li class="row">
-                                <a href = {{ env('APP_URL') . "/painting/" . $painting->id }} >
+                                <a id={{"paintingTitle" . $painting->id}}
+                                    href = {{ env('APP_URL') . "/painting/" . $painting->id }} >
                                     {{$painting->title }}
                                 </a>
                                 <div class="pl-5 dropdown">
                                     <button class="btn-sm btn-secondary dropdown-toggle" type="button"
                                         data-toggle="dropdown"> Options </button>
                                     <div class="dropdown-menu" role="menu">
-                                        <form method='POST' action={{ "/api/p/" . $painting->id }}
-                                            onsubmit="return confirm('Really delete painting?')">
+                                        <form method='POST' action={{ "/api/p/" . $painting->id }} class="deletePaintingForm">
                                             @csrf
                                             @method('DELETE')
                                             <button class="dropdown-item" type="submit">Delete</button>
@@ -50,8 +50,12 @@
                                                     <span>&times;</span>
                                                 </button>
                                             </div>
-                                            <div class="modal-body">
-                                                Form goes here
+                                            <div class="modal-body row justify-content-center">
+                                                <input class="col-8" type="text" placeholder="Edit title" >
+                                                <button id={{ $painting->id }}
+                                                    class="btn btn-primary editTitleSubmitButton" type="submit">
+                                                    Submit
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -64,4 +68,5 @@
         </div>
     </div>
 </div>
+<script src= {{asset("js/home.js") }}></script>
 @endsection

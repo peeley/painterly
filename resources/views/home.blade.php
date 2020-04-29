@@ -41,7 +41,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="modal" role="dialog" id={{  "titleModal" . $painting->id }}>
+                                <div class="modal fade" role="dialog" id={{  "titleModal" . $painting->id }}>
                                     <div class="modal-dialog" role="document" >
                                         <div class="modal-content">
                                             <div class="modal-header">

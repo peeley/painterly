@@ -5,7 +5,6 @@ $(".deletePaintingForm").on("submit", function () {
 $(".editTitleSubmitButton").on("click", function () {
     let id = $(this).attr('id');
     let newTitle = $('#titleForm'+id).val();
-    console.log(`entered new title: ${newTitle}`);
     axios.put(`${process.env.MIX_APP_URL}/api/p/${id}/title`,
               {title: newTitle},
               {headers: { 'Content-Type': 'application/json'}})

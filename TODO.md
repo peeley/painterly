@@ -5,6 +5,8 @@
 - Fix panning to outside of boundaries, add background?
 - Bugfix - fill tool not properly assigning bytes to image data
 - Make logout timer not so obnoxious/learn how authentication actually works lmao
+- Make validators for user input - titles, etc.
+- Add painting preview in home screen
 - TESTING!
 
 # In Progress

@@ -15,33 +15,39 @@
                     @endif
 
                     You are logged in!
-                    <form method="POST" action="/painting">
-                        @csrf
-                        <button type="submit">Create New Painting</button>
-                    </form>
-                    <ul>
+                    <div class="row py-3" >
+                        <h3 class="col-4">My Paintings</h3>
+                        <form method="POST" action="/painting">
+                            @csrf
+                            <button class="btn btn-sm btn-success" col" type="submit">Create New Painting</button>
+                        </form>
+                    </div>
+                    <ul class="list-group list-group-flush">
                         @foreach ($paintings as $painting)
-                            <li class="row">
-                                <a id={{"paintingTitle" . $painting->id}}
+                            <li class="list-group-item row">
+                                <a id={{"paintingTitle" . $painting->id}} class="col"
                                     href = {{ env('APP_URL') . "/painting/" . $painting->id }} >
                                     {{$painting->title }}
                                 </a>
-                                <div class="pl-5 dropdown">
-                                    <button class="btn-sm btn-secondary dropdown-toggle" type="button"
-                                        data-toggle="dropdown"> Options </button>
+                                <div class="dropdown col">
+                                    <button class="btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                                        data-toggle="dropdown">
+                                        ...
+                                    </button>
                                     <div class="dropdown-menu" role="menu">
+                                        <button class="dropdown-item" data-toggle="modal"
+                                            data-target={{  "#titleModal" . $painting->id }} >
+                                            Edit Title
+                                        </button>
+                                        <div class="dropdown-divider" ></div>
                                         <form method='POST' action={{ "/api/p/" . $painting->id }} class="deletePaintingForm">
                                             @csrf
                                             @method('DELETE')
                                             <button class="dropdown-item" type="submit">Delete</button>
                                         </form>
-                                        <button class="dropdown-item" data-toggle="modal"
-                                            data-target={{  "#titleModal" . $painting->id }} >
-                                            Edit Title
-                                        </button>
                                     </div>
                                 </div>
-                                <div class="modal fade" role="dialog" id={{  "titleModal" . $painting->id }}>
+                                <div class="modal fade" role="dialog" id={{ "titleModal" . $painting->id }}>
                                     <div class="modal-dialog" role="document" >
                                         <div class="modal-content">
                                             <div class="modal-header">

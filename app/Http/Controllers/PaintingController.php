@@ -45,4 +45,8 @@ class PaintingController extends Controller
         $painting->delete();
         return redirect('/home');
     }
+    public function togglePrivate(\App\Painting $painting){
+        $painting->view_private = !$painting->view_private;
+        return response()->json($painting->view_private);
+    }
 }

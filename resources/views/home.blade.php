@@ -36,8 +36,12 @@
                                     </button>
                                     <div class="dropdown-menu" role="menu">
                                         <button class="dropdown-item" data-toggle="modal"
-                                            data-target={{  "#titleModal" . $painting->id }} >
+                                            data-target={{ "#titleModal" . $painting->id }} >
                                             Edit Title
+                                        </button>
+                                        <button class="dropdown-item" data-toggle="modal"
+                                                data-target={{ "#privacyModal" . $painting->id }} >
+                                            Edit Privacy Settings
                                         </button>
                                         <div class="dropdown-divider" ></div>
                                         <form method='POST' action={{ "/api/p/" . $painting->id }} class="deletePaintingForm">
@@ -63,6 +67,21 @@
                                                     class="btn btn-primary editTitleSubmitButton" type="submit">
                                                     Submit
                                                 </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" role="dialog" id={{ "privacyModal" . $painting->id }}>
+                                    <div class="modal-dialog" role="document" >
+                                        <div class="modal-content" >
+                                            <div class="modal-header" >
+                                                <h5 class="modal-title" >Edit Privacy Settings</h5>
+                                                <button type="close" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span>&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body row justify-content-center" >
+                                                Edit privacy settings here
                                             </div>
                                         </div>
                                     </div>

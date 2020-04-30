@@ -7,6 +7,7 @@
 - Make logout timer not so obnoxious/learn how authentication actually works lmao
 - Make validators for user input - titles, etc.
 - Add painting preview in home screen
+- Split home screen into blade components
 - TESTING!
 
 # In Progress

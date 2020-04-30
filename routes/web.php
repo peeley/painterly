@@ -26,4 +26,5 @@ Route::get('/painting/{painting}', 'PaintingController@show')->middleware('auth'
 Route::get('/api/p/{painting}', 'PaintingController@getPainting');
 Route::put('/api/p/{painting}/strokes', 'PaintingController@putStrokes')->middleware('auth');
 Route::put('/api/p/{painting}/title', 'PaintingController@putTitle')->middleware('auth');
+Route::put('/api/p/{painting}/private', 'PaintingController@togglePrivate')->middleware('auth');
 Route::delete('/api/p/{painting}', 'PaintingController@deletePainting')->middleware('auth');

@@ -64,8 +64,8 @@ class Canvas extends React.Component {
         context.clearRect(0, 0, width, height);
     }
     pushCanvas = () => {
-        axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.match.params.id}/strokes`,
-            this.versionController.versionHistory,
+        axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.match.params.id}`,
+            { strokes: this.versionController.versionHistory },
             { headers: { 'Content-Type' : 'application/json' }})
         .then( response => {
             if(response.status === 401){ // not logged in

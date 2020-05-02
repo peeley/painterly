@@ -23,23 +23,15 @@ class PaintingController extends Controller
     public function getPainting(\App\Painting $painting){
         return $painting;
     }
-    public function putStrokes(Request $request, \App\Painting $painting){
+    public function putPainting(Request $request, \App\Painting $painting){
         if(!Auth::check()){
             return response('Not Logged In', 401);
         }
         Gate::authorize('edit-painting', $painting);
-        $painting->strokes = json_decode($request->getContent());
+        $painting->strokes = $request->input('strokes', $painting->strokes); 
+        $painting->title = $request->input('title', $painting->title); 
         $painting->save();
-        return response()->json($painting->strokes);
-    }
-    public function putTitle(Request $request, \App\Painting $painting){
-        if(!Auth::check()){
-            return response('Not Logged In', 401);
-        }
-        Gate::authorize('edit-painting', $painting);
-        $painting->title = $request->input('title');
-        $painting->save();
-        return response()->json($painting->title);
+        return response()->json($painting);
     }
     public function deletePainting(\App\Painting $painting){
         $painting->delete();

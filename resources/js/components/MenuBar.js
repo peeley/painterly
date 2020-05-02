@@ -34,7 +34,7 @@ export class MenuBar extends React.Component {
         this.setState({
             titleSelected: false
         });
-        axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}/title`,
+        axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`,
             { title: this.state.title },
             { headers: { 'Content-Type' : 'application/json'}})
         .then(response => {

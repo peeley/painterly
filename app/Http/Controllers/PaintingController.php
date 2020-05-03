@@ -30,15 +30,13 @@ class PaintingController extends Controller
         Gate::authorize('edit-painting', $painting);
         $painting->strokes = $request->input('strokes', $painting->strokes); 
         $painting->title = $request->input('title', $painting->title); 
+        $painting->view_public = $request->input('view_public', $painting->view_public); 
+        $painting->edit_public = $request->input('edit_public', $painting->edit_public); 
         $painting->save();
         return response()->json($painting);
     }
     public function deletePainting(\App\Painting $painting){
         $painting->delete();
         return redirect('/home');
-    }
-    public function togglePrivate(\App\Painting $painting){
-        $painting->view_private = !$painting->view_private;
-        return response()->json($painting->view_private);
     }
 }

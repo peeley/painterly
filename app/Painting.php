@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Painting extends Model
 {
 
-    protected $fillable = ['title', 'strokes', 'view_private', 'edit_private'];
+    protected $fillable = ['title', 'strokes', 'view_public', 'edit_public'];
 
     protected $casts = [
         'strokes' => 'array',
-        'view_private' => 'boolean',
-        'edit_private' => 'boolean',
+        'view_public' => 'boolean',
+        'edit_public' => 'boolean',
         'user_id' => 'integer',
     ];
     

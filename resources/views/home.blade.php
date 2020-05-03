@@ -81,7 +81,25 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body row justify-content-center" >
-                                                Edit privacy settings here
+                                                <div class="custom-control custom-switch" >
+                                                    <div class="row" >
+                                                        <input type="checkbox" class="custom-control-input"
+                                                            id="viewPublicSwitch" >
+                                                        <label class="custom-control-label" for="viewPublicSwitch">
+                                                            Anyone can view
+                                                        </label>
+                                                    </div>
+                                                    <div class="row" >
+                                                        <input type="checkbox" class="custom-control-input"
+                                                            id="editPublicSwitch" >
+                                                        <label class="custom-control-label" for="editPublicSwitch">
+                                                            Anyone can edit
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer" >
+                                                <button class="btn btn-primary" >Submit</button>
                                             </div>
                                         </div>
                                     </div>

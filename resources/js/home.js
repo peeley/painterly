@@ -4,7 +4,7 @@ $(".deletePaintingForm").on("submit", function () {
 
 $(".editTitleSubmitButton").on("click", function () {
     let id = $(this).attr('id');
-    let newTitle = $('#titleForm'+id).val();
+    let newTitle = $('#titleForm_'+id).val();
     axios.put(`${process.env.MIX_APP_URL}/api/p/${id}`,
               {title: newTitle},
               {headers: { 'Content-Type': 'application/json'}})
@@ -16,4 +16,8 @@ $(".editTitleSubmitButton").on("click", function () {
     .catch( error => {
         console.log(error);
     })
+});
+
+$(".editPublicSwitch").change(function () {
+    alert('changed edit settings!');
 });

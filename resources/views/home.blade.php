@@ -61,7 +61,7 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body row justify-content-center">
-                                                <input id={{"titleForm" . $painting->id}} class="col-8"
+                                                <input id={{"titleForm_" . $painting->id}} class="col-8"
                                                     type="text" placeholder="Edit title" value={{ $painting->title }}>
                                                 <button data-dismiss="modal" id={{ $painting->id }}
                                                     class="btn btn-primary editTitleSubmitButton" type="submit">
@@ -80,26 +80,30 @@
                                                     <span>&times;</span>
                                                 </button>
                                             </div>
-                                            <div class="modal-body row justify-content-center" >
-                                                <div class="custom-control custom-switch" >
-                                                    <div class="row" >
-                                                        <input type="checkbox" class="custom-control-input"
-                                                            id="viewPublicSwitch" >
-                                                        <label class="custom-control-label" for="viewPublicSwitch">
+                                            <div class="modal-body" >
+                                                <div class="row justify-content-center" >
+                                                    <div class="custom-control custom-switch" >
+                                                        <input type="checkbox" class="custom-control-input viewPublicSwitch"
+                                                            id={{"viewPublicSwitch_" . $painting->id}} >
+                                                        <label class="custom-control-label"
+                                                            for={{"viewPublicSwitch_" . $painting->id}}>
                                                             Anyone can view
                                                         </label>
                                                     </div>
-                                                    <div class="row" >
-                                                        <input type="checkbox" class="custom-control-input"
-                                                            id="editPublicSwitch" >
-                                                        <label class="custom-control-label" for="editPublicSwitch">
+                                                </div>
+                                                <div class="row justify-content-center" >
+                                                    <div class="custom-control custom-switch" >
+                                                        <input type="checkbox" class="custom-control-input editPublicSwitch"
+                                                            id={{"editPublicSwitch_" . $painting->id}}>
+                                                        <label class="custom-control-label"
+                                                            for={{"editPublicSwitch_" . $painting->id}}>
                                                             Anyone can edit
                                                         </label>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="modal-footer" >
-                                                <button class="btn btn-primary" >Submit</button>
+                                                <button class="btn btn-primary" data-dismiss="modal">Submit</button>
                                             </div>
                                         </div>
                                     </div>

@@ -19,5 +19,19 @@ $(".editTitleSubmitButton").on("click", function () {
 });
 
 $(".editPublicSwitch").change(function () {
-    alert('changed edit settings!');
+    let id = $(this).attr('id').split('_')[1];
+    let editCheckbox = $(`#editPublicSwitch_${id}`)[0];
+    let viewCheckbox = $(`#viewPublicSwitch_${id}`)[0];
+    if(editCheckbox.checked && !viewCheckbox.checked){
+        viewCheckbox.checked = true;
+    }
+});
+
+$(".viewPublicSwitch").change(function () {
+    let id = $(this).attr('id').split('_')[1];
+    let editCheckbox = $(`#editPublicSwitch_${id}`)[0];
+    let viewCheckbox = $(`#viewPublicSwitch_${id}`)[0];
+    if(!viewCheckbox.checked && editCheckbox.checked){
+        editCheckbox.checked = false;
+    }
 });

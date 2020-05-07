@@ -35,3 +35,14 @@ $(".viewPublicSwitch").change(function () {
         editCheckbox.checked = false;
     }
 });
+
+$(".submitPrivacySettingsButton").on('click', function () {
+    let id = $(this).attr('paintingId');
+    let viewPublic = $(`#viewPublicSwitch_${id}`)[0].checked;
+    let editPublic = $(`#editPublicSwitch_${id}`)[0].checked;
+    axios.put(`${process.env.MIX_APP_URL}/api/p/${id}`,
+              {'view_public': viewPublic,
+               'edit_public': editPublic },
+              {'Content-Type': 'application/json'}
+             );
+});

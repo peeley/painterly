@@ -84,7 +84,8 @@
                                                 <div class="row justify-content-center" >
                                                     <div class="custom-control custom-switch" >
                                                         <input type="checkbox" class="custom-control-input viewPublicSwitch"
-                                                            id={{"viewPublicSwitch_" . $painting->id}} >
+                                                            id={{"viewPublicSwitch_" . $painting->id}}
+                                                            @if ($painting->view_public) checked @endif >
                                                         <label class="custom-control-label"
                                                             for={{"viewPublicSwitch_" . $painting->id}}>
                                                             Anyone can view
@@ -94,7 +95,8 @@
                                                 <div class="row justify-content-center" >
                                                     <div class="custom-control custom-switch" >
                                                         <input type="checkbox" class="custom-control-input editPublicSwitch"
-                                                            id={{"editPublicSwitch_" . $painting->id}}>
+                                                            id={{"editPublicSwitch_" . $painting->id}}
+                                                            @if ($painting->edit_public) checked @endif >
                                                         <label class="custom-control-label"
                                                             for={{"editPublicSwitch_" . $painting->id}}>
                                                             Anyone can edit
@@ -103,7 +105,9 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer" >
-                                                <button class="btn btn-primary" data-dismiss="modal">Submit</button>
+                                                <button class="btn btn-primary submitPrivacySettingsButton"
+                                                    paintingId={{ $painting->id }}
+                                                    data-dismiss="modal">Submit</button>
                                             </div>
                                         </div>
                                     </div>

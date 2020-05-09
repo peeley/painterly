@@ -28,10 +28,16 @@ class PaintingController extends Controller
             return response('Not Logged In', 401);
         }
         Gate::authorize('edit-painting', $painting);
-        $painting->strokes = $request->input('strokes', $painting->strokes); 
-        $painting->title = $request->input('title', $painting->title); 
-        $painting->view_public = $request->input('view_public', $painting->view_public); 
-        $painting->edit_public = $request->input('edit_public', $painting->edit_public); 
+        $validated = $request->validate([
+            'title' => ['max:255'],
+            'view_public' => ['boolean'],
+            'edit_public' => ['boolean'],
+            'strokes' => ['JSON']
+        ]);
+        $painting->strokes = isset($validated['strokes']) ? $validated['strokes'] : $painting->strokes;
+        $painting->title = isset($validated['title']) ? $validated['title'] : $painting->title;
+        $painting->view_public = isset($validated['view_public']) ? $validated['view_public'] : $painting->view_public;
+        $painting->edit_public = isset($validated['edit_public']) ? $validated['edit_public'] : $painting->edit_public;
         $painting->save();
         return response()->json($painting);
     }

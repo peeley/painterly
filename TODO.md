@@ -10,7 +10,6 @@
 - TESTING!
 
 # In Progress
-- Make validators for user input - titles, etc.
 - Add new tool types
     - Shapes
     - Image insertion
@@ -44,3 +43,4 @@
     - add debug .env flag for debug printing
 - Refactor `fetch` calls in React to use `axios`
 - From home screen be able to delete painting, edit title, make private
+- Make validators for user input - titles, etc.

@@ -34,10 +34,10 @@ class PaintingController extends Controller
             'edit_public' => ['boolean'],
             'strokes' => ['JSON']
         ]);
-        $painting->strokes = isset($validated['strokes']) ? $validated['strokes'] : $painting->strokes;
-        $painting->title = isset($validated['title']) ? $validated['title'] : $painting->title;
-        $painting->view_public = isset($validated['view_public']) ? $validated['view_public'] : $painting->view_public;
-        $painting->edit_public = isset($validated['edit_public']) ? $validated['edit_public'] : $painting->edit_public;
+        $painting->strokes = $validated['strokes'] ?? $painting->strokes;
+        $painting->title = $validated['title'] ?? $painting->title;
+        $painting->view_public = $validated['view_public'] ?? $painting->view_public;
+        $painting->edit_public = $validated['edit_public'] ?? $painting->edit_public;
         $painting->save();
         return response()->json($painting);
     }

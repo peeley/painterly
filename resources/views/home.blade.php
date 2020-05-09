@@ -62,7 +62,7 @@
                                             </div>
                                             <div class="modal-body row justify-content-center">
                                                 <input id={{"titleForm_" . $painting->id}} class="col-8"
-                                                    type="text" placeholder="Edit title" value={{ $painting->title }}>
+                                                    type="text" placeholder="Edit title" value="{{ $painting->title }}">
                                                 <button data-dismiss="modal" id={{ $painting->id }}
                                                     class="btn btn-primary editTitleSubmitButton" type="submit">
                                                     Submit

@@ -15,7 +15,7 @@ class PaintingController extends Controller
         $painting = $user->paintings()->create();
         return redirect("/painting/{$painting->id}");
     }
-    
+
     public function show(\App\Painting $painting){
         Gate::authorize('view-painting', $painting);
         return view('app', ['title' => $painting->title]);

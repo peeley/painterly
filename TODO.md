@@ -5,13 +5,12 @@
 - Fix panning to outside of boundaries, add background?
 - Bugfix - fill tool not properly assigning bytes to image data
 - Make logout timer not so obnoxious/learn how authentication actually works lmao
-- Make validators for user input - titles, etc.
 - Add painting preview in home screen
 - Split home screen into blade components
 - TESTING!
 
 # In Progress
-- From home screen be able to delete painting, edit title, make private
+- Make validators for user input - titles, etc.
 - Add new tool types
     - Shapes
     - Image insertion
@@ -44,3 +43,4 @@
 - Edit build script to detect changes in React app, build automatically
     - add debug .env flag for debug printing
 - Refactor `fetch` calls in React to use `axios`
+- From home screen be able to delete painting, edit title, make private

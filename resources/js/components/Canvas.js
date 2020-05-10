@@ -167,9 +167,9 @@ class Canvas extends React.Component {
                         </button>
                     </div>
                 </div>
-                <canvas className="row" id="drawSurface" 
+                <canvas className="row" id="drawSurface"
                     onMouseDown = {this.handleInput}
-                    onMouseMove = {this.handleInput}                    
+                    onMouseMove = {this.handleInput}
                     onMouseLeave = {this.handleInput}
                     onMouseUp = {this.handleInput}
                     onWheel = {this.handleZoom}

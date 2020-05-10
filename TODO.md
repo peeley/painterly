@@ -7,6 +7,8 @@
 - Make logout timer not so obnoxious/learn how authentication actually works lmao
 - Add painting preview in home screen
 - Split home screen into blade components
+- Loading animation while strokes object is being downloaded/rendered
+- Add specific users to view/edit when permissions are set to private
 - TESTING!
 
 # In Progress

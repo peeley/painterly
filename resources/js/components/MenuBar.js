@@ -7,6 +7,7 @@ export class MenuBar extends React.Component {
         super(props);
         this.state = {
             title: props.title,
+            savedTitle: props.title,
             titleSelected: false,
             imgLink: ""
         }
@@ -14,7 +15,8 @@ export class MenuBar extends React.Component {
     componentDidUpdate(prevProps){
         if(prevProps.title !== this.props.title){
             this.setState({
-                title: this.props.title,
+                savedTitle: this.props.title,
+                title: this.props.title
             });
         }
     }
@@ -37,11 +39,22 @@ export class MenuBar extends React.Component {
         axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`,
             { title: this.state.title },
             { headers: { 'Content-Type' : 'application/json'}})
-        .then(response => {
-            if(response.status === 401){ // not logged in
+        .then( response => {
+            this.setState({
+                savedTitle: this.state.title
+            });
+        })
+        .catch( error => {
+            if(error.response.status === 422){ // invalid title
+                alert(error.response.data.errors.title[0]);
+                this.setState({
+                    title: this.state.savedTitle
+                })
+            }
+            else if(error.response.status === 401){ // not logged in
                 window.location.replace(`${process.env.MIX_APP_URL}/login`);
             }
-            else if(response.status === 403){ // not authorized
+            else if(response.status === 403){ // do not have edit permissions
                 alert("You do not have permissions to edit this painting's title. ");
             }
         });
@@ -65,7 +78,7 @@ export class MenuBar extends React.Component {
                                 <button type="submit">Save Title </button>
                             </form> ) :
                             ( <h3 onDoubleClick={() => this.setState({ titleSelected: true })}>
-                                { this.state.title }
+                                { this.state.savedTitle }
                             </h3> )
                         }
                     </div>
@@ -74,7 +87,7 @@ export class MenuBar extends React.Component {
                     <a className="btn btn-outline-primary btn-sm" 
                         onMouseEnter={this.updateImgLink}
                         href={this.state.imgLink} 
-                        download={this.state.title}>
+                        download={this.state.savedTitle}>
                         Save
                     </a>
                     <ShareModal />

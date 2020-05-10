@@ -16,11 +16,10 @@ $(".editTitleSubmitButton").on("click", function () {
         }
     })
     .catch( error => {
-        console.log('error path');
         let content = $('#titleModal'+id).find('.modal-dialog');
         content.append($.parseHTML(`
             <div class="alert alert-danger alert-dismissable fade show" role="alert">
-                ${error.response.data.message}
+                ${error.response.data.errors.title[0]}
             </div>
         `));
     })

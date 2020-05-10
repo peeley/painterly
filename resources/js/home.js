@@ -11,10 +11,18 @@ $(".editTitleSubmitButton").on("click", function () {
     .then( response => {
         if(response.status == 200){
             $('#paintingTitle'+id).text(newTitle);
+            $('#titleModal'+id).find('.modal-dialog').remove(".alert");
+            $('#titleModal'+id).modal('hide');
         }
     })
     .catch( error => {
-        console.log(error);
+        console.log('error path');
+        let content = $('#titleModal'+id).find('.modal-dialog');
+        content.append($.parseHTML(`
+            <div class="alert alert-danger alert-dismissable fade show" role="alert">
+                ${error.response.data.message}
+            </div>
+        `));
     })
 });
 

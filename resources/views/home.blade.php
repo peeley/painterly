@@ -40,7 +40,7 @@
                                             Edit Title
                                         </button>
                                         <button class="dropdown-item" data-toggle="modal"
-                                                data-target={{ "#privacyModal" . $painting->id }} >
+                                            data-target={{ "#privacyModal" . $painting->id }} >
                                             Edit Privacy Settings
                                         </button>
                                         <div class="dropdown-divider" ></div>
@@ -63,7 +63,7 @@
                                             <div class="modal-body row justify-content-center">
                                                 <input id={{"titleForm_" . $painting->id}} class="col-8"
                                                     type="text" placeholder="Edit title" value="{{ $painting->title }}">
-                                                <button data-dismiss="modal" id={{ $painting->id }}
+                                                <button id={{ $painting->id }}
                                                     class="btn btn-primary editTitleSubmitButton" type="submit">
                                                     Submit
                                                 </button>

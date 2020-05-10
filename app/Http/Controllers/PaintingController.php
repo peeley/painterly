@@ -29,10 +29,10 @@ class PaintingController extends Controller
         }
         Gate::authorize('edit-painting', $painting);
         $validated = $request->validate([
-            'title' => ['max:255'],
-            'view_public' => ['boolean'],
-            'edit_public' => ['boolean'],
-            'strokes' => ['JSON']
+            'title' => 'max:255|min:1',
+            'view_public' => 'boolean',
+            'edit_public' => 'boolean',
+            'strokes' => 'JSON'
         ]);
         $painting->strokes = $validated['strokes'] ?? $painting->strokes;
         $painting->title = $validated['title'] ?? $painting->title;

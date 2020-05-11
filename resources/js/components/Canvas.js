@@ -94,12 +94,12 @@ class Canvas extends React.Component {
     }
     zoomIn = () => {
         this.setState({
-            scaleFactor: this.state.scaleFactor * 2
+            scaleFactor: this.state.scaleFactor + 0.25
         }, () => this.scaleCanvas());
     }
     zoomOut = () => {
         this.setState({
-            scaleFactor: this.state.scaleFactor / 2
+            scaleFactor: this.state.scaleFactor - 0.25
         }, () => this.scaleCanvas());
     }
     resetZoom = () => {

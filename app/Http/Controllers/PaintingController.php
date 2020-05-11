@@ -32,9 +32,10 @@ class PaintingController extends Controller
             'title' => 'max:255|min:1',
             'view_public' => 'boolean',
             'edit_public' => 'boolean',
-            'strokes' => 'JSON'
+            'strokes' => 'json'
         ]);
-        $painting->strokes = $validated['strokes'] ?? $painting->strokes;
+        $painting->strokes = $validated['strokes'] ?
+            json_decode($validated['strokes']) : $painting->strokes;
         $painting->title = $validated['title'] ?? $painting->title;
         $painting->view_public = $validated['view_public'] ?? $painting->view_public;
         $painting->edit_public = $validated['edit_public'] ?? $painting->edit_public;

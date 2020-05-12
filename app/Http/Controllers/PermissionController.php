@@ -10,10 +10,14 @@ class PermissionController extends Controller
 {
     public function addUser(Request $request, Painting $painting, User $user){
         Gate::authorize('edit-permissions', $painting);
+        $perms = $request->query('perms');
+        if(!($perms === 'read' && $perms === 'read_write')){
+            return response('Invalid permissions', 422);
+        }
         // TODO add validation for perms string
         $newPerm = $painting->permissions->firstOrCreate(
             ['user_id' => $user->id],
-            ['permissions' => $request->query('perms')]
+            ['permissions' => $perms]
         );
         return response()->json($newPerm);
     }

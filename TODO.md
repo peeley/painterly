@@ -8,6 +8,10 @@
 - Add painting preview in home screen
 - Split home screen into blade components
 - Loading animation while strokes object is being downloaded/rendered
+- Fix automatic canvas sizing to fit screen, have canvas visual size
+  and programmatic size be different.
+- JQuery really isn't cutting it even for simpler interactions like in
+  the home page - maybe start working on React component
 - TESTING!
 
 # In Progress

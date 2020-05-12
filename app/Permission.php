@@ -12,6 +12,11 @@ class Permission extends Model
         'permissions' => 'string'
     ];
 
+    protected $fillable = [
+        'user_id',
+        'permissions'
+    ];
+
     public function painting(){
         return $this->belongsTo('App\Painting');
     }

@@ -53,5 +53,8 @@ class AuthServiceProvider extends ServiceProvider
             }
             return false;
         });
+        Gate::define('edit-permissions', function($user, $painting) {
+            return $user->id === $painting->user_id;
+        });
     }
 }

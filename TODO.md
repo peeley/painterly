@@ -8,10 +8,12 @@
 - Add painting preview in home screen
 - Split home screen into blade components
 - Loading animation while strokes object is being downloaded/rendered
-- Add specific users to view/edit when permissions are set to private
 - TESTING!
 
 # In Progress
+- Add new users to painting when private
+    - Create backend controller
+    - Create form in options modal in /home
 - Add new tool types
     - Shapes
     - Image insertion

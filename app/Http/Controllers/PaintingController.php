@@ -16,14 +16,14 @@ class PaintingController extends Controller
         return redirect("/painting/{$painting->id}");
     }
 
-    public function show(\App\Painting $painting){
+    public function show(Painting $painting){
         Gate::authorize('view-painting', $painting);
         return view('app', ['title' => $painting->title]);
     }
-    public function getPainting(\App\Painting $painting){
+    public function getPainting(Painting $painting){
         return $painting;
     }
-    public function putPainting(Request $request, \App\Painting $painting){
+    public function putPainting(Request $request, Painting $painting){
         if(!Auth::check()){
             return response('Not Logged In', 401);
         }
@@ -38,7 +38,7 @@ class PaintingController extends Controller
         $painting->save();
         return response()->json($painting);
     }
-    public function deletePainting(\App\Painting $painting){
+    public function deletePainting(Painting $painting){
         $painting->delete();
         return redirect('/home');
     }

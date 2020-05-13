@@ -15,6 +15,8 @@
                     @endif
 
                     You are logged in!
+                    <div id="root" ></div>
+                    <!--
                     <div class="row py-3" >
                         <h3 class="col-4">My Paintings</h3>
                         <form method="POST" action="/painting">
@@ -115,6 +117,7 @@
                             </li>
                         @endforeach
                     </ul>
+                    -->
                 </div>
             </div>
         </div>

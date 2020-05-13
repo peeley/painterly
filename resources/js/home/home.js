@@ -1,3 +1,34 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PaintingList from './components/PaintingList.js';
+
+class Home extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            posts: [ ]
+        }
+    }
+    render(){
+        return (
+            <>
+                <div class="row py-3" >
+                    <h3 className="col-6">My Paintings</h3>
+                    <form method="POST" action="/painting">
+                        <button className="btn btn-sm btn-success col" type="submit">
+                            Create New Painting
+                        </button>
+                    </form>
+                </div>
+                <PaintingList paintings={this.state.paintings} />
+            </>
+        );
+    }
+}
+
+ReactDOM.render(<Home />, document.getElementById('root'));
+
+/*
 $(".deletePaintingForm").on("submit", function () {
     return confirm("Really delete painting?");
 });
@@ -53,3 +84,4 @@ $(".submitPrivacySettingsButton").on('click', function () {
               {'Content-Type': 'application/json'}
              );
 });
+*/

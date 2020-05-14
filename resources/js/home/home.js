@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PaintingList from './components/PaintingList.js';
+import Painting from './components/Painting.js';
 
 class Home extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            posts: [ ]
+            paintings: [ ]
         }
     }
     render(){
@@ -20,7 +20,11 @@ class Home extends React.Component {
                         </button>
                     </form>
                 </div>
-                <PaintingList paintings={this.state.paintings} />
+                <ul>
+                { this.state.paintings.map(painting => {
+                    return <Painting painting={painting} />;
+                })}
+                </ul>
             </>
         );
     }

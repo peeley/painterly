@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Painting from './components/Painting.js';
 
+let userId = $('#root').attr('userId');
 class Home extends React.Component {
     constructor(props){
         super(props);
@@ -9,10 +10,18 @@ class Home extends React.Component {
             paintings: [ ]
         }
     }
+    componentDidMount(){
+        axios.get(`${process.env.MIX_APP_URL}/api/u/${this.props.userId}/paintings`)
+        .then( response => {
+            this.setState({
+                paintings: response.data
+            });
+        })
+    }
     render(){
         return (
             <>
-                <div class="row py-3" >
+                <div className="row py-3" >
                     <h3 className="col-6">My Paintings</h3>
                     <form method="POST" action="/painting">
                         <button className="btn btn-sm btn-success col" type="submit">
@@ -22,7 +31,7 @@ class Home extends React.Component {
                 </div>
                 <ul>
                 { this.state.paintings.map(painting => {
-                    return <Painting painting={painting} />;
+                    return <Painting title={painting.title} id={painting.id}/>;
                 })}
                 </ul>
             </>
@@ -30,7 +39,7 @@ class Home extends React.Component {
     }
 }
 
-ReactDOM.render(<Home />, document.getElementById('root'));
+ReactDOM.render(<Home userId={userId}/>, document.getElementById('root'));
 
 /*
 $(".deletePaintingForm").on("submit", function () {

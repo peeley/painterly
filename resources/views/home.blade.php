@@ -15,7 +15,7 @@
                     @endif
 
                     You are logged in!
-                    <div id="root" ></div>
+                    <div id="root" userId="{{ Auth::id() }}"></div>
                     <!--
                     <div class="row py-3" >
                         <h3 class="col-4">My Paintings</h3>

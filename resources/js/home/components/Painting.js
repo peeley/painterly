@@ -7,7 +7,7 @@ class Painting extends React.Component {
     render() {
         return (
             <li className="list-group-item row">
-                <a className"col"
+                <a className="col"
                     href={`${process.env.MIX_APP_URL}/painting/${this.props.id}`}>
                     {this.props.title}
                 </a>

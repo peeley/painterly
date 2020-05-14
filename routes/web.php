@@ -21,10 +21,14 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
 Route::post('/painting', 'PaintingController@index')->middleware('auth');
 Route::get('/painting/{painting}', 'PaintingController@show')->middleware('auth');
 Route::get('/api/p/{painting}', 'PaintingController@getPainting');
 Route::put('/api/p/{painting}', 'PaintingController@putPainting')->middleware('auth');
 Route::delete('/api/p/{painting}', 'PaintingController@deletePainting')->middleware('auth');
+
 Route::post('/api/p/{painting}/perms/{user}', 'PermissionController@addUser')->middleware('auth');
 Route::delete('/api/p/{painting}/perms/{user}', 'PermissionController@removeUser')->middleware('auth');
+
+Route::get('/api/u/{user}/paintings', 'UserController@getPaintings')->middleware('auth');

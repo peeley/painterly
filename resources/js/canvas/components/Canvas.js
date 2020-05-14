@@ -64,7 +64,7 @@ class Canvas extends React.Component {
         context.clearRect(0, 0, width, height);
     }
     pushCanvas = () => {
-        axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.match.params.id}`,
+        axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`,
                   { strokes: JSON.stringify(this.versionController.versionHistory) },
             { headers: { 'Content-Type' : 'application/json' }})
         .then( response => {
@@ -78,7 +78,7 @@ class Canvas extends React.Component {
         })
     }
     getCanvas = () => {
-        axios.get(`${process.env.MIX_APP_URL}/api/p/${this.props.match.params.id}`)
+        axios.get(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`)
         .then( response => {
             this.setState({
                 title: response.data.title
@@ -130,7 +130,7 @@ class Canvas extends React.Component {
                 <MenuBar 
                     title={this.state.title}
                     surface={this.state.drawSurface} 
-                    paintingId={this.props.match.params.id}
+                    paintingId={this.props.paintingId}
                 />
                 <div className="row pl-5">
                     <ToolController 

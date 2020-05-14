@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Painting from './components/Painting.js';
 
 let userId = $('#root').attr('userId');
+
 class Home extends React.Component {
     constructor(props){
         super(props);

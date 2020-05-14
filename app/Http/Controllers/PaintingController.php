@@ -18,7 +18,7 @@ class PaintingController extends Controller
 
     public function show(Painting $painting){
         Gate::authorize('view-painting', $painting);
-        return view('app', ['title' => $painting->title]);
+        return view('app', ['title' => $painting->title, 'id' => $painting->id]);
     }
     public function getPainting(Painting $painting){
         return $painting;

@@ -10,14 +10,14 @@
 - Loading animation while strokes object is being downloaded/rendered
 - Fix automatic canvas sizing to fit screen, have canvas visual size
   and programmatic size be different.
-- JQuery really isn't cutting it even for simpler interactions like in
-  the home page - maybe start working on React component
 - TESTING!
 
 # In Progress
 - Add new users to painting when private
     - Create backend controller
     - Create form in options modal in /home
+- JQuery really isn't cutting it even for simpler interactions like in
+  the home page - maybe start working on React component
 - Add new tool types
     - Shapes
     - Image insertion

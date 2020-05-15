@@ -32,7 +32,7 @@ class Home extends React.Component {
                 </div>
                 <ul className="list-group list-group-flush">
                 { this.state.paintings.map(painting => {
-                    return <Painting title={painting.title} id={painting.id}/>;
+                    return <Painting title={painting.title} paintingId={painting.id} key={painting.id}/>;
                 })}
                 </ul>
             </>

@@ -10,7 +10,9 @@ class PaintingOptions extends React.Component {
                         data-toggle="dropdown">
                         ...
                     </button>
-                    <TitleEditor paintingId={this.props.paintingId} title={this.props.paintingTitle}/>
+                    <TitleEditor paintingId={this.props.paintingId}
+                        title={this.props.paintingTitle}
+                        titleChangeCallback={this.props.titleChangeCallback}/>
                 </div>
             </>
         );

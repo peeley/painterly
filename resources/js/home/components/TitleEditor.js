@@ -20,14 +20,15 @@ class TitleEditor extends React.Component {
                   {headers: { 'Content-Type': 'application/json'}})
             .then( response => {
                 this.setState({
-                    savedTitle: title,
-                    error: null
+                    savedTitle: this.state.title,
+                    errors: null
                 });
+                this.props.titleChangeCallback(this.state.title);
+                $(`#titleModal${this.props.paintingId}`).modal('hide');
             })
             .catch( error => {
-                console.log(error.response);
+                console.log(error);
                 this.setState({
-                    title: this.state.savedTitle,
                     errors: error.response.data.errors.title[0]
                 });
             });
@@ -61,6 +62,11 @@ class TitleEditor extends React.Component {
                                 </button>
                             </div>
                         </div>
+                        { this.state.errors ?
+                            <div className="alert alert-danger alert-dismissable fade show" role="alert">
+                                {this.state.errors}
+                            </div> : null
+                        }
                     </div>
                 </div>
             </>

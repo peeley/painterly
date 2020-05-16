@@ -7,11 +7,8 @@ class PrivacyEditor extends React.Component {
     render() {
         return (
             <>
-                <button className="dropdown-item" data-toggle="modal"
-                    data-target={ "#privacyModal" + this.props.paintingId } >
-                    Edit Privacy Settings
-                </button>
-                <div className="modal fade" role="dialog" id={ "privacyModal" + this.props.paintingId }>
+                <div className="modal fade" role="dialog" tabindex="-1"
+                    id={ "privacyModal" + this.props.paintingId }>
                     <div className="modal-dialog" role="document" >
                         <div className="modal-content" >
                             <div className="modal-header" >
@@ -47,7 +44,9 @@ class PrivacyEditor extends React.Component {
                             <div className="modal-footer" >
                                 <button className="btn btn-primary"
                                     onClick={ this.submitSettings }
-                                    data-dismiss="modal">Submit</button>
+                                    data-dismiss="modal">
+                                    Submit
+                                </button>
                             </div>
                         </div>
                     </div>

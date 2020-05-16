@@ -12,14 +12,22 @@ class PaintingOptions extends React.Component {
                         ...
                     </button>
                     <div className="dropdown-menu" role="menu" >
-                        <TitleEditor paintingId={this.props.paintingId}
-                            title={this.props.paintingTitle}
-                            titleChangeCallback={this.props.titleChangeCallback}/>
-                        <PrivacyEditor paintingId={this.props.paintingId}
-                            edit_public={this.props.edit_public}
-                            view_public={this.props.view_public} />
+                        <button className="dropdown-item" data-toggle="modal"
+                            data-target={'#titleModal' + this.props.paintingId}>
+                            Edit Title
+                        </button>
+                        <button className="dropdown-item" data-toggle="modal"
+                            data-target={ "#privacyModal" + this.props.paintingId } >
+                            Edit Privacy Settings
+                        </button>
                     </div>
                 </div>
+                <TitleEditor paintingId={this.props.paintingId}
+                    title={this.props.paintingTitle}
+                    titleChangeCallback={this.props.titleChangeCallback}/>
+                <PrivacyEditor paintingId={this.props.paintingId}
+                    view_public={this.props.view_public}
+                    edit_public={this.props.edit_public} />
             </>
         );
     }

@@ -21,7 +21,10 @@ class Painting extends React.Component {
                     {this.state.title}
                 </a>
                 <PaintingOptions paintingId={this.props.paintingId}
-                    paintingTitle={this.props.title} titleChangeCallback={this.setTitle}/>
+                    paintingTitle={this.props.title}
+                    edit_public={this.props.edit_public}
+                    view_public={this.props.view_public}
+                    titleChangeCallback={this.setTitle}/>
             </li>
         );
     }

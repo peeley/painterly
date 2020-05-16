@@ -36,12 +36,10 @@ class TitleEditor extends React.Component {
     render(){
         return (
             <>
-                <div className="dropdown-menu" role="menu" >
-                    <button className="dropdown-item" data-toggle="modal"
-                        data-target={'#titleModal' + this.props.paintingId}>
-                        Edit Title
-                    </button>
-                </div>
+                <button className="dropdown-item" data-toggle="modal"
+                    data-target={'#titleModal' + this.props.paintingId}>
+                    Edit Title
+                </button>
                 <div className="modal fade" role="dialog" id={"titleModal" + this.props.paintingId} >
                     <div className="modal-dialog" role="document" >
                         <div className="modal-content">

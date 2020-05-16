@@ -35,35 +35,33 @@ class TitleEditor extends React.Component {
     }
     render(){
         return (
-            <>
-                <div className="modal fade" id={"titleModal" + this.props.paintingId} >
-                    <div className="modal-dialog" >
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">Edit Title</h5>
-                                <button type="close" className="close" data-dismiss="modal" aria-label="Close">
-                                    <span>&times;</span>
-                                </button>
-                            </div>
-                            <div className="modal-body row justify-content-center">
-                                <input id={"titleForm_" + this.props.paintingId} className="col-8"
-                                    onChange={this.handleChange} type="text" placeholder="Edit title"
-                                    value={ this.state.title } />
-                                <button id={ this.props.paintingId }
-                                    className="btn btn-primary editTitleSubmitButton"
-                                    onClick={this.submitTitle}>
-                                    Submit
-                                </button>
-                            </div>
+            <div className="modal fade" id={"titleModal" + this.props.paintingId} >
+                <div className="modal-dialog" >
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">Edit Title</h5>
+                            <button type="close" className="close" data-dismiss="modal" aria-label="Close">
+                                <span>&times;</span>
+                            </button>
                         </div>
-                        { this.state.errors ?
-                            <div className="alert alert-danger alert-dismissable fade show" >
-                                {this.state.errors}
-                            </div> : null
-                        }
+                        <div className="modal-body row justify-content-center">
+                            <input id={"titleForm_" + this.props.paintingId} className="col-8"
+                                onChange={this.handleChange} type="text" placeholder="Edit title"
+                                value={ this.state.title } />
+                            <button id={ this.props.paintingId }
+                                className="btn btn-primary editTitleSubmitButton"
+                                onClick={this.submitTitle}>
+                                Submit
+                            </button>
+                        </div>
                     </div>
+                    { this.state.errors ?
+                        <div className="alert alert-danger alert-dismissable fade show" >
+                            {this.state.errors}
+                        </div> : null
+                    }
                 </div>
-            </>
+            </div>
         );
     };
 }

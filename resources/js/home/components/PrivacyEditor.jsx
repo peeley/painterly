@@ -1,6 +1,35 @@
 import React from 'react';
 
 class PrivacyEditor extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            view_public: this.props.view_public,
+            edit_public: this.props.edit_public,
+        }
+    }
+    handleViewToggle = () => {
+        this.setState({
+            view_public: !this.state.view_public
+        }, () => {
+            if(!this.state.view_public && this.state.edit_public){
+                this.setState({
+                    edit_public: false
+                });
+            }
+        });
+    }
+    handleEditToggle = () => {
+        this.setState({
+            edit_public: !this.state.edit_public
+        }, () => {
+            if(!this.state.view_public && this.state.edit_public){
+                this.setState({
+                    view_public: true
+                });
+            }
+        });
+    }
     submitSettings = () => {
         // TODO
     }
@@ -21,7 +50,8 @@ class PrivacyEditor extends React.Component {
                                 <div className="custom-control custom-switch" >
                                     <input type="checkbox" className="custom-control-input"
                                         id={ "viewPublicSwitch_" + this.props.paintingId }
-                                        checked={ this.props.view_public } readOnly />
+                                        checked={ this.state.view_public }
+                                        onChange={ this.handleViewToggle } />
                                     <label className="custom-control-label"
                                         htmlFor={ "viewPublicSwitch_" + this.props.paintingId }>
                                         Anyone can view
@@ -32,7 +62,8 @@ class PrivacyEditor extends React.Component {
                                 <div className="custom-control custom-switch" >
                                     <input type="checkbox" className="custom-control-input"
                                         id={ "editPublicSwitch_" + this.props.paintingId }
-                                        checked={ this.props.edit_public } readOnly />
+                                        checked={ this.state.edit_public }
+                                        onChange={ this.handleEditToggle }/>
                                     <label className="custom-control-label"
                                         htmlFor={ "editPublicSwitch_" + this.props.paintingId }>
                                         Anyone can edit

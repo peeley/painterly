@@ -20,6 +20,10 @@ class PaintingOptions extends React.Component {
                             data-target={ "#privacyModal" + this.props.paintingId } >
                             Edit Privacy Settings
                         </button>
+                        <div className="dropdown-divider"></div>
+                        <button className="dropdown-item">
+                            Delete
+                        </button>
                     </div>
                 </div>
                 <TitleEditor paintingId={this.props.paintingId}

@@ -6,6 +6,7 @@ class PrivacyEditor extends React.Component {
         this.state = {
             view_public: this.props.view_public,
             edit_public: this.props.edit_public,
+            errors: null
         }
     }
     handleViewToggle = () => {
@@ -31,11 +32,20 @@ class PrivacyEditor extends React.Component {
         });
     }
     submitSettings = () => {
-        // TODO
+        axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`,
+                  {'view_public': this.state.view_public,
+                   'edit_public': this.state.edit_public },
+                  {'Content-Type': 'application/json'}
+        )
+        .catch( error => {
+            this.setState({
+                errors: error
+            })
+        });
     }
     render() {
         return (
-            <div className="modal fade" role="dialog" tabindex="-1"
+            <div className="modal fade" role="dialog"
                 id={ "privacyModal" + this.props.paintingId }>
                 <div className="modal-dialog" role="document" >
                     <div className="modal-content" >
@@ -80,6 +90,11 @@ class PrivacyEditor extends React.Component {
                         </div>
                     </div>
                 </div>
+                { this.state.errors ?
+                    <div className="alert alert-danger alert-dismissable fade show" >
+                          {this.state.errors}
+                        </div> : null
+                    }
             </div>
         );
     }

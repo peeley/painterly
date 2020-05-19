@@ -16,8 +16,6 @@
 - Add new users to painting when private
     - Create backend controller
     - Create form in options modal in /home
-- JQuery really isn't cutting it even for simpler interactions like in
-  the home page - maybe start working on React component
 - Add new tool types
     - Shapes
     - Image insertion
@@ -52,3 +50,5 @@
 - Refactor `fetch` calls in React to use `axios`
 - From home screen be able to delete painting, edit title, make private
 - Make validators for user input - titles, etc.
+- JQuery really isn't cutting it even for simpler interactions like in
+  the home page - maybe start working on React component

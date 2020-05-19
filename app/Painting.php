@@ -17,6 +17,13 @@ class Painting extends Model
         'user_id' => 'integer',
     ];
 
+    protected $attributes = [
+        'title' => 'Blank painting',
+        'strokes' => '[]',
+        'view_public' => false,
+        'edit_public' => false
+    ];
+
     public function user(){
         return $this->belongsTo('App\User');
     }

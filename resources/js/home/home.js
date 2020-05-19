@@ -19,16 +19,31 @@ class Home extends React.Component {
             });
         })
     }
+    deletePainting = (paintingId) => {
+        this.setState({
+            paintings: this.state.paintings.filter(p => p.id !== paintingId)
+        });
+    }
+    createPainting = () => {
+        axios.post(`${process.env.MIX_APP_URL}/api/p`)
+        .then( response => {
+            this.setState({
+                paintings: this.state.paintings.concat([response.data])
+            });
+        })
+        .catch( error => {
+            console.log(error);
+            // TODO: error handling
+        })
+    }
     render(){
         return (
             <>
                 <div className="row py-3" >
                     <h3 className="col-6">My Paintings</h3>
-                    <form method="POST" action="/painting">
-                        <button className="btn btn-sm btn-success col" type="submit">
-                            Create New Painting
-                        </button>
-                    </form>
+                    <button className="btn btn-sm btn-success" onClick={this.createPainting}>
+                        Create New Painting
+                    </button>
                 </div>
                 <ul className="list-group list-group-flush">
                 { this.state.paintings.map(painting => {
@@ -37,7 +52,8 @@ class Home extends React.Component {
                             paintingId={painting.id}
                             edit_public={painting.edit_public}
                             view_public={painting.view_public}
-                            key={painting.id} />
+                            key={painting.id}
+                            deletePaintingCallback={this.deletePainting} />
                     );
                 })}
                 </ul>

@@ -10,10 +10,10 @@ use \App\Painting;
 
 class PaintingController extends Controller
 {
-    public function index(){
+    public function createPainting(){
         $user = Auth::user();
         $painting = $user->paintings()->create();
-        return redirect("/painting/{$painting->id}");
+        return response()->json($painting);
     }
 
     public function show(Painting $painting){
@@ -40,6 +40,6 @@ class PaintingController extends Controller
     }
     public function deletePainting(Painting $painting){
         $painting->delete();
-        return redirect('/home');
+        return response('OK', 200);
     }
 }

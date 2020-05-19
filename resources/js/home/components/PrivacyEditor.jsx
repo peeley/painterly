@@ -73,7 +73,7 @@ class PrivacyEditor extends React.Component {
                                     <input type="checkbox" className="custom-control-input"
                                         id={ "editPublicSwitch_" + this.props.paintingId }
                                         checked={ this.state.edit_public }
-                                        onChange={ this.handleEditToggle }/>
+                                        onChange={ this.handleEditToggle } />
                                     <label className="custom-control-label"
                                         htmlFor={ "editPublicSwitch_" + this.props.paintingId }>
                                         Anyone can edit

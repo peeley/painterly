@@ -24,7 +24,8 @@ class Painting extends React.Component {
                     paintingTitle={this.props.title}
                     edit_public={this.props.edit_public}
                     view_public={this.props.view_public}
-                    titleChangeCallback={this.setTitle}/>
+                    titleChangeCallback={this.setTitle}
+                    deletePaintingCallback={this.props.deletePaintingCallback} />
             </li>
         );
     }

@@ -22,8 +22,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::post('/painting', 'PaintingController@index')->middleware('auth');
 Route::get('/painting/{painting}', 'PaintingController@show')->middleware('auth');
+Route::post('/api/p', 'PaintingController@createPainting')->middleware('auth');
 Route::get('/api/p/{painting}', 'PaintingController@getPainting');
 Route::put('/api/p/{painting}', 'PaintingController@putPainting')->middleware('auth');
 Route::delete('/api/p/{painting}', 'PaintingController@deletePainting')->middleware('auth');

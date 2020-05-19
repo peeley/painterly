@@ -3,6 +3,18 @@ import TitleEditor from './TitleEditor.js';
 import PrivacyEditor from './PrivacyEditor.jsx';
 
 class PaintingOptions extends React.Component {
+    handleDelete = () => {
+        if(confirm(`Really delete painting '${this.props.paintingTitle}'?`)){
+            axios.delete(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`)
+            .then( response => {
+                this.props.deletePaintingCallback(this.props.paintingId);
+            })
+            .catch( error => {
+                console.log(error);
+                // TODO: error handling
+            });
+        }
+    }
     render(){
         return (
             <>
@@ -21,7 +33,7 @@ class PaintingOptions extends React.Component {
                             Edit Privacy Settings
                         </button>
                         <div className="dropdown-divider"></div>
-                        <button className="dropdown-item">
+                        <button className="dropdown-item" onClick={this.handleDelete}>
                             Delete
                         </button>
                     </div>

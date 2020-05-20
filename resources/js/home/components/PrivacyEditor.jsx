@@ -9,6 +9,12 @@ class PrivacyEditor extends React.Component {
             errors: null
         }
     }
+    componentDidMount(){
+        axios.get(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}/perms`)
+            .then( response => {
+                console.log(response);
+            });
+    }
     handleViewToggle = () => {
         this.setState({
             view_public: !this.state.view_public

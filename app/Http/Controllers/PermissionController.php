@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use \App\Painting;
 use \App\User;
 
 class PermissionController extends Controller
 {
+    public function getPermissions(Painting $painting){
+        return $painting->permissions;
+    }
     public function addUser(Request $request, Painting $painting, User $user){
         Gate::authorize('edit-permissions', $painting);
         $perms = $request->query('perms');

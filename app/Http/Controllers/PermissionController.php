@@ -10,7 +10,7 @@ use \App\User;
 class PermissionController extends Controller
 {
     public function getPermissions(Painting $painting){
-        return $painting->permissions;
+        return response()->json($painting->permissions);
     }
     public function addUser(Request $request, Painting $painting, User $user){
         Gate::authorize('edit-permissions', $painting);

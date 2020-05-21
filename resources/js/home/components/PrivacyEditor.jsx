@@ -1,4 +1,5 @@
 import React from 'react';
+import UserPermissionList from './UserPermissionList.jsx';
 
 class PrivacyEditor extends React.Component {
     constructor(props){
@@ -7,13 +8,7 @@ class PrivacyEditor extends React.Component {
             view_public: this.props.view_public,
             edit_public: this.props.edit_public,
             errors: null
-        }
-    }
-    componentDidMount(){
-        axios.get(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}/perms`)
-            .then( response => {
-                console.log(response);
-            });
+        };
     }
     handleViewToggle = () => {
         this.setState({
@@ -87,6 +82,9 @@ class PrivacyEditor extends React.Component {
                                 </div>
                             </div>
                         </div>
+                        { !this.state.view_public || ! this.state.edit_public ?
+                            <UserPermissionList paintingId={this.props.paintingId} /> : null
+                        }
                         <div className="modal-footer" >
                             <button className="btn btn-primary"
                                 onClick={ this.submitSettings }

@@ -20,14 +20,14 @@ class UserPermissionList extends React.Component {
     }
     render(){
         return (
-            <>
-                <h5>User Permissions</h5>
+            <div>
+                <h5 className="pl-3">User Permissions</h5>
                 <ul className="list-group">
                     { this.state.permissions.map( perm => {
                         <li className="list-group-item row">{perm}</li>
                     })}
                 </ul>
-            </>
+            </div>
         )
     }
 }

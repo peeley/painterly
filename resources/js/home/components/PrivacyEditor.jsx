@@ -81,10 +81,10 @@ class PrivacyEditor extends React.Component {
                                     </label>
                                 </div>
                             </div>
+                            { !this.state.view_public || ! this.state.edit_public ?
+                                <UserPermissionList paintingId={this.props.paintingId} /> : null
+                                }
                         </div>
-                        { !this.state.view_public || ! this.state.edit_public ?
-                            <UserPermissionList paintingId={this.props.paintingId} /> : null
-                        }
                         <div className="modal-footer" >
                             <button className="btn btn-primary"
                                 onClick={ this.submitSettings }

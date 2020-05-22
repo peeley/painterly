@@ -8,12 +8,14 @@ class Permission extends Model
 {
     protected $casts = [
         'user_id' => 'integer',
+        'user_email' => 'string',
         'painting_id' => 'integer',
         'permissions' => 'string'
     ];
 
     protected $fillable = [
         'user_id',
+        'user_email',
         'permissions'
     ];
 

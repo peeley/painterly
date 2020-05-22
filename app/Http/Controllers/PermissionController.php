@@ -21,7 +21,7 @@ class PermissionController extends Controller
         // TODO add validation for perms string
         $newPerm = $painting->permissions->firstOrCreate(
             ['user_id' => $user->id],
-            ['permissions' => $perms]
+            ['permissions' => $perms, 'user_email' => $user->email]
         );
         return response()->json($newPerm);
     }

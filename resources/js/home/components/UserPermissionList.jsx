@@ -28,10 +28,13 @@ class UserPermissionList extends React.Component {
     addUser = () => {
         // TODO call to API to add user permission
     }
+    removeUser = () => {
+        // TODO call to API to remove user permission
+    }
     render(){
         return (
-            <div>
-                <h5 className="pl-3">User Permissions</h5>
+            <div className="container">
+                <h3 className="pl-3">User Permissions</h3>
                 <div className="row justify-content-center">
                     <input type="text" value={this.state.searchText}
                         onChange={this.handleSearchChange} />
@@ -39,11 +42,16 @@ class UserPermissionList extends React.Component {
                         Add User
                     </button>
                 </div>
-                <ul className="list-group">
+                <ul className="list-group list-group-flush">
                     { this.state.permissions.map( perm => {
                         return (
-                            <li key={perm.id} className="list-group-item row">
-                                {JSON.stringify(perm)}
+                            <li key={perm.id} className="list-group-item">
+                                <span className="col-5">{perm.user_email}</span>
+                                <span className="col-7">{perm.permissions}</span>
+                                <button className="btn btn-outline-danger btn-sm"
+                                    onClick={this.removeUser}>
+                                    &times;
+                                </button>
                             </li>
                         );
                     })}

@@ -16,6 +16,7 @@ class CreatePermissionsTable extends Migration
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
+            $table->string('user_email');
             $table->foreignId('painting_id')->constrained();
             $table->enum('permissions', ['read', 'read_write']);
             $table->timestamps();

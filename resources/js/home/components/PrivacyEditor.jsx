@@ -51,7 +51,7 @@ class PrivacyEditor extends React.Component {
                 <div className="modal-dialog" role="document" >
                     <div className="modal-content" >
                         <div className="modal-header" >
-                            <h5 className="modal-title" >Edit Privacy Settings</h5>
+                            <h3 className="modal-title" >Edit Privacy Settings</h3>
                             <button type="close" className="close" data-dismiss="modal" aria-label="Close">
                                 <span>&times;</span>
                             </button>

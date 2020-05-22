@@ -12,22 +12,26 @@ class PermissionController extends Controller
     public function getPermissions(Painting $painting){
         return response()->json($painting->permissions);
     }
-    public function addUser(Request $request, Painting $painting, User $user){
+    public function addUser(Request $request, Painting $painting){
         Gate::authorize('edit-permissions', $painting);
         $perms = $request->query('perms');
-        if(!($perms === 'read' && $perms === 'read_write')){
+        if(!($perms === 'read' || $perms === 'read_write')){
             return response('Invalid permissions', 422);
         }
-        // TODO add validation for perms string
-        $newPerm = $painting->permissions->firstOrCreate(
+        $email = $request->query('email');
+        $user = User::where('email', $email)->first();
+        if(!$user){
+            return response("No matching user with email $email", 404);
+        }
+        $newPerm = $painting->permissions()->firstOrCreate(
             ['user_id' => $user->id],
-            ['permissions' => $perms, 'user_email' => $user->email]
+            ['permissions' => $perms, 'user_email' => $email]
         );
         return response()->json($newPerm);
     }
     public function removeUser(Painting $painting, User $user){
         Gate::authorize('edit-permissions', $painting);
-        $painting->permissions->where('user_id', $user->id)->delete();
+        $painting->permissions->where('user_id', $user->id)->first()->delete();
         return response('Permission removed', 200);
     }
 }

@@ -28,6 +28,8 @@ class PermissionController extends Controller
             ['permissions' => $perms, 'user_email' => $email]
         );
         return response()->json($newPerm);
+
+        // TODO notify user when added to painting
     }
     public function removeUser(Painting $painting, User $user){
         Gate::authorize('edit-permissions', $painting);

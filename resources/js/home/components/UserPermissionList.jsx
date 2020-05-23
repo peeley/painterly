@@ -5,7 +5,8 @@ class UserPermissionList extends React.Component {
         super(props);
         this.state = {
             permissions: [],
-            searchText: ""
+            searchText: "",
+            selectedPermission: "read"
         };
     }
     componentDidMount(){
@@ -25,12 +26,19 @@ class UserPermissionList extends React.Component {
         });
         // TODO interactive search, usernames pop up
     }
+    handlePermSelect = (event) => {
+        this.setState({
+            selectedPermission: event.target.value
+        });
+    }
     addUser = () => {
         axios.post(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}/perms`,
                    null,
                    { params: {'email': this.state.searchText, 'perms': 'read_write'}})
         .then( response => {
-            console.log(response);
+            this.setState({
+                permissions: this.state.permissions.concat([response.data])
+            })
         })
         .catch( error => {
             console.log(error);
@@ -39,26 +47,33 @@ class UserPermissionList extends React.Component {
     }
     removeUser = (userId) => {
         axios.delete(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}/perms/${userId}`)
-             .then( response => {
-                 this.setState({
-                     permissions: this.state.permissions.filter( p => p.user_id !== userId)
-                 });
-             })
-             .then( error => {
-                 console.log(error);
-                 // TODO error handling
-             });
+        .then( response => {
+            this.setState({
+                permissions: this.state.permissions.filter( p => p.user_id !== userId)
+            });
+        })
+        .then( error => {
+            console.log(error);
+            // TODO error handling
+        });
     }
     render(){
         return (
             <div className="container">
                 <h5 className="pl-3">User Permissions</h5>
-                <div className="row justify-content-center">
+                <div className="justify-content-center input-group mb-3">
                     <input type="text" value={this.state.searchText}
-                        onChange={this.handleSearchChange} />
-                    <button className="btn btn-primary btn-sm" onClick={this.addUser}>
-                        Add User
-                    </button>
+                        onChange={this.handleSearchChange} className="form-control"/>
+                    <div className="input-group-append">
+                        <select value={this.state.value} className="custom-select" onChange={this.handlePermSelect}>
+                            <option value="read">Read</option>
+                            <option value="read_write">Read & Write</option>
+                        </select>
+                        <button className="btn btn-primary"
+                            onClick={this.addUser}>
+                            Add
+                        </button>
+                    </div>
                 </div>
                 <ul className="list-group list-group-flush">
                     { this.state.permissions.map( perm => {

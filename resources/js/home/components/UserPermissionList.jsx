@@ -57,10 +57,24 @@ class UserPermissionList extends React.Component {
             // TODO error handling
         });
     }
+    permToString = (perm) => {
+        if(perm === "read"){
+            return "Read"
+        }
+        else if(perm === "read_write"){
+            return "Read & Write"
+        }
+        else {
+            // TODO handle potentially mangled permission strings
+            this.setState({
+                errors: "Unknown permission given to user."
+            });
+        }
+    }
     render(){
         return (
             <div className="container">
-                <h5 className="pl-3">User Permissions</h5>
+                <h5 className="pl-3 pt-5">User Permissions</h5>
                 <div className="justify-content-center input-group mb-3">
                     <input type="text" value={this.state.searchText}
                         onChange={this.handleSearchChange} className="form-control"/>
@@ -75,20 +89,31 @@ class UserPermissionList extends React.Component {
                         </button>
                     </div>
                 </div>
-                <ul className="list-group list-group-flush">
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">User</th>
+                            <th scope="col">Access</th>
+                            <th scope="col">Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     { this.state.permissions.map( perm => {
                         return (
-                            <li key={perm.id} className="list-group-item">
-                                <span className="col-5">{perm.user_email}</span>
-                                <span className="col-7">{perm.permissions}</span>
-                                <button className="btn btn-outline-danger btn-sm"
-                                    onClick={() => this.removeUser(perm.user_id)}>
-                                    &times;
-                                </button>
-                            </li>
+                            <tr key={perm.id} scope="row">
+                                <td>{perm.user_email}</td>
+                                <td>{this.permToString(perm.permissions)}</td>
+                                <td>
+                                    <button className="btn btn-outline-danger btn-sm"
+                                        onClick={() => this.removeUser(perm.user_id)}>
+                                        &times;
+                                    </button>
+                                </td>
+                            </tr>
                         );
                     })}
-                </ul>
+                    </tbody>
+                </table>
             </div>
         )
     }

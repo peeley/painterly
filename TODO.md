@@ -7,15 +7,12 @@
 - Make logout timer not so obnoxious/learn how authentication actually works lmao
 - Add painting preview in home screen
 - Split home screen into blade components
-- Loading animation while strokes object is being downloaded/rendered
 - Fix automatic canvas sizing to fit screen, have canvas visual size
   and programmatic size be different.
 - TESTING!
 
 # In Progress
-- Add new users to painting when private
-    - Create backend controller
-    - Create form in options modal in /home
+- Loading animation while strokes object is being downloaded/rendered
 - Add new tool types
     - Shapes
     - Image insertion
@@ -23,6 +20,9 @@
     - Charts/tables
     
 # Done
+- Add new users to painting when private
+    - Create backend controller
+    - Create form in options modal in /home
 - Draw on canvas w/ pen, see changes instantly
     - Edit color, width of stroke
 - Undo/redo functionality, version history

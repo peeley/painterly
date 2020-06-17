@@ -2,7 +2,6 @@
 - User organizations
 - Automatically push changes in canvas to all viewers
     - possibly have others view stroke indicators - may not be performant
-- Fix panning to outside of boundaries, add background?
 - Bugfix - fill tool not properly assigning bytes to image data
 - Make logout timer not so obnoxious/learn how authentication actually works lmao
 - Add painting preview in home screen
@@ -12,7 +11,7 @@
 - TESTING!
 
 # In Progress
-- Loading animation while strokes object is being downloaded/rendered
+- Fix panning to outside of boundaries, add background?
 - Add new tool types
     - Shapes
     - Image insertion
@@ -20,6 +19,7 @@
     - Charts/tables
     
 # Done
+- Loading animation while strokes object is being downloaded/rendered
 - Add new users to painting when private
     - Create backend controller
     - Create form in options modal in /home

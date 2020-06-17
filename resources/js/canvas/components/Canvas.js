@@ -167,15 +167,23 @@ class Canvas extends React.Component {
                         </button>
                     </div>
                 </div>
-                <canvas className="row" id="drawSurface"
-                    onMouseDown = {this.handleInput}
-                    onMouseMove = {this.handleInput}
-                    onMouseLeave = {this.handleInput}
-                    onMouseUp = {this.handleInput}
-                    onWheel = {this.handleZoom}
-                    height = { window.innerHeight * .9 }
-                    width = { window.innerWidth * .95 }
-                    ref = { this.state.drawSurface } />
+                { this.state.loading ?
+                    <>
+                        <canvas ref={this.state.drawSurface}></canvas>
+                        <div className="spinner-border text-success" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                    </> :
+                    <canvas className="row" id="drawSurface"
+                        onMouseDown = {this.handleInput}
+                        onMouseMove = {this.handleInput}
+                        onMouseLeave = {this.handleInput}
+                        onMouseUp = {this.handleInput}
+                        onWheel = {this.handleZoom}
+                        height = { window.innerHeight * .9 }
+                        width = { window.innerWidth * .95 }
+                        ref = { this.state.drawSurface } />
+                }
             </div>
         )
     }

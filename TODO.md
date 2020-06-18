@@ -11,7 +11,7 @@
 - TESTING!
 
 # In Progress
-- Fix panning to outside of boundaries, add background?
+- Change pan tool to be unable to pan beyond canvas boundaries
 - Add new tool types
     - Shapes
     - Image insertion

@@ -63,7 +63,7 @@ export class MenuBar extends React.Component {
     render(){
         return (
             <>
-                <div className="row">
+                <div className="row pt-3">
                     <div className="pr-3">
                     <a href={`${process.env.MIX_APP_URL}/home`}
                         className="btn btn-outline-primary">Home</a>

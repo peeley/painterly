@@ -40,6 +40,7 @@ export class VersionController {
         context.clearRect(0, 0, width, height);
         while(versionCounter <= this.currentVersion){
             let stroke = this.versionHistory[versionCounter-1];
+            // TODO refactor out switch statement, allow for polymorphism?
             switch(stroke.type){
                 case 'pen':
                     PenTool.redoStroke(stroke, context);
@@ -51,7 +52,7 @@ export class VersionController {
                     FillTool.redoStroke(stroke, context);
                     break
                 default:
-                    console.log('unknown stroke type');
+                    // console.log(`unknown stroke type: ${JSON.stringify(stroke)}`);
             }
             if(stroke.indicator){
                 this.versionHistory.splice(versionCounter-1, 1);

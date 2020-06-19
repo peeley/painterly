@@ -12,6 +12,7 @@
 
 # In Progress
 - Change pan tool to be unable to pan beyond canvas boundaries
+- Revamp landing page
 - Add new tool types
     - Shapes
     - Image insertion

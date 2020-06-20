@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>Painterly</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -73,7 +73,7 @@
                         <a href="{{ route('login') }}">Login</a>
 
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
+                            <a href="{{ route('register') }}">Sign Up</a>
                         @endif
                     @endauth
                 </div>
@@ -82,6 +82,9 @@
             <div class="content">
                 <div class="title m-b-md">
                     Painterly
+                </div>
+                <div class="subtitle">
+                    Sketch, collaborate, whiteboard.
                 </div>
             </div>
         </div>

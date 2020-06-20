@@ -8,6 +8,8 @@ export class PanTool extends Tool {
         this.mouseDown = false;
         this.lastX = null;
         this.lastY = null;
+        this.shiftedX = 0;
+        this.shiftedY = 0;
     }
     handleEvent = (event, context) => {
         if(!this.mouseDown && (event.buttons === 1 || event.buttons === 4)){
@@ -23,7 +25,19 @@ export class PanTool extends Tool {
             const yCoord = event.clientY - this.topOffset;
             const deltaX = xCoord - this.lastX;
             const deltaY = yCoord - this.lastY;
-            context.translate(deltaX, deltaY);
+            if(this.shiftedX - deltaX > 0 && this.shiftedY - deltaY > 0){
+                this.shiftedX -= deltaX;
+                this.shiftedY -= deltaY;
+                context.translate(deltaX, deltaY);
+            }
+            else if(this.shiftedX - deltaX < 0 && this.shiftedY - deltaY > 0){
+                this.shiftedY -= deltaY;
+                context.translate(0, deltaY);
+            }
+            else if(this.shiftedX - deltaX > 0 && this.shiftedY - deltaY < 0){
+                this.shiftedX -= deltaX;
+                context.translate(deltaX, 0);
+            }
             this.lastX = xCoord;
             this.lastY = yCoord;
             return { indicator: true };

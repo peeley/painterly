@@ -25,16 +25,20 @@ export class PanTool extends Tool {
             const yCoord = event.clientY - this.topOffset;
             const deltaX = xCoord - this.lastX;
             const deltaY = yCoord - this.lastY;
-            if(this.shiftedX - deltaX > 0 && this.shiftedY - deltaY > 0){
+            if(this.shiftedX - deltaX > 0 && this.shiftedY - deltaY > 0 &&
+               this.shiftedX - deltaX < context.canvas.width &&
+               this.shiftedY - deltaY < context.canvas.height){
                 this.shiftedX -= deltaX;
                 this.shiftedY -= deltaY;
                 context.translate(deltaX, deltaY);
             }
-            else if(this.shiftedX - deltaX < 0 && this.shiftedY - deltaY > 0){
+            else if((this.shiftedX - deltaX < 0 || this.shiftedX - deltaX > context.canvas.width) &&
+                    (this.shiftedY - deltaY > 0 && this.shiftedY - deltaY < context.canvas.height)){
                 this.shiftedY -= deltaY;
                 context.translate(0, deltaY);
             }
-            else if(this.shiftedX - deltaX > 0 && this.shiftedY - deltaY < 0){
+            else if((this.shiftedX - deltaX > 0 && this.shiftedX - deltaX < context.canvas.width) &&
+                    (this.shiftedY - deltaY < 0 || this.shiftedY - deltaY > context.canvas.height)){
                 this.shiftedX -= deltaX;
                 context.translate(deltaX, 0);
             }

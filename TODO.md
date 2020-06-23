@@ -11,7 +11,8 @@
 - TESTING!
 
 # In Progress
-- Change pan tool to be unable to pan beyond canvas boundaries
+- Refactor coordinate offsets into Context object instead of being tracked by 
+  each tool individually
 - Revamp landing page
 - Add new tool types
     - Shapes
@@ -20,6 +21,7 @@
     - Charts/tables
     
 # Done
+- Change pan tool to be unable to pan beyond canvas boundaries
 - Loading animation while strokes object is being downloaded/rendered
 - Add new users to painting when private
     - Create backend controller

@@ -33,7 +33,7 @@ export class VersionController {
         this.currentVersion = 0;
     }
     redrawCanvas = (drawSurface) => {
-        let context = drawSurface.current.getContext('2d')
+        let context = drawSurface.current.getContext('2d');
         let versionCounter = 1;
         const width = context.canvas.width;
         const height = context.canvas.height;

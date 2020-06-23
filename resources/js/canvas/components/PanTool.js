@@ -25,20 +25,19 @@ export class PanTool extends Tool {
             const yCoord = event.clientY - this.topOffset;
             const deltaX = xCoord - this.lastX;
             const deltaY = yCoord - this.lastY;
-            if(this.shiftedX - deltaX > 0 && this.shiftedY - deltaY > 0 &&
-               this.shiftedX - deltaX < context.canvas.width &&
-               this.shiftedY - deltaY < context.canvas.height){
+            if(this.isInsideWidthBounds(this.shiftedX - deltaX, context) &&
+               this.isInsideHeightBounds(this.shiftedY - deltaY, context)){
                 this.shiftedX -= deltaX;
                 this.shiftedY -= deltaY;
                 context.translate(deltaX, deltaY);
             }
-            else if((this.shiftedX - deltaX < 0 || this.shiftedX - deltaX > context.canvas.width) &&
-                    (this.shiftedY - deltaY > 0 && this.shiftedY - deltaY < context.canvas.height)){
+            else if(!this.isInsideWidthBounds(this.shiftedX - deltaX, context) &&
+                    this.isInsideHeightBounds(this.shiftedY - deltaY, context)){
                 this.shiftedY -= deltaY;
                 context.translate(0, deltaY);
             }
-            else if((this.shiftedX - deltaX > 0 && this.shiftedX - deltaX < context.canvas.width) &&
-                    (this.shiftedY - deltaY < 0 || this.shiftedY - deltaY > context.canvas.height)){
+            else if(this.isInsideWidthBounds(this.shiftedX - deltaX, context) &&
+                    !this.isInsideHeightBounds(this.shiftedY - deltaY, context)){
                 this.shiftedX -= deltaX;
                 context.translate(deltaX, 0);
             }
@@ -46,5 +45,11 @@ export class PanTool extends Tool {
             this.lastY = yCoord;
             return { indicator: true };
         }
+    }
+    isInsideWidthBounds(coord, context){
+        return (coord > 0 && coord < context.canvas.width);
+    }
+    isInsideHeightBounds(coord, context){
+        return (coord > 0 && coord < context.canvas.height);
     }
 }

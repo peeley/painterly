@@ -49,7 +49,7 @@ class Canvas extends React.Component {
     handleInput = event => {
         let context = this.state.drawSurface.current.getContext('2d');
         if(event.buttons === 4){
-            // shortcut for panning
+            // TODO shortcut for panning
         }
         let inputEvent = {
             clientX : (event.clientX / this.state.scaleFactor) - this.leftOffset,

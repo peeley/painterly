@@ -13,15 +13,15 @@ export class RectTool extends Tool {
         if(event.type === "mousedown"){
             context.beginPath();
             this.mouseDown = true;
-            this.startX = event.clientX - this.leftOffset;
-            this.startY = event.clientY - this.topOffset;
+            this.startX = event.clientX;
+            this.startY = event.clientY;
             this.currentStroke.coords = [this.startX, this.startY];
         }
         else if(event.type === "mouseup" || 
                 (this.mouseDown && event.type === "mousemove")){
             context.fillStyle = this.color;
-            const width = (event.clientX - this.leftOffset) - this.startX;
-            const height = (event.clientY - this.topOffset) - this.startY;
+            const width = event.clientX - this.startX;
+            const height = event.clientY - this.startY;
             context.fillRect(this.startX, this.startY, width, height);
             this.currentStroke.width = width;
             this.currentStroke.height = height;

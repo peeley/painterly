@@ -25,13 +25,6 @@ export class ToolController extends React.Component{
             selectedName: "pen"
         };
     }
-    componentDidUpdate(prevProps){
-        if(this.props.surface.current){
-            for(let toolName in this.toolSet){
-                this.toolSet[toolName].setOffsets(this.props.surface);
-            }
-        }
-    }
     handleChange = (event) => {
         let toolName = event.target.value;
         this.setState({

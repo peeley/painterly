@@ -14,15 +14,15 @@ export class PanTool extends Tool {
     handleEvent = (event, context) => {
         if(!this.mouseDown && (event.buttons === 1 || event.buttons === 4)){
             this.mouseDown = true;
-            this.lastX = event.clientX - this.leftOffset;
-            this.lastY = event.clientY - this.topOffset;
+            this.lastX = event.clientX;
+            this.lastY = event.clientY;
         }
         else if(event.type === 'mouseup'){
             this.mouseDown = false;
         }
         else if(this.mouseDown && event.type === 'mousemove'){
-            const xCoord = event.clientX - this.leftOffset;
-            const yCoord = event.clientY - this.topOffset;
+            const xCoord = event.clientX;
+            const yCoord = event.clientY;
             const deltaX = xCoord - this.lastX;
             const deltaY = yCoord - this.lastY;
             if(this.isInsideWidthBounds(this.shiftedX - deltaX, context) &&
@@ -43,7 +43,10 @@ export class PanTool extends Tool {
             }
             this.lastX = xCoord;
             this.lastY = yCoord;
-            return { indicator: true };
+            this.currentStroke.indicator = true;
+            this.currentStroke.leftOffset = this.shiftedX;
+            this.currentStroke.topOffset = this.shiftedY;
+            return this.currentStroke;
         }
     }
     isInsideWidthBounds(coord, context){

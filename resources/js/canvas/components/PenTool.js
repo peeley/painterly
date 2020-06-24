@@ -9,8 +9,8 @@ export class PenTool extends Tool {
         this.joinType = 'round';
     }
     handleEvent = (event, context) => {
-        const xCoord = event.clientX - this.leftOffset;
-        const yCoord = event.clientY - this.topOffset;
+        const xCoord = event.clientX;
+        const yCoord = event.clientY;
         if(event.type === "mousedown"){
             this.mouseDown = true;
             context.save();
@@ -35,9 +35,8 @@ export class PenTool extends Tool {
             let indicatorStroke = this.currentStroke;
             indicatorStroke.indicator = true;
             return indicatorStroke;
-
         }
-    }   
+    }
     static redoStroke(stroke, context){
         const color = stroke.color;
         const width = stroke.strokeWidth;

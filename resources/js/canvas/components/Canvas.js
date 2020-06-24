@@ -14,8 +14,10 @@ class Canvas extends React.Component {
             title: null,
             loading: true,
             drawSurface: React.createRef(),
-            scaleFactor: 1
+            scaleFactor: 1,
         };
+        this.leftOffset = 0;
+        this.topOffset = 0;
     }
     componentDidMount(){
         document.addEventListener('keydown', (event) => {
@@ -31,24 +33,37 @@ class Canvas extends React.Component {
                 }
             }
         });
+        this.setOffsets();
         this.getCanvas();
+    }
+    setOffsets = () => {
+        let rect = this.state.drawSurface.current.getBoundingClientRect();
+        this.leftOffset = rect.left / this.state.scaleFactor;
+        this.topOffset = rect.top / this.state.scaleFactor;
     }
     handleToolSelect = (tool) => {
         this.setState({
             tool: tool
-        }, () => this.state.tool.setOffsets(this.state.drawSurface, 
-                                            this.state.scaleFactor));
+        });
     }
     handleInput = event => {
         let context = this.state.drawSurface.current.getContext('2d');
         if(event.buttons === 4){
             // shortcut for panning
         }
-        event.clientX /= this.state.scaleFactor;
-        event.clientY /= this.state.scaleFactor;
-        let newItem = this.state.tool.handleEvent(event, context);
+        let inputEvent = {
+            clientX : (event.clientX / this.state.scaleFactor) - this.leftOffset,
+            clientY : (event.clientY / this.state.scaleFactor) - this.topOffset,
+            buttons : event.buttons,
+            type : event.type,
+        }
+        let newItem = this.state.tool.handleEvent(inputEvent, context);
         if(newItem != null){
             this.versionController.push(newItem);
+            if(newItem.type === 'pan'){
+                this.leftOffset = newItem.leftOffset;
+                this.topOffset = newItem.topOffset;
+            }
             if(!newItem.indicator){
                 this.pushCanvas();
             }
@@ -121,8 +136,6 @@ class Canvas extends React.Component {
         ctx.resetTransform();
         ctx.scale(this.state.scaleFactor, this.state.scaleFactor);
         this.versionController.redrawCanvas(this.state.drawSurface);
-        this.state.tool.setOffsets(this.state.drawSurface, 
-                                   this.state.scaleFactor);
     }
     render(){
         return(

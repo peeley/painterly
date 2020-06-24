@@ -19,11 +19,6 @@ export class Tool {
             strokeWidth: this.getStrokeWidth(),
         }
     }
-    setOffsets = (drawSurface, scaleFactor = 1) => {
-        let rect = drawSurface.current.getBoundingClientRect();
-        this.topOffset = rect.top / scaleFactor;
-        this.leftOffset = rect.left / scaleFactor;
-    }
     setColor = (color) => {
         this.color = color;
         this.currentStroke.color = this.color;

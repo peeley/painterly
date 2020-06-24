@@ -55,8 +55,8 @@ export class FillTool extends Tool {
     }
     handleEvent = (event, context) => {
         if(event.type === 'mousedown'){
-            const xCoord = Math.floor(event.clientX - this.leftOffset);
-            const yCoord = Math.floor(event.clientY - this.topOffset);
+            const xCoord = Math.floor(event.clientX);
+            const yCoord = Math.floor(event.clientY);
             const backgroundColor = context.getImageData(xCoord, yCoord, 1, 1).data;
             this.currentStroke.color = hexToRGBA(this.color);
             console.log(`filling ${backgroundColor} from ${xCoord},${yCoord} 

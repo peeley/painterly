@@ -10,18 +10,20 @@ export class RectTool extends Tool {
         this.mouseDown = false;
     }
     handleEvent = (event, context) => {
+        const xCoord = (event.clientX - event.leftOffset) / event.scaleFactor;
+        const yCoord = (event.clientY - event.topOffset) / event.scaleFactor;
         if(event.type === "mousedown"){
             context.beginPath();
             this.mouseDown = true;
-            this.startX = event.clientX;
-            this.startY = event.clientY;
+            this.startX = xCoord;
+            this.startY = yCoord;
             this.currentStroke.coords = [this.startX, this.startY];
         }
         else if(event.type === "mouseup" || 
                 (this.mouseDown && event.type === "mousemove")){
             context.fillStyle = this.color;
-            const width = event.clientX - this.startX;
-            const height = event.clientY - this.startY;
+            const width = xCoord - this.startX;
+            const height = yCoord - this.startY;
             context.fillRect(this.startX, this.startY, width, height);
             this.currentStroke.width = width;
             this.currentStroke.height = height;
@@ -36,7 +38,7 @@ export class RectTool extends Tool {
             }
             return finishedStroke;
         }
-    }   
+    }
     static redoStroke(stroke, context){
         const color = stroke.color;
         const [x, y] = stroke.coords;

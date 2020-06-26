@@ -9,8 +9,9 @@ export class PenTool extends Tool {
         this.joinType = 'round';
     }
     handleEvent = (event, context) => {
-        const xCoord = event.clientX;
-        const yCoord = event.clientY;
+        const xCoord = (event.clientX - event.leftOffset) / event.scaleFactor;
+        const yCoord = (event.clientY - event.topOffset) / event.scaleFactor;
+        console.log(JSON.stringify(event));
         if(event.type === "mousedown"){
             this.mouseDown = true;
             context.save();

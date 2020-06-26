@@ -14,7 +14,7 @@ class Canvas extends React.Component {
             title: null,
             loading: true,
             drawSurface: React.createRef(),
-            scaleFactor: 1,
+            scaleFactor: 1.0,
         };
         this.leftOffset = 0;
         this.topOffset = 0;
@@ -52,8 +52,11 @@ class Canvas extends React.Component {
             // TODO shortcut for panning
         }
         let inputEvent = {
-            clientX : (event.clientX / this.state.scaleFactor) - this.leftOffset,
-            clientY : (event.clientY / this.state.scaleFactor) - this.topOffset,
+            clientX : event.clientX,
+            clientY : event.clientY,
+            leftOffset: this.leftOffset,
+            topOffset: this.topOffset,
+            scaleFactor: this.state.scaleFactor,
             buttons : event.buttons,
             type : event.type,
         }

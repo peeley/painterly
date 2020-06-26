@@ -9,7 +9,6 @@ export class VersionController {
     }
     push(item){
         if(this.currentVersion !== this.versionHistory.length){
-            console.log('slicing history');
             this.versionHistory = this.versionHistory.slice(
                                     0, this.currentVersion);
         }

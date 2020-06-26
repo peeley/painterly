@@ -11,8 +11,8 @@
 - TESTING!
 
 # In Progress
-- Refactor coordinate offsets into Context object instead of being tracked by 
-  each tool individually
+- Rewrite stroke objects to be ES6 classes, get rid of lack of polymorphism in
+  VersionController
 - Revamp landing page
 - Add new tool types
     - Shapes
@@ -21,6 +21,8 @@
     - Charts/tables
     
 # Done
+- Refactor coordinate offsets into Context object instead of being tracked by 
+  each tool individually
 - Change pan tool to be unable to pan beyond canvas boundaries
 - Loading animation while strokes object is being downloaded/rendered
 - Add new users to painting when private

@@ -27,8 +27,6 @@ export class PanTool extends Tool {
             const deltaY = yCoord - this.lastY;
             this.lastX = xCoord;
             this.lastY = yCoord;
-            console.log(`delta X: ${deltaX}`);
-            console.log(`delta Y: ${deltaY}`);
             if(this.isInsideWidthBounds(this.shiftedX - deltaX, context) &&
                this.isInsideHeightBounds(this.shiftedY - deltaY, context)){
                 this.shiftedX -= deltaX;

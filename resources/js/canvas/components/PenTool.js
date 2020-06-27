@@ -1,4 +1,5 @@
 import { Tool } from './Tool.js';
+import Stroke from './Stroke.js';
 
 export class PenTool extends Tool {
     constructor(){
@@ -7,11 +8,11 @@ export class PenTool extends Tool {
         this.displayName = 'Pen';
         this.strokeWidth = 3;
         this.joinType = 'round';
+        this.stroke = new PenStroke('pen', this.strokeWidth, this.color);
     }
     handleEvent = (event, context) => {
         const xCoord = (event.clientX - event.leftOffset) / event.scaleFactor;
         const yCoord = (event.clientY - event.topOffset) / event.scaleFactor;
-        console.log(JSON.stringify(event));
         if(event.type === "mousedown"){
             this.mouseDown = true;
             context.save();
@@ -26,7 +27,7 @@ export class PenTool extends Tool {
             this.mouseDown = false;
             let finishedStroke = this.stroke;
             finishedStroke.indicator = false;
-            this.stroke.resetStroke();
+            this.stroke = new PenStroke('pen', this.strokeWidth, this.color);
             return finishedStroke;
         }
         else if(this.mouseDown && event.type === "mousemove"){
@@ -38,16 +39,20 @@ export class PenTool extends Tool {
             return indicatorStroke;
         }
     }
-    static redoStroke(stroke, context){
-        const color = stroke.color;
-        const width = stroke.strokeWidth;
-        const startCoords = stroke.coords[0];
+}
+
+class PenStroke extends Stroke {
+    constructor(type, width, color){
+        super(type, width, color);
+    }
+    redoStroke = (context) => {
+        const startCoords = this.coords[0];
         context.save();
-        context.strokeStyle = color;
-        context.lineWidth = width;
+        context.strokeStyle = this.color;
+        context.lineWidth = this.strokeWidth;
         context.beginPath();
         context.moveTo(startCoords[0], startCoords[1]);
-        for(let coord of stroke.coords.slice(1)){
+        for(let coord of this.coords.slice(1)){
             context.lineTo(coord[0], coord[1]);
         }
         context.stroke();

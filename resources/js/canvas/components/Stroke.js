@@ -1,10 +1,10 @@
 
-export class Stroke {
-    constructor(type, color){
+export default class Stroke {
+    constructor(type, width, color){
         this.type = type;
         this.indicator = false;
         this.color = color;
-        this.strokeWidth = 1;
+        this.strokeWidth = width;
         this.coords = [];
     }
     reset = () => {
@@ -29,4 +29,5 @@ export class Stroke {
     setIndicator = (indicator) => {
         this.indicator = indicator;
     }
+    redoStroke = (context) => {}
 }

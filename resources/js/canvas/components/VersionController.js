@@ -1,7 +1,3 @@
-import { PenTool } from './PenTool.js';
-import { RectTool } from './RectTool.js';
-import { FillTool } from './FillTool.js';
-
 export class VersionController {
     constructor(){
         this.versionHistory = [];
@@ -39,20 +35,7 @@ export class VersionController {
         context.clearRect(0, 0, width, height);
         while(versionCounter <= this.currentVersion){
             let stroke = this.versionHistory[versionCounter-1];
-            // TODO refactor out switch statement, allow for polymorphism?
-            switch(stroke.type){
-                case 'pen':
-                    PenTool.redoStroke(stroke, context);
-                    break;
-                case 'rect':
-                    RectTool.redoStroke(stroke, context);
-                    break
-                case 'fill':
-                    FillTool.redoStroke(stroke, context);
-                    break
-                default:
-                    // console.log(`unknown stroke type: ${JSON.stringify(stroke)}`);
-            }
+            stroke.redoStroke(context);
             if(stroke.indicator){
                 this.versionHistory.splice(versionCounter-1, 1);
                 this.currentVersion -= 1;

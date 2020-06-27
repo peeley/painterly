@@ -17,7 +17,7 @@ export class RectTool extends Tool {
             this.mouseDown = true;
             this.startX = xCoord;
             this.startY = yCoord;
-            this.currentStroke.coords = [this.startX, this.startY];
+            this.stroke.pushCoords([this.startX, this.startY]);
         }
         else if(event.type === "mouseup" || 
                 (this.mouseDown && event.type === "mousemove")){
@@ -25,12 +25,12 @@ export class RectTool extends Tool {
             const width = xCoord - this.startX;
             const height = yCoord - this.startY;
             context.fillRect(this.startX, this.startY, width, height);
-            this.currentStroke.width = width;
-            this.currentStroke.height = height;
-            const finishedStroke = this.currentStroke;
+            this.stroke.setWidth(width);
+            this.stroke.setHeight(height);
+            let finishedStroke = this.stroke;
             if(event.type === "mouseup"){
                 finishedStroke.indicator = false;
-                this.resetStroke();
+                this.stroke.resetStroke();
                 this.mouseDown = false;
             }
             else{

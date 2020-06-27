@@ -41,7 +41,7 @@ export class PenTool extends Tool {
     }
 }
 
-class PenStroke extends Stroke {
+export class PenStroke extends Stroke {
     constructor(type, width, color){
         super(type, width, color);
     }
@@ -57,5 +57,21 @@ class PenStroke extends Stroke {
         }
         context.stroke();
         context.restore();
+    }
+    serialize = () => {
+        return {
+            type: this.type,
+            indicator: this.indicator,
+            color: this.color,
+            strokeWidth: this.strokeWidth,
+            coords: this.coords
+        };
+    }
+    deserialize = (json) => {
+        this.type = json.type;
+        this.indicator = json.indicator;
+        this.color = json.color;
+        this.strokeWidth = json.strokeWidth;
+        this.coords = json.coords;
     }
 }

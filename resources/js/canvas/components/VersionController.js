@@ -1,3 +1,5 @@
+import { PenStroke } from './PenTool.js';
+
 export class VersionController {
     constructor(){
         this.versionHistory = [];
@@ -43,6 +45,25 @@ export class VersionController {
             else{
                 versionCounter += 1;
             }
+        }
+    }
+    serializeHistory = () => {
+        let history = this.versionHistory.map( stroke => { return stroke.serialize(); });
+        return history;
+    }
+    deserializeHistory = (history) => {
+        for(const json of history){
+            let stroke;
+            switch(json.type){
+                case 'pen':
+                    stroke = new PenStroke(json.type, json.strokeWidth, json.color);
+                    stroke.coords = json.coords;
+                    stroke.indicator = json.indicator;
+                    break;
+                default:
+                    console.log('unknown stroke type');
+            }
+            this.push(stroke);
         }
     }
 }

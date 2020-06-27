@@ -82,8 +82,9 @@ class Canvas extends React.Component {
         context.clearRect(0, 0, width, height);
     }
     pushCanvas = () => {
+        let history =  this.versionController.serializeHistory();
         axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`,
-                  { strokes: JSON.stringify(this.versionController.versionHistory) },
+                  { strokes: JSON.stringify(history) },
             { headers: { 'Content-Type' : 'application/json' }})
         .then( response => {
             if(response.status === 401){ // not logged in
@@ -101,9 +102,7 @@ class Canvas extends React.Component {
             this.setState({
                 title: response.data.title
             });
-            for(const item of response.data.strokes){
-                this.versionController.push(item);
-            }
+            this.versionController.deserializeHistory(response.data.strokes);
             this.versionController.redrawCanvas(this.state.drawSurface);
         });
         this.setState({
@@ -143,13 +142,13 @@ class Canvas extends React.Component {
     render(){
         return(
             <div className="container col px-5 Canvas">
-                <MenuBar 
+                <MenuBar
                     title={this.state.title}
-                    surface={this.state.drawSurface} 
+                    surface={this.state.drawSurface}
                     paintingId={this.props.paintingId}
                 />
                 <div className="row pl-5">
-                    <ToolController 
+                    <ToolController
                         surface={this.state.drawSurface}
                         handleToolSelect={this.handleToolSelect}
                     />
@@ -164,7 +163,7 @@ class Canvas extends React.Component {
                         }}>
                             Redo
                         </button>
-                        <button onClick={ (event) => { 
+                        <button onClick={ (event) => {
                             this.clearCanvas();
                             this.versionController.wipeHistory();
                             this.pushCanvas();

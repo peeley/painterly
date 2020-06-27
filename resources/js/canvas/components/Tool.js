@@ -4,34 +4,19 @@ export class Tool {
         this.strokeType = strokeType;
         this.mouseDown = false;
         this.color = "rgba(66, 68, 90, 1)";
-        this.currentStroke = {
-            type: this.strokeType,
-            indicator: false,
-            color: this.color,
-            strokeWidth: 1,
-            coords: []
-        }
-    }
-    resetStroke = () => {
-        this.currentStroke = {
-            type: this.strokeType,
-            color: this.getColor(),
-            strokeWidth: this.getStrokeWidth(),
-        }
+        this.stroke = new Stroke(this.strokeType, this.color);
     }
     setColor = (color) => {
-        this.color = color;
-        this.currentStroke.color = this.color;
+        this.stroke.setColor(this.color);
     }
     getColor = () => {
-        return this.color;
+        return this.stroke.getColor();
     }
     setStrokeWidth = (width) => {
-        this.strokeWidth = width;
-        this.currentStroke.strokeWidth = this.strokeWidth;
+        this.stroke.setStrokeWidth(this.strokeWidth);
     }
     getStrokeWidth = () => {
-        return this.strokeWidth;
+        return this.stroke.getStrokeWidth();
     }
     handleEvent(event, context){}
 }

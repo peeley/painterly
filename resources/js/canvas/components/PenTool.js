@@ -20,21 +20,21 @@ export class PenTool extends Tool {
             context.lineJoin = this.joinType;
             context.strokeStyle = this.color;
             context.moveTo(xCoord, yCoord);
-            this.currentStroke.coords = [[xCoord, yCoord]];
+            this.stroke.pushCoords([xCoord, yCoord]);
         }
         else if((event.type === "mouseup" || event.type === "mouseleave") && this.mouseDown){
             this.mouseDown = false;
-            let finishedStroke = this.currentStroke;
+            let finishedStroke = this.stroke;
             finishedStroke.indicator = false;
-            this.resetStroke();
+            this.stroke.resetStroke();
             return finishedStroke;
         }
         else if(this.mouseDown && event.type === "mousemove"){
             context.lineWidth = this.strokeWidth;
             context.lineTo(xCoord, yCoord);
-            this.currentStroke.coords.push([xCoord, yCoord]);
-            let indicatorStroke = this.currentStroke;
-            indicatorStroke.indicator = true;
+            this.stroke.pushCoords([xCoord, yCoord]);
+            let indicatorStroke = this.stroke;
+            indicatorStroke.setIndicator(true);
             return indicatorStroke;
         }
     }

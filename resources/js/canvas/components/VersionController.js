@@ -1,4 +1,5 @@
 import { PenStroke } from './PenTool.js';
+import { RectStroke } from './RectTool.js';
 
 export class VersionController {
     constructor(){
@@ -36,7 +37,7 @@ export class VersionController {
         const height = context.canvas.height;
         context.clearRect(0, 0, width, height);
         while(versionCounter <= this.currentVersion){
-            let stroke = this.versionHistory[versionCounter-1];
+            const stroke = this.versionHistory[versionCounter-1];
             stroke.redoStroke(context);
             if(stroke.indicator){
                 this.versionHistory.splice(versionCounter-1, 1);
@@ -56,9 +57,12 @@ export class VersionController {
             let stroke;
             switch(json.type){
                 case 'pen':
-                    stroke = new PenStroke(json.type, json.strokeWidth, json.color);
-                    stroke.coords = json.coords;
-                    stroke.indicator = json.indicator;
+                    stroke = new PenStroke();
+                    stroke.deserialize(json);
+                    break;
+                case 'rect':
+                    stroke = new RectStroke();
+                    stroke.deserialize(json);
                     break;
                 default:
                     console.log('unknown stroke type');

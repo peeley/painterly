@@ -1,25 +1,27 @@
 import { Tool } from './Tool.js';
+import Stroke from './Stroke.js';
 
 export class RectTool extends Tool {
     constructor(){
         super('rect');
-        this.toolName = 'rect';
         this.displayName = 'Rectangle';
         this.startX = null;
         this.startY = null;
         this.mouseDown = false;
+        this.stroke = new RectStroke(this.color);
     }
     handleEvent = (event, context) => {
-        const xCoord = (event.clientX - event.leftOffset) / event.scaleFactor;
-        const yCoord = (event.clientY - event.topOffset) / event.scaleFactor;
+        const xCoord = Math.floor((event.clientX - event.leftOffset) / event.scaleFactor);
+        const yCoord = Math.floor((event.clientY - event.topOffset) / event.scaleFactor);
         if(event.type === "mousedown"){
             context.beginPath();
             this.mouseDown = true;
             this.startX = xCoord;
             this.startY = yCoord;
-            this.stroke.pushCoords([this.startX, this.startY]);
+            console.log(this.startX, this.startY);
+            this.stroke.pushCoords([xCoord, yCoord]);
         }
-        else if(event.type === "mouseup" || 
+        else if(event.type === "mouseup" ||
                 (this.mouseDown && event.type === "mousemove")){
             context.fillStyle = this.color;
             const width = xCoord - this.startX;
@@ -29,24 +31,54 @@ export class RectTool extends Tool {
             this.stroke.setHeight(height);
             let finishedStroke = this.stroke;
             if(event.type === "mouseup"){
-                finishedStroke.indicator = false;
-                this.stroke.resetStroke();
+                this.stroke = new RectStroke(this.color);
+                finishedStroke.setIndicator(false);
                 this.mouseDown = false;
             }
             else{
-                finishedStroke.indicator = true;
+                finishedStroke.setIndicator(true);
             }
             return finishedStroke;
         }
     }
-    static redoStroke(stroke, context){
-        const color = stroke.color;
-        const [x, y] = stroke.coords;
-        const width = stroke.width;
-        const height = stroke.height;
+}
+
+export class RectStroke extends Stroke {
+    constructor(color){
+        super('rect', 1, color);
+        this.width = 0;
+        this.height = 0;
+    }
+    redoStroke = (context) => {
+        const [[x, y]] = this.coords;
         context.save();
-        context.fillStyle = color;
-        context.fillRect(x, y, width, height);
+        context.fillStyle = this.color;
+        console.log(`filling at coords ${x}, ${y} rect of ${this.width} x ${this.height}`);
+        context.fillRect(x, y, this.width, this.height);
         context.restore();
+    }
+    setWidth = (width) => {
+        this.width = width;
+    }
+    setHeight = (height) => {
+        this.height = height;
+    }
+    serialize = () => {
+        return {
+            type: this.type,
+            indicator: this.indicator,
+            color: this.color,
+            height: this.height,
+            width: this.width,
+            coords: this.coords
+        };
+    }
+    deserialize = (json) => {
+        this.type = json.type;
+        this.indicator = json.indicator;
+        this.color = json.color;
+        this.height = json.height;
+        this.width = json.width;
+        this.coords = json.coords;
     }
 }

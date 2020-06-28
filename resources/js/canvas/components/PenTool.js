@@ -4,11 +4,10 @@ import Stroke from './Stroke.js';
 export class PenTool extends Tool {
     constructor(){
         super('pen');
-        this.toolName = 'pen';
         this.displayName = 'Pen';
         this.strokeWidth = 3;
         this.joinType = 'round';
-        this.stroke = new PenStroke('pen', this.strokeWidth, this.color);
+        this.stroke = new PenStroke(this.strokeWidth, this.color);
     }
     handleEvent = (event, context) => {
         const xCoord = (event.clientX - event.leftOffset) / event.scaleFactor;
@@ -26,8 +25,8 @@ export class PenTool extends Tool {
         else if((event.type === "mouseup" || event.type === "mouseleave") && this.mouseDown){
             this.mouseDown = false;
             let finishedStroke = this.stroke;
-            finishedStroke.indicator = false;
-            this.stroke = new PenStroke('pen', this.strokeWidth, this.color);
+            finishedStroke.setIndicator(false);
+            this.stroke = new PenStroke(this.strokeWidth, this.color);
             return finishedStroke;
         }
         else if(this.mouseDown && event.type === "mousemove"){
@@ -42,8 +41,8 @@ export class PenTool extends Tool {
 }
 
 export class PenStroke extends Stroke {
-    constructor(type, width, color){
-        super(type, width, color);
+    constructor(width, color){
+        super('pen', width, color);
     }
     redoStroke = (context) => {
         const startCoords = this.coords[0];

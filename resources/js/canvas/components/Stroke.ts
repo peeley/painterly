@@ -1,33 +1,30 @@
 
 export default class Stroke {
-    constructor(type, width, color){
+    protected type: string;
+    protected indicator: boolean;
+    protected color: string;
+    protected coords: Array<Array<number>>;
+    constructor(type: string, color: string){
         this.type = type;
         this.indicator = false;
         this.color = color;
-        this.strokeWidth = width;
         this.coords = [];
     }
     reset = () => {
         this.coords = [];
         this.indicator = false;
     }
-    pushCoords = (coords) => {
+    pushCoords = (coords: Array<number>) => {
         this.coords.push(coords);
     }
-    setColor = (color) => {
+    setColor = (color: string) => {
         this.color = color;
     }
     getColor = () => {
         return this.color;
     }
-    setStrokeWidth = (width) => {
-        this.strokeWidth = width;
-    }
-    getStrokeWidth = () => {
-        return this.strokeWidth;
-    }
-    setIndicator = (indicator) => {
+    setIndicator = (indicator: boolean) => {
         this.indicator = indicator;
     }
-    redoStroke = (context) => {}
+    redoStroke = (context: CanvasRenderingContext2D) => {}
 }

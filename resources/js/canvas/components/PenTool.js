@@ -1,5 +1,5 @@
 import { Tool } from './Tool.js';
-import Stroke from './Stroke.js';
+import Stroke from './Stroke.ts';
 
 export class PenTool extends Tool {
     constructor(){
@@ -42,7 +42,14 @@ export class PenTool extends Tool {
 
 export class PenStroke extends Stroke {
     constructor(width, color){
-        super('pen', width, color);
+        super('pen', color);
+        this.strokeWidth = width;
+    }
+    setStrokeWidth = (width) => {
+        this.strokeWidth = width;
+    }
+    getStrokeWidth = () => {
+        return this.strokeWidth;
     }
     redoStroke = (context) => {
         const startCoords = this.coords[0];

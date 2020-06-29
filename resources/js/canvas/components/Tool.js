@@ -1,4 +1,4 @@
-import Stroke from './Stroke.js';
+import Stroke from './Stroke.ts';
 
 export class Tool {
     constructor(strokeType){

@@ -1,5 +1,5 @@
 import { Tool } from './Tool.js';
-import Stroke from './Stroke.js';
+import Stroke from './Stroke.ts';
 
 export class RectTool extends Tool {
     constructor(){
@@ -18,7 +18,6 @@ export class RectTool extends Tool {
             this.mouseDown = true;
             this.startX = xCoord;
             this.startY = yCoord;
-            console.log(this.startX, this.startY);
             this.stroke.pushCoords([xCoord, yCoord]);
         }
         else if(event.type === "mouseup" ||
@@ -45,7 +44,7 @@ export class RectTool extends Tool {
 
 export class RectStroke extends Stroke {
     constructor(color){
-        super('rect', 1, color);
+        super('rect', color);
         this.width = 0;
         this.height = 0;
     }
@@ -53,7 +52,6 @@ export class RectStroke extends Stroke {
         const [[x, y]] = this.coords;
         context.save();
         context.fillStyle = this.color;
-        console.log(`filling at coords ${x}, ${y} rect of ${this.width} x ${this.height}`);
         context.fillRect(x, y, this.width, this.height);
         context.restore();
     }

@@ -1,16 +1,19 @@
-import { Tool } from './Tool.ts';
-import Stroke from './Stroke.ts';
+import { Tool } from './Tool';
+import Stroke from './Stroke';
 
 export class RectTool extends Tool {
+    private startX: number;
+    private startY: number;
+    private stroke: RectStroke;
     constructor(){
         super('rect');
         this.displayName = 'Rectangle';
-        this.startX = null;
-        this.startY = null;
+        this.startX = 0;
+        this.startY = 0;
         this.mouseDown = false;
         this.stroke = new RectStroke(this.color);
     }
-    handleEvent = (event, context) => {
+    handleEvent = (event: any, context: CanvasRenderingContext2D) => {
         const xCoord = Math.floor((event.clientX - event.leftOffset) / event.scaleFactor);
         const yCoord = Math.floor((event.clientY - event.topOffset) / event.scaleFactor);
         if(event.type === "mousedown"){
@@ -18,6 +21,7 @@ export class RectTool extends Tool {
             this.mouseDown = true;
             this.startX = xCoord;
             this.startY = yCoord;
+            this.stroke.setColor(this.color);
             this.stroke.pushCoords([xCoord, yCoord]);
         }
         else if(event.type === "mouseup" ||
@@ -43,22 +47,24 @@ export class RectTool extends Tool {
 }
 
 export class RectStroke extends Stroke {
-    constructor(color){
+    private width: number;
+    private height: number;
+    constructor(color: string){
         super('rect', color);
         this.width = 0;
         this.height = 0;
     }
-    redoStroke = (context) => {
+    redoStroke = (context: CanvasRenderingContext2D) => {
         const [[x, y]] = this.coords;
         context.save();
         context.fillStyle = this.color;
         context.fillRect(x, y, this.width, this.height);
         context.restore();
     }
-    setWidth = (width) => {
+    setWidth = (width: number) => {
         this.width = width;
     }
-    setHeight = (height) => {
+    setHeight = (height: number) => {
         this.height = height;
     }
     serialize = () => {
@@ -71,7 +77,7 @@ export class RectStroke extends Stroke {
             coords: this.coords
         };
     }
-    deserialize = (json) => {
+    deserialize = (json: any) => {
         this.type = json.type;
         this.indicator = json.indicator;
         this.color = json.color;

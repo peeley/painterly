@@ -1,7 +1,7 @@
 import React from 'react';
 import { Palette } from './Palette.js';
 import { PenTool } from './PenTool.js';
-import { RectTool } from './RectTool.js';
+import { RectTool } from './RectTool.ts';
 import { PanTool } from './PanTool.ts';
 import { FillTool } from './FillTool.js';
 

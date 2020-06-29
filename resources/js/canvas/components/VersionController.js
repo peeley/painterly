@@ -1,5 +1,5 @@
 import { PenStroke } from './PenTool.js';
-import { RectStroke } from './RectTool.js';
+import { RectStroke } from './RectTool.ts';
 
 export class VersionController {
     constructor(){

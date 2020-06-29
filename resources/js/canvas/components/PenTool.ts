@@ -1,22 +1,27 @@
-import { Tool } from './Tool.ts';
-import Stroke from './Stroke.ts';
+import { Tool } from './Tool';
+import Stroke from './Stroke';
 
 export class PenTool extends Tool {
+    private readonly joinType: CanvasLineJoin;
+    private readonly lineCap: CanvasLineCap;
+    private stroke: PenStroke;
     constructor(){
         super('pen');
         this.displayName = 'Pen';
         this.strokeWidth = 3;
         this.joinType = 'round';
+        this.lineCap = 'round';
         this.stroke = new PenStroke(this.strokeWidth, this.color);
     }
-    handleEvent = (event, context) => {
+    handleEvent = (event: any, context: CanvasRenderingContext2D) => {
         const xCoord = (event.clientX - event.leftOffset) / event.scaleFactor;
         const yCoord = (event.clientY - event.topOffset) / event.scaleFactor;
         if(event.type === "mousedown"){
             this.mouseDown = true;
             context.save();
             context.beginPath();
-            context.lineCap = 'round';
+            context.lineWidth = this.strokeWidth;
+            context.lineCap = this.lineCap;
             context.lineJoin = this.joinType;
             context.strokeStyle = this.color;
             context.moveTo(xCoord, yCoord);
@@ -43,17 +48,18 @@ export class PenTool extends Tool {
 }
 
 export class PenStroke extends Stroke {
-    constructor(width, color){
+    private strokeWidth: number;
+    constructor(width: number, color: string){
         super('pen', color);
         this.strokeWidth = width;
     }
-    setStrokeWidth = (width) => {
+    setStrokeWidth = (width: number) => {
         this.strokeWidth = width;
     }
-    getStrokeWidth = () => {
+    getStrokeWidth = (): number => {
         return this.strokeWidth;
     }
-    redoStroke = (context) => {
+    redoStroke = (context: CanvasRenderingContext2D) => {
         const startCoords = this.coords[0];
         context.save();
         context.strokeStyle = this.color;
@@ -75,7 +81,8 @@ export class PenStroke extends Stroke {
             coords: this.coords
         };
     }
-    deserialize = (json) => {
+    // TODO create type for serialized PenStroke
+    deserialize = (json: any) => {
         this.type = json.type;
         this.indicator = json.indicator;
         this.color = json.color;

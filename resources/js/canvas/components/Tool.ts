@@ -17,14 +17,15 @@ export class Tool {
         // TODO kind of a code smell, shouldn't be duplicated
         this.color = color;
     }
-    getColor = () => {
+    getColor(): string {
         return this.color;
     }
-    getStrokeWidth(){
+    getStrokeWidth(): number {
         return this.strokeWidth;
     }
     setStrokeWidth(width: number){
         this.strokeWidth = width;
+        console.log(`set width to ${this.strokeWidth}`);
     }
     handleEvent(event: any, context: CanvasRenderingContext2D){}
 }

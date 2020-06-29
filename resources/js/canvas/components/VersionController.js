@@ -1,4 +1,4 @@
-import { PenStroke } from './PenTool.js';
+import { PenStroke } from './PenTool.ts';
 import { RectStroke } from './RectTool.ts';
 
 export class VersionController {

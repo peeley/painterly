@@ -1,4 +1,4 @@
-import { Tool } from './Tool.js';
+import { Tool } from './Tool.ts';
 
 // converts hexadecimal string to RGBA array
 let hexToRGBA = (color) => {

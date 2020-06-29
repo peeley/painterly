@@ -2,7 +2,7 @@ import React from 'react';
 import { Palette } from './Palette.js';
 import { PenTool } from './PenTool.js';
 import { RectTool } from './RectTool.js';
-import { PanTool } from './PanTool.js';
+import { PanTool } from './PanTool.ts';
 import { FillTool } from './FillTool.js';
 
 export class ToolController extends React.Component{

@@ -1,5 +1,4 @@
-
-export default class Stroke {
+export default class Stroke{
     protected type: string;
     protected indicator: boolean;
     protected color: string;

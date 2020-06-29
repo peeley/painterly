@@ -57,16 +57,15 @@ export class VersionController {
             let stroke;
             switch(json.type){
                 case 'pen':
-                    stroke = new PenStroke();
-                    stroke.deserialize(json);
+                    stroke = new PenStroke(json.strokeWidth, json.color);
                     break;
                 case 'rect':
-                    stroke = new RectStroke();
-                    stroke.deserialize(json);
+                    stroke = new RectStroke(json.color);
                     break;
                 default:
                     console.log('unknown stroke type');
             }
+            stroke.deserialize(json);
             this.push(stroke);
         }
     }

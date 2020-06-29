@@ -1,17 +1,24 @@
-import { Tool } from './Tool.js';
+import { Tool } from './Tool';
+import Stroke from './Stroke';
 
 export class PanTool extends Tool {
+    private lastX: number;
+    private lastY: number;
+    private shiftedX: number;
+    private shiftedY: number;
+    private stroke: PanStroke;
     constructor(){
         super('pan');
         this.toolName = 'pan';
         this.displayName = 'Pan';
         this.mouseDown = false;
-        this.lastX = null;
-        this.lastY = null;
+        this.lastX = 0;
+        this.lastY = 0;
         this.shiftedX = 0;
         this.shiftedY = 0;
+        this.stroke = new PanStroke();
     }
-    handleEvent = (event, context) => {
+    handleEvent = (event: any, context: CanvasRenderingContext2D) => {
         const xCoord = event.clientX / event.scaleFactor;
         const yCoord = event.clientY / event.scaleFactor;
         if(!this.mouseDown && (event.buttons === 1 || event.buttons === 4)){
@@ -31,30 +38,46 @@ export class PanTool extends Tool {
                this.isInsideHeightBounds(this.shiftedY - deltaY, context)){
                 this.shiftedX -= deltaX;
                 this.shiftedY -= deltaY;
-                this.currentStroke.leftOffset = this.shiftedX;
-                this.currentStroke.topOffset = this.shiftedY;
+                this.stroke.leftOffset = this.shiftedX;
+                this.stroke.topOffset = this.shiftedY;
                 context.translate(deltaX, deltaY);
             }
             else if(!this.isInsideWidthBounds(this.shiftedX - deltaX, context) &&
                     this.isInsideHeightBounds(this.shiftedY - deltaY, context)){
                 this.shiftedY -= deltaY;
-                this.currentStroke.topOffset = this.shiftedY;
+                this.stroke.topOffset = this.shiftedY;
                 context.translate(0, deltaY);
             }
             else if(this.isInsideWidthBounds(this.shiftedX - deltaX, context) &&
                     !this.isInsideHeightBounds(this.shiftedY - deltaY, context)){
                 this.shiftedX -= deltaX;
-                this.currentStroke.leftOffset = this.shiftedX;
+                this.stroke.leftOffset = this.shiftedX;
                 context.translate(deltaX, 0);
             }
-            this.currentStroke.indicator = true;
-            return this.currentStroke;
+            this.stroke.setIndicator(true);
+            return this.stroke;
         }
     }
-    isInsideWidthBounds(coord, context){
+    isInsideWidthBounds(coord: number, context: CanvasRenderingContext2D){
         return (coord > 0 && coord < context.canvas.width);
     }
-    isInsideHeightBounds(coord, context){
+    isInsideHeightBounds(coord: number, context: CanvasRenderingContext2D){
         return (coord > 0 && coord < context.canvas.height);
+    }
+}
+
+export class PanStroke extends Stroke {
+    public leftOffset: number;
+    public topOffset: number;
+    constructor(){
+        super('pan', '');
+        this.leftOffset = 0;
+        this.topOffset = 0;
+    }
+    setLeftOffset(left: number){
+        this.leftOffset = left;
+    }
+    setTopOffset(top: number){
+        this.topOffset = top;
     }
 }

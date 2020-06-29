@@ -1,4 +1,4 @@
-import { Tool } from './Tool.js';
+import { Tool } from './Tool.ts';
 import Stroke from './Stroke.ts';
 
 export class PenTool extends Tool {
@@ -20,6 +20,8 @@ export class PenTool extends Tool {
             context.lineJoin = this.joinType;
             context.strokeStyle = this.color;
             context.moveTo(xCoord, yCoord);
+            this.stroke.setColor(this.color);
+            this.stroke.setStrokeWidth(this.strokeWidth);
             this.stroke.pushCoords([xCoord, yCoord]);
         }
         else if((event.type === "mouseup" || event.type === "mouseleave") && this.mouseDown){

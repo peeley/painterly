@@ -1,4 +1,4 @@
-import { Tool } from './Tool.js';
+import { Tool } from './Tool.ts';
 import Stroke from './Stroke.ts';
 
 export class RectTool extends Tool {

@@ -38,20 +38,20 @@ export class PanTool extends Tool {
                this.isInsideHeightBounds(this.shiftedY - deltaY, context)){
                 this.shiftedX -= deltaX;
                 this.shiftedY -= deltaY;
-                this.stroke.leftOffset = this.shiftedX;
-                this.stroke.topOffset = this.shiftedY;
+                this.stroke.shiftedX = this.shiftedX;
+                this.stroke.shiftedY = this.shiftedY;
                 context.translate(deltaX, deltaY);
             }
             else if(!this.isInsideWidthBounds(this.shiftedX - deltaX, context) &&
                     this.isInsideHeightBounds(this.shiftedY - deltaY, context)){
                 this.shiftedY -= deltaY;
-                this.stroke.topOffset = this.shiftedY;
+                this.stroke.shiftedY = this.shiftedY;
                 context.translate(0, deltaY);
             }
             else if(this.isInsideWidthBounds(this.shiftedX - deltaX, context) &&
                     !this.isInsideHeightBounds(this.shiftedY - deltaY, context)){
                 this.shiftedX -= deltaX;
-                this.stroke.leftOffset = this.shiftedX;
+                this.stroke.shiftedX = this.shiftedX;
                 context.translate(deltaX, 0);
             }
             this.stroke.setIndicator(true);
@@ -67,17 +67,17 @@ export class PanTool extends Tool {
 }
 
 export class PanStroke extends Stroke {
-    public leftOffset: number;
-    public topOffset: number;
+    public shiftedX: number;
+    public shiftedY: number;
     constructor(){
         super('pan', '');
-        this.leftOffset = 0;
-        this.topOffset = 0;
+        this.shiftedX = 0;
+        this.shiftedY = 0;
     }
     setLeftOffset(left: number){
-        this.leftOffset = left;
+        this.shiftedX = left;
     }
     setTopOffset(top: number){
-        this.topOffset = top;
+        this.shiftedY = top;
     }
 }

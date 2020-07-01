@@ -16,6 +16,8 @@ class Canvas extends React.Component {
             drawSurface: React.createRef(),
             scaleFactor: 1.0,
         };
+        this.leftBoundary = 0;
+        this.topBoundary = 0;
         this.leftOffset = 0;
         this.topOffset = 0;
     }
@@ -33,11 +35,13 @@ class Canvas extends React.Component {
                 }
             }
         });
-        this.setOffsets();
+        this.setBoundaries();
         this.getCanvas();
     }
-    setOffsets = () => {
+    setBoundaries = () => {
         let rect = this.state.drawSurface.current.getBoundingClientRect();
+        this.leftBoundary = rect.left / this.state.scaleFactor;
+        this.topBoundary = rect.top / this.state.scaleFactor;
         this.leftOffset = rect.left / this.state.scaleFactor;
         this.topOffset = rect.top / this.state.scaleFactor;
     }
@@ -64,8 +68,9 @@ class Canvas extends React.Component {
         if(newItem != null){
             this.versionController.push(newItem);
             if(newItem.type === 'pan'){
-                this.leftOffset = newItem.leftOffset;
-                this.topOffset = newItem.topOffset;
+                this.leftOffset = this.leftBoundary - newItem.shiftedX;
+                this.topOffset = this.topBoundary - newItem.shiftedY;
+                console.log(`updating offsets: left ${this.leftOffset}, top ${this.topOffset}`);
             }
             if(!newItem.indicator){
                 this.pushCanvas();

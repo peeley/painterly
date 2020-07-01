@@ -25,7 +25,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     private leftOffset: number = 0;
     private topOffset: number = 0;
     state: CanvasState = {
-        tool: null,
+        tool: new Tool('generic'),
         title: '',
         loading: true,
         drawSurface: React.createRef(),
@@ -51,19 +51,19 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         this.setBoundaries();
         this.getCanvas();
     }
-    setBoundaries = () => {
+    setBoundaries(){
         let rect = this.state.drawSurface.current.getBoundingClientRect();
         this.leftBoundary = rect.left / this.state.scaleFactor;
         this.topBoundary = rect.top / this.state.scaleFactor;
         this.leftOffset = this.leftBoundary;
         this.topOffset = this.topBoundary;
     }
-    handleToolSelect = (tool: Tool) => {
+    handleToolSelect(tool: Tool){
         this.setState({
             tool: tool
         });
     }
-    handleInput(event: React.SyntheticEvent<HTMLCanvasElement, Event>) {
+    handleInput(event: MouseEvent) {
         let context = this.state.drawSurface.current.getContext('2d');
         if (event.buttons === 4) {
             // TODO shortcut for panning
@@ -93,13 +93,13 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         }
         event.preventDefault();
     }
-    clearCanvas = () => {
+    clearCanvas(){
         let context = this.state.drawSurface.current.getContext('2d');
         const width = context.canvas.width;
         const height = context.canvas.height;
         context.clearRect(0, 0, width, height);
     }
-    pushCanvas = () => {
+    pushCanvas(){
         let history = this.versionController.serializeHistory();
         axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`,
             { strokes: JSON.stringify(history) },
@@ -114,7 +114,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 }
             })
     }
-    getCanvas = () => {
+    getCanvas(){
         axios.get(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`)
             .then(response => {
                 this.setState({
@@ -127,22 +127,22 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             loading: false
         });
     }
-    zoomIn = () => {
+    zoomIn(){
         this.setState({
             scaleFactor: this.state.scaleFactor + 0.25
         }, () => this.scaleCanvas());
     }
-    zoomOut = () => {
+    zoomOut(){
         this.setState({
             scaleFactor: this.state.scaleFactor - 0.25
         }, () => this.scaleCanvas());
     }
-    resetZoom = () => {
+    resetZoom(){
         this.setState({
             scaleFactor: 1
         }, () => this.scaleCanvas());
     }
-    handleZoom = (event) => {
+    handleZoom(event){
         if (event.deltaY < 0) {
             this.zoomIn();
         }
@@ -150,14 +150,14 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             this.zoomOut();
         }
     }
-    scaleCanvas = () => {
+    scaleCanvas(){
         let ctx = this.state.drawSurface.current.getContext('2d');
         this.clearCanvas();
         ctx.resetTransform();
         ctx.scale(this.state.scaleFactor, this.state.scaleFactor);
         this.versionController.redrawCanvas(this.state.drawSurface);
     }
-    render() {
+    render(){
         return (
             <div className= "container col px-5" >
             <MenuBar

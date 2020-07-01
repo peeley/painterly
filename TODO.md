@@ -8,6 +8,9 @@
 - Split home screen into blade components
 - Fix automatic canvas sizing to fit screen, have canvas visual size
   and programmatic size be different.
+- Increase performance, perhaps rework painting serialization/protocol?
+  - currently frontend sends entire painting JSON to backend, perhaps send only diffs?
+  - current protocol definitely won't scale to multiple users in same session
 - TESTING!
 
 # In Progress

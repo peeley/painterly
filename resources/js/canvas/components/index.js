@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Canvas from './Canvas.js';
+import Canvas from './Canvas.ts';
 import * as serviceWorker from './serviceWorker';
 
 const paintingId = $('#root').attr('paintingId');

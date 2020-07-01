@@ -11,8 +11,7 @@
 - TESTING!
 
 # In Progress
-- Rewrite stroke objects to be ES6 classes, get rid of lack of polymorphism in
-  VersionController
+- Refactoring frontend code to TypeScript
 - Revamp landing page
 - Add new tool types
     - Shapes
@@ -21,6 +20,8 @@
     - Charts/tables
     
 # Done
+- Rewrite stroke objects to be ES6 classes, get rid of lack of polymorphism in
+  VersionController
 - Refactor coordinate offsets into Context object instead of being tracked by 
   each tool individually
 - Change pan tool to be unable to pan beyond canvas boundaries

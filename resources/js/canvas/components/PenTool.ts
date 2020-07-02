@@ -11,7 +11,7 @@ export class PenTool extends Tool {
         this.strokeWidth = 3;
         this.stroke = new PenStroke(this.strokeWidth, this.color);
     }
-    handleEvent(event: any, context: CanvasRenderingContext2D): PenStroke {
+    handleEvent(event: any, context: CanvasRenderingContext2D): PenStroke|void {
         const xCoord = (event.clientX - event.leftOffset) / event.scaleFactor;
         const yCoord = (event.clientY - event.topOffset) / event.scaleFactor;
         if(event.type === "mousedown"){
@@ -26,7 +26,6 @@ export class PenTool extends Tool {
             this.stroke.setColor(this.color);
             this.stroke.setStrokeWidth(this.strokeWidth);
             this.stroke.pushCoords([xCoord, yCoord]);
-            this.stroke.setIndicator(true);
         }
         else if((event.type === "mouseup" || event.type === "mouseleave") && this.mouseDown){
             this.mouseDown = false;
@@ -43,7 +42,6 @@ export class PenTool extends Tool {
             indicatorStroke.setIndicator(true);
             return indicatorStroke;
         }
-        return this.stroke;
     }
 }
 
@@ -60,7 +58,7 @@ export class PenStroke extends Stroke {
         return this.strokeWidth;
     }
     redoStroke = (context: CanvasRenderingContext2D) => {
-        const startCoords = this.coords[0];
+        const startCoords: [number, number] = this.coords[0];
         context.save();
         context.strokeStyle = this.color;
         context.lineWidth = this.strokeWidth;

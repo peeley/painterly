@@ -61,12 +61,12 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             this.topOffset = this.topBoundary;
         }
     }
-    handleToolSelect(tool: Tool){
+    handleToolSelect = (tool: Tool): void => {
         this.setState({
             tool: tool
         });
     }
-    handleInput(event: React.MouseEvent<HTMLCanvasElement> ) {
+    handleInput = (event: React.MouseEvent<HTMLCanvasElement> ) => {
         if(!this.state.drawSurface.current){
             return;
         }
@@ -92,7 +92,6 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             if (newItem instanceof PanStroke) {
                 this.leftOffset = this.leftBoundary - newItem.shiftedX;
                 this.topOffset = this.topBoundary - newItem.shiftedY;
-                console.log(`updating offsets: left ${this.leftOffset}, top ${this.topOffset}`);
             }
             if (!newItem.getIndicator()) {
                 this.pushCanvas();

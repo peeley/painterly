@@ -27,9 +27,8 @@ export class Tool {
     }
     setStrokeWidth(width: number){
         this.strokeWidth = width;
-        console.log(`set width to ${this.strokeWidth}`);
     }
-    handleEvent(_: any, __: CanvasRenderingContext2D): Stroke{
+    handleEvent(_: any, __: CanvasRenderingContext2D): Stroke|void {
         return new Stroke('', '');
     }
 }

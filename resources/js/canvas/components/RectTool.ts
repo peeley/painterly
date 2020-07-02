@@ -13,7 +13,7 @@ export class RectTool extends Tool {
         this.mouseDown = false;
         this.stroke = new RectStroke(this.color);
     }
-    handleEvent(event: any, context: CanvasRenderingContext2D): RectStroke {
+    handleEvent(event: any, context: CanvasRenderingContext2D): RectStroke|void {
         const xCoord = Math.floor((event.clientX - event.leftOffset) / event.scaleFactor);
         const yCoord = Math.floor((event.clientY - event.topOffset) / event.scaleFactor);
         if(event.type === "mousedown"){
@@ -44,7 +44,6 @@ export class RectTool extends Tool {
             }
             return finishedStroke;
         }
-        return this.stroke;
     }
 }
 

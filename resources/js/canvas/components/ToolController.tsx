@@ -16,7 +16,10 @@ interface ToolControllerState {
 
 export class ToolController extends React.Component<ToolControllerProps, ToolControllerState>{
     private toolSet: object;
-    private selectedTool: Tool
+    private selectedTool: Tool;
+    public state = {
+        selectedName: "pen"
+    };
     constructor(props: ToolControllerProps){
         super(props);
         this.toolSet = {
@@ -27,9 +30,6 @@ export class ToolController extends React.Component<ToolControllerProps, ToolCon
         }
         this.selectedTool = this.toolSet['pen'];
         this.props.handleToolSelect(this.selectedTool);
-        this.state = {
-            selectedName: "pen"
-        };
     }
     handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let toolName = event.target.value;
@@ -55,8 +55,8 @@ export class ToolController extends React.Component<ToolControllerProps, ToolCon
             let displayName = this.toolSet[name].displayName;
             toolList.push(
                 <div className="pr-3" key={name}>
-                    <input type="radio" value={name} id={name} 
-                        checked={this.state.selectedName === name} 
+                    <input type="radio" value={name} id={name}
+                        checked={this.state.selectedName === name}
                         onChange={this.handleChange} />
                     <label htmlFor={name}> {displayName} </label>
                 </div>
@@ -67,7 +67,7 @@ export class ToolController extends React.Component<ToolControllerProps, ToolCon
     render(){
         return(
             <div className="row controlBar">
-                <Palette 
+                <Palette
                     updateStrokeWidth={this.setStrokeWidth}
                     updateColor={this.setColor}
                 />

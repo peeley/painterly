@@ -18,7 +18,7 @@ export class PanTool extends Tool {
         this.shiftedY = 0;
         this.stroke = new PanStroke();
     }
-    handleEvent(event: any, context: CanvasRenderingContext2D): PanStroke {
+    handleEvent(event: any, context: CanvasRenderingContext2D): PanStroke|void {
         const xCoord = event.clientX / event.scaleFactor;
         const yCoord = event.clientY / event.scaleFactor;
         if(!this.mouseDown && (event.buttons === 1 || event.buttons === 4)){

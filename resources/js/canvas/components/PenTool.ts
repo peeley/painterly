@@ -13,7 +13,7 @@ export class PenTool extends Tool {
         this.lineCap = 'round';
         this.stroke = new PenStroke(this.strokeWidth, this.color);
     }
-    handleEvent = (event: any, context: CanvasRenderingContext2D) => {
+    handleEvent(event: any, context: CanvasRenderingContext2D): PenStroke {
         const xCoord = (event.clientX - event.leftOffset) / event.scaleFactor;
         const yCoord = (event.clientY - event.topOffset) / event.scaleFactor;
         if(event.type === "mousedown"){
@@ -28,6 +28,7 @@ export class PenTool extends Tool {
             this.stroke.setColor(this.color);
             this.stroke.setStrokeWidth(this.strokeWidth);
             this.stroke.pushCoords([xCoord, yCoord]);
+            this.stroke.setIndicator(true);
         }
         else if((event.type === "mouseup" || event.type === "mouseleave") && this.mouseDown){
             this.mouseDown = false;
@@ -44,6 +45,7 @@ export class PenTool extends Tool {
             indicatorStroke.setIndicator(true);
             return indicatorStroke;
         }
+        return this.stroke;
     }
 }
 

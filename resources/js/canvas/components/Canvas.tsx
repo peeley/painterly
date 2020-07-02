@@ -3,6 +3,7 @@ import axios from 'axios';
 import './Canvas.css';
 import { ToolController } from './ToolController';
 import { Tool } from './Tool';
+import { PanStroke } from './PanTool';
 import { VersionController } from './VersionController';
 import { MenuBar } from './MenuBar';
 
@@ -28,7 +29,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         tool: new Tool('generic'),
         title: '',
         loading: true,
-        drawSurface: React.createRef(),
+        drawSurface: React.createRef<HTMLCanvasElement>(),
         scaleFactor: 1.0,
     };
     constructor(props: CanvasProps) {
@@ -52,19 +53,24 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         this.getCanvas();
     }
     setBoundaries(){
-        let rect = this.state.drawSurface.current.getBoundingClientRect();
-        this.leftBoundary = rect.left / this.state.scaleFactor;
-        this.topBoundary = rect.top / this.state.scaleFactor;
-        this.leftOffset = this.leftBoundary;
-        this.topOffset = this.topBoundary;
+        if(this.state.drawSurface.current){
+            let rect = this.state.drawSurface.current.getBoundingClientRect();
+            this.leftBoundary = rect.left / this.state.scaleFactor;
+            this.topBoundary = rect.top / this.state.scaleFactor;
+            this.leftOffset = this.leftBoundary;
+            this.topOffset = this.topBoundary;
+        }
     }
     handleToolSelect(tool: Tool){
         this.setState({
             tool: tool
         });
     }
-    handleInput(event: MouseEvent) {
+    handleInput(event: React.MouseEvent<HTMLCanvasElement> ) {
         let context = this.state.drawSurface.current.getContext('2d');
+        if(context === null){
+            return;
+        }
         if (event.buttons === 4) {
             // TODO shortcut for panning
         }
@@ -80,12 +86,12 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         let newItem = this.state.tool.handleEvent(inputEvent, context);
         if (newItem != null) {
             this.versionController.push(newItem);
-            if (newItem.type === 'pan') {
+            if (newItem instanceof PanStroke) {
                 this.leftOffset = this.leftBoundary - newItem.shiftedX;
                 this.topOffset = this.topBoundary - newItem.shiftedY;
                 console.log(`updating offsets: left ${this.leftOffset}, top ${this.topOffset}`);
             }
-            if (!newItem.indicator) {
+            if (!newItem.getIndicator()) {
                 this.pushCanvas();
             }
             this.clearCanvas();
@@ -142,7 +148,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             scaleFactor: 1
         }, () => this.scaleCanvas());
     }
-    handleZoom(event){
+    handleZoom(event: React.WheelEvent){
         if (event.deltaY < 0) {
             this.zoomIn();
         }
@@ -157,69 +163,64 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         ctx.scale(this.state.scaleFactor, this.state.scaleFactor);
         this.versionController.redrawCanvas(this.state.drawSurface);
     }
-    render(){
+    render(): JSX.Element {
         return (
             <div className= "container col px-5" >
-            <MenuBar
+                <MenuBar
                     title={ this.state.title }
                     surface = { this.state.drawSurface }
                     paintingId = { this.props.paintingId } />
-            <div className="row pl-5" >
-                <ToolController
-                    surface={ this.state.drawSurface }
-                    handleToolSelect = { this.handleToolSelect } />
-                <div className="versionButtons pt-2 pl-5" >
-                <button onClick={
-                    (event) => {
-                        this.versionController.undo(this.state.drawSurface)
-                    }
-        }>
-            Undo
-            < /button>
-            < button onClick = { (event) => {
-            this.versionController.redo(this.state.drawSurface)
-        }
-    }>
-        Redo
-        < /button>
-        < button onClick = { (event) => {
-    this.clearCanvas();
-    this.versionController.wipeHistory();
-    this.pushCanvas();
-}}>
-    Clear
-    < /button>
-    < button onClick = { this.zoomIn } >
-        Zoom In
-            < /button>
-            < span > Zoom Level: { this.state.scaleFactor } x < /span>
-                < button onClick = { this.zoomOut } >
-                    Zoom Out
-                        < /button>
-                        < button onClick = { this.resetZoom } >
+                <div className="row pl-5" >
+                    <ToolController
+                        surface={ this.state.drawSurface }
+                        handleToolSelect = { this.handleToolSelect } />
+                    <div className="versionButtons pt-2 pl-5" >
+                        <button onClick={ () => {
+                            this.versionController.undo(this.state.drawSurface)}}>
+                            Undo
+                        </button>
+                        <button onClick = { () => {
+                            this.versionController.redo(this.state.drawSurface)
+                            }}>
+                            Redo
+                        </button>
+                        <button onClick = { () => {
+                            this.clearCanvas();
+                            this.versionController.wipeHistory();
+                            this.pushCanvas();
+                            }}>
+                            Clear
+                        </button>
+                        <button onClick = { this.zoomIn } >
+                            Zoom In
+                        </button>
+                        <span> Zoom Level: { this.state.scaleFactor } x </span>
+                        <button onClick = { this.zoomOut } >
+                            Zoom Out
+                        </button>
+                        <button onClick = { this.resetZoom } >
                             Reset Zoom
-                                < /button>
-                                < /div>
-                                < /div>
-{
-    this.state.loading ?
-    <>
-    <canvas ref={ this.state.drawSurface }> </canvas>
-        < div className = "spinner-border text-success" role = "status" >
-            <span className="sr-only" > Loading...</span>
-                < /div>
-                < /> :
-                < canvas className = "row" id = "drawSurface"
-    onMouseDown = { this.handleInput }
-    onMouseMove = { this.handleInput }
-    onMouseLeave = { this.handleInput }
-    onMouseUp = { this.handleInput }
-    onWheel = { this.handleZoom }
-    height = { window.innerHeight * .9 }
-    width = { window.innerWidth * .95 }
-    ref = { this.state.drawSurface } />
+                        </button>
+                    </div>
+                </div>
+                { this.state.loading ?
+                    <>
+                        <canvas ref={ this.state.drawSurface }> </canvas>
+                        <div className = "spinner-border text-success" role = "status" >
+                            <span className="sr-only" > Loading...</span>
+                        </div>
+                    </> :
+                    <canvas className = "row" id = "drawSurface"
+                        onMouseDown = { this.handleInput }
+                        onMouseMove = { this.handleInput }
+                        onMouseLeave = { this.handleInput }
+                        onMouseUp = { this.handleInput }
+                        onWheel = { this.handleZoom }
+                        height = { window.innerHeight * .9 }
+                        width = { window.innerWidth * .95 }
+                        ref = { this.state.drawSurface } />
                 }
-</div>
+            </div>
         )
     }
 }

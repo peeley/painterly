@@ -18,7 +18,7 @@ export class PanTool extends Tool {
         this.shiftedY = 0;
         this.stroke = new PanStroke();
     }
-    handleEvent = (event: any, context: CanvasRenderingContext2D) => {
+    handleEvent(event: any, context: CanvasRenderingContext2D): PanStroke {
         const xCoord = event.clientX / event.scaleFactor;
         const yCoord = event.clientY / event.scaleFactor;
         if(!this.mouseDown && (event.buttons === 1 || event.buttons === 4)){
@@ -54,14 +54,14 @@ export class PanTool extends Tool {
                 this.stroke.shiftedX = this.shiftedX;
                 context.translate(deltaX, 0);
             }
-            this.stroke.setIndicator(true);
-            return this.stroke;
         }
+        this.stroke.setIndicator(true);
+        return this.stroke;
     }
-    isInsideWidthBounds(coord: number, context: CanvasRenderingContext2D){
+    isInsideWidthBounds(coord: number, context: CanvasRenderingContext2D): boolean {
         return (coord > 0 && coord < context.canvas.width);
     }
-    isInsideHeightBounds(coord: number, context: CanvasRenderingContext2D){
+    isInsideHeightBounds(coord: number, context: CanvasRenderingContext2D): boolean {
         return (coord > 0 && coord < context.canvas.height);
     }
 }

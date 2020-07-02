@@ -1,3 +1,5 @@
+import Stroke from './Stroke';
+
 export class Tool {
     protected strokeType: string;
     protected mouseDown: boolean;
@@ -27,5 +29,7 @@ export class Tool {
         this.strokeWidth = width;
         console.log(`set width to ${this.strokeWidth}`);
     }
-    handleEvent(event: any, context: CanvasRenderingContext2D){}
+    handleEvent(_: any, __: CanvasRenderingContext2D): Stroke{
+        return new Stroke('', '');
+    }
 }

@@ -13,7 +13,7 @@ export class RectTool extends Tool {
         this.mouseDown = false;
         this.stroke = new RectStroke(this.color);
     }
-    handleEvent = (event: any, context: CanvasRenderingContext2D) => {
+    handleEvent(event: any, context: CanvasRenderingContext2D): RectStroke {
         const xCoord = Math.floor((event.clientX - event.leftOffset) / event.scaleFactor);
         const yCoord = Math.floor((event.clientY - event.topOffset) / event.scaleFactor);
         if(event.type === "mousedown"){
@@ -23,6 +23,7 @@ export class RectTool extends Tool {
             this.startY = yCoord;
             this.stroke.setColor(this.color);
             this.stroke.pushCoords([xCoord, yCoord]);
+            this.stroke.setIndicator(true);
         }
         else if(event.type === "mouseup" ||
                 (this.mouseDown && event.type === "mousemove")){
@@ -43,6 +44,7 @@ export class RectTool extends Tool {
             }
             return finishedStroke;
         }
+        return this.stroke;
     }
 }
 

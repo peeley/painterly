@@ -1,5 +1,5 @@
 export default class Stroke{
-    public readonly type: string;
+    protected type: string;
     protected indicator: boolean = false;
     protected color: string;
     protected coords: Array<Array<number>> = [];

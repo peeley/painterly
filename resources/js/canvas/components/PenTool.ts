@@ -2,15 +2,13 @@ import { Tool } from './Tool';
 import Stroke from './Stroke';
 
 export class PenTool extends Tool {
-    private readonly joinType: CanvasLineJoin;
-    private readonly lineCap: CanvasLineCap;
+    private readonly joinType: CanvasLineJoin = 'round';
+    private readonly lineCap: CanvasLineCap = 'round';
     private stroke: PenStroke;
     constructor(){
         super('pen');
         this.displayName = 'Pen';
         this.strokeWidth = 3;
-        this.joinType = 'round';
-        this.lineCap = 'round';
         this.stroke = new PenStroke(this.strokeWidth, this.color);
     }
     handleEvent(event: any, context: CanvasRenderingContext2D): PenStroke {

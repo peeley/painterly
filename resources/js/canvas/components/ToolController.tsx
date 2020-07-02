@@ -1,23 +1,29 @@
-import React from 'react';
+import * as React from 'react';
+import { Tool } from './Tool';
 import { Palette } from './Palette.js';
-import { PenTool } from './PenTool.ts';
-import { RectTool } from './RectTool.ts';
-import { PanTool } from './PanTool.ts';
-import { FillTool } from './FillTool.js';
+import { PenTool } from './PenTool';
+import { RectTool } from './RectTool';
+import { PanTool } from './PanTool';
+//import { FillTool } from './FillTool.js';
 
-export class ToolController extends React.Component{
-    /* TODO : update when static fields are widely compatible
-    static toolSet = {
-        'pen': new PenTool(),
-        'rect': new RectTool()
-    } */
-    constructor(props){
+interface ToolControllerProps {
+    handleToolSelect(tool: Tool): void,
+};
+
+interface ToolControllerState {
+    selectedName: string,
+};
+
+export class ToolController extends React.Component<ToolControllerProps, ToolControllerState>{
+    private toolSet: object;
+    private selectedTool: Tool
+    constructor(props: ToolControllerProps){
         super(props);
         this.toolSet = {
             'pen': new PenTool(),
             'rect': new RectTool(),
             'pan' : new PanTool(),
-            'fill' : new FillTool(),
+            //'fill' : new FillTool(),
         }
         this.selectedTool = this.toolSet['pen'];
         this.props.handleToolSelect(this.selectedTool);
@@ -25,27 +31,26 @@ export class ToolController extends React.Component{
             selectedName: "pen"
         };
     }
-    handleChange = (event) => {
+    handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let toolName = event.target.value;
         this.setState({
             selectedName: toolName
-        });
-        this.selectNewTool(toolName);
+        }, () => this.selectNewTool(toolName));
     }
-    selectNewTool = (toolName) => {
+    selectNewTool = (toolName: string) => {
         this.selectedTool = this.toolSet[toolName];
         this.props.handleToolSelect(this.selectedTool);
     }
-    setStrokeWidth = (width) => {
+    setStrokeWidth = (width: number) => {
         this.selectedTool.setStrokeWidth(width);
     }
-    setColor = (color) => {
+    setColor = (color: string) => {
         for(let toolName in this.toolSet){
             this.toolSet[toolName].setColor(color);
         }
     }
-    toolListJSX = () => {
-        let toolList = [];
+    toolListJSX(): Array<JSX.Element> {
+        let toolList: Array<JSX.Element> = [];
         for(let name in this.toolSet){
             let displayName = this.toolSet[name].displayName;
             toolList.push(

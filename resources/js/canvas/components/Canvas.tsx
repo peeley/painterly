@@ -7,17 +7,17 @@ import { PanStroke } from './PanTool';
 import { VersionController } from './VersionController';
 import { MenuBar } from './MenuBar';
 
-type CanvasProps = {
+interface CanvasProps {
     paintingId: number;
 };
 
-type CanvasState = {
+interface CanvasState {
     tool: Tool,
     title: string,
     loading: boolean,
     drawSurface: React.RefObject<HTMLCanvasElement>,
     scaleFactor: number
-}
+};
 
 class Canvas extends React.Component<CanvasProps, CanvasState> {
     private versionController: VersionController = new VersionController;
@@ -25,7 +25,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     private topBoundary: number = 0;
     private leftOffset: number = 0;
     private topOffset: number = 0;
-    state: CanvasState = {
+    public state: CanvasState = {
         tool: new Tool('generic'),
         title: '',
         loading: true,
@@ -67,8 +67,11 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         });
     }
     handleInput(event: React.MouseEvent<HTMLCanvasElement> ) {
+        if(!this.state.drawSurface.current){
+            return;
+        }
         let context = this.state.drawSurface.current.getContext('2d');
-        if(context === null){
+        if(!context){
             return;
         }
         if (event.buttons === 4) {
@@ -100,7 +103,13 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         event.preventDefault();
     }
     clearCanvas(){
+        if(!this.state.drawSurface.current){
+            return;
+        }
         let context = this.state.drawSurface.current.getContext('2d');
+        if(!context){
+            return;
+        }
         const width = context.canvas.width;
         const height = context.canvas.height;
         context.clearRect(0, 0, width, height);
@@ -157,11 +166,15 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         }
     }
     scaleCanvas(){
-        let ctx = this.state.drawSurface.current.getContext('2d');
-        this.clearCanvas();
-        ctx.resetTransform();
-        ctx.scale(this.state.scaleFactor, this.state.scaleFactor);
-        this.versionController.redrawCanvas(this.state.drawSurface);
+        if(this.state.drawSurface.current){
+            let ctx = this.state.drawSurface.current.getContext('2d');
+            if(ctx){
+                this.clearCanvas();
+                ctx.resetTransform();
+                ctx.scale(this.state.scaleFactor, this.state.scaleFactor);
+                this.versionController.redrawCanvas(this.state.drawSurface);
+            }
+        }
     }
     render(): JSX.Element {
         return (
@@ -172,7 +185,6 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                     paintingId = { this.props.paintingId } />
                 <div className="row pl-5" >
                     <ToolController
-                        surface={ this.state.drawSurface }
                         handleToolSelect = { this.handleToolSelect } />
                     <div className="versionButtons pt-2 pl-5" >
                         <button onClick={ () => {

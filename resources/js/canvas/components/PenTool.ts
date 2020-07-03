@@ -29,7 +29,7 @@ export class PenTool extends Tool {
         }
         else if((event.type === "mouseup" || event.type === "mouseleave") && this.mouseDown){
             this.mouseDown = false;
-            let finishedStroke = this.stroke;
+            let finishedStroke: PenStroke = this.stroke;
             finishedStroke.setIndicator(false);
             this.stroke = new PenStroke(this.strokeWidth, this.color);
             return finishedStroke;
@@ -38,7 +38,7 @@ export class PenTool extends Tool {
             context.lineWidth = this.strokeWidth;
             context.lineTo(xCoord, yCoord);
             this.stroke.pushCoords([xCoord, yCoord]);
-            let indicatorStroke = this.stroke;
+            let indicatorStroke: PenStroke = this.stroke;
             indicatorStroke.setIndicator(true);
             return indicatorStroke;
         }
@@ -79,7 +79,6 @@ export class PenStroke extends Stroke {
             coords: this.coords
         };
     }
-    // TODO create type for serialized PenStroke
     deserialize = (json: any) => {
         this.type = json.type;
         this.indicator = json.indicator;

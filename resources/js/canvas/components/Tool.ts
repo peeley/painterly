@@ -16,7 +16,6 @@ export class Tool {
         this.displayName = 'tool';
     }
     setColor = (color: string) => {
-        // TODO kind of a code smell, shouldn't be duplicated
         this.color = color;
     }
     getColor(): string {

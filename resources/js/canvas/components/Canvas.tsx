@@ -49,7 +49,6 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 }
             }
         });
-        this.setBoundaries();
         this.getCanvas();
     }
     setBoundaries(){
@@ -139,7 +138,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             });
         this.setState({
             loading: false
-        });
+        }, () => this.setBoundaries());
     }
     zoomIn(){
         this.setState({

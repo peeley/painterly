@@ -29,5 +29,8 @@ export default class Stroke{
     getIndicator(): boolean {
         return this.indicator;
     }
+    serialize(){}
+    // TODO create type for serialized stroke
+    deserialize(_: any){}
     redoStroke(_: CanvasRenderingContext2D){}
 }

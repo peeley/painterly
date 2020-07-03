@@ -1,12 +1,11 @@
-import { PenStroke } from './PenTool.ts';
-import { RectStroke } from './RectTool.ts';
+import { PenStroke } from './PenTool';
+import { RectStroke } from './RectTool';
+import Stroke from './Stroke';
 
 export class VersionController {
-    constructor(){
-        this.versionHistory = [];
-        this.currentVersion = 0;
-    }
-    push(item){
+    private versionHistory: Array<Stroke> = [];
+    private currentVersion: number = 0
+    push(item: Stroke){
         if(this.currentVersion !== this.versionHistory.length){
             this.versionHistory = this.versionHistory.slice(
                                     0, this.currentVersion);
@@ -14,13 +13,13 @@ export class VersionController {
         this.versionHistory.push(item);
         this.currentVersion += 1;
     }
-    undo = (drawSurface) => {
+    undo = (drawSurface: React.RefObject<HTMLCanvasElement>) => {
         if(this.currentVersion > 0){
             this.currentVersion -= 1;
             this.redrawCanvas(drawSurface);
         }
     }
-    redo = (drawSurface) => {
+    redo = (drawSurface: React.RefObject<HTMLCanvasElement>) => {
         if(this.currentVersion < this.versionHistory.length){
             this.currentVersion += 1;
             this.redrawCanvas(drawSurface);
@@ -30,8 +29,14 @@ export class VersionController {
         this.versionHistory = [];
         this.currentVersion = 0;
     }
-    redrawCanvas = (drawSurface) => {
+    redrawCanvas = (drawSurface: React.RefObject<HTMLCanvasElement>) => {
+        if(!drawSurface.current){
+            return;
+        }
         let context = drawSurface.current.getContext('2d');
+        if(!context){
+            return;
+        }
         let versionCounter = 1;
         const width = context.canvas.width;
         const height = context.canvas.height;
@@ -39,7 +44,7 @@ export class VersionController {
         while(versionCounter <= this.currentVersion){
             const stroke = this.versionHistory[versionCounter-1];
             stroke.redoStroke(context);
-            if(stroke.indicator){
+            if(stroke.getIndicator()){
                 this.versionHistory.splice(versionCounter-1, 1);
                 this.currentVersion -= 1;
             }
@@ -52,9 +57,10 @@ export class VersionController {
         let history = this.versionHistory.map( stroke => { return stroke.serialize(); });
         return history;
     }
-    deserializeHistory = (history) => {
+    // TODO create type for serialized strokes
+    deserializeHistory = (history: Array<any>) => {
         for(const json of history){
-            let stroke;
+            let stroke: Stroke;
             switch(json.type){
                 case 'pen':
                     stroke = new PenStroke(json.strokeWidth, json.color);
@@ -63,7 +69,7 @@ export class VersionController {
                     stroke = new RectStroke(json.color);
                     break;
                 default:
-                    console.log('unknown stroke type');
+                    continue;
             }
             stroke.deserialize(json);
             this.push(stroke);

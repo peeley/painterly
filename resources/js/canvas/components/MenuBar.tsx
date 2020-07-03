@@ -1,9 +1,22 @@
-import React from 'react';
+import * as React from 'react';
 import axios from 'axios';
-import { ShareModal } from './ShareModal.tsx';
+import { ShareModal } from './ShareModal';
 
-export class MenuBar extends React.Component {
-    constructor(props){
+type MenuBarProps = {
+    title: string,
+    paintingId: number,
+    surface: React.RefObject<HTMLCanvasElement>
+};
+
+type MenuBarState = {
+    title: string,
+    savedTitle: string,
+    titleSelected: boolean,
+    imgLink: string
+};
+
+export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
+    constructor(props: MenuBarProps){
         super(props);
         this.state = {
             title: props.title,
@@ -12,7 +25,7 @@ export class MenuBar extends React.Component {
             imgLink: ""
         }
     }
-    componentDidUpdate(prevProps){
+    componentDidUpdate(prevProps: MenuBarProps){
         if(prevProps.title !== this.props.title){
             this.setState({
                 savedTitle: this.props.title,
@@ -22,24 +35,27 @@ export class MenuBar extends React.Component {
     }
     updateImgLink = () => {
         let canvas = this.props.surface.current;
+        if(!canvas){
+            return;
+        }
         let imgUrl = canvas.toDataURL('image/jpg');
         this.setState({
             imgLink: imgUrl
         });
     }
-    handleTitleChange = (event) => {
+    handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             title: event.target.value
         });
     }
-    postTitle = (event) => {
+    postTitle = (event: React.FormEvent<HTMLFormElement>) => {
         this.setState({
             titleSelected: false
         });
         axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`,
             { title: this.state.title },
             { headers: { 'Content-Type' : 'application/json'}})
-        .then( response => {
+        .then( _ => {
             this.setState({
                 savedTitle: this.state.title
             });
@@ -54,7 +70,7 @@ export class MenuBar extends React.Component {
             else if(error.response.status === 401){ // not logged in
                 window.location.replace(`${process.env.MIX_APP_URL}/login`);
             }
-            else if(response.status === 403){ // do not have edit permissions
+            else if(error.response.status === 403){ // do not have edit permissions
                 alert("You do not have permissions to edit this painting's title. ");
             }
         });

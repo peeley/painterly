@@ -1,15 +1,22 @@
-import React from 'react';
+import * as React from 'react';
 
-export class ShareModal extends React.Component {
-    constructor(props){
+type ShareModalState = {
+    copied: boolean
+};
+
+export class ShareModal extends React.Component<{}, ShareModalState> {
+    private shareLink: string = window.location.href;
+    private linkTextArea: React.RefObject<HTMLInputElement> = React.createRef();
+    public state: ShareModalState = {
+        copied: false
+    }
+    constructor(props: {}){
         super(props);
-        this.shareLink = window.location.href;
-        this.linkTextArea = React.createRef();
-        this.state = {
-            copied: false
-        };
     }
     copyLink = () => {
+        if(!this.linkTextArea.current){
+            return;
+        }
         this.linkTextArea.current.select();
         document.execCommand('copy');
         this.setState({

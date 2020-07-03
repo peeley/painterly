@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { ShareModal } from './ShareModal.js';
+import { ShareModal } from './ShareModal.tsx';
 
 export class MenuBar extends React.Component {
     constructor(props){

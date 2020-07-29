@@ -1,9 +1,21 @@
-import React from 'react';
+import * as React from 'react';
 import '@simonwep/pickr/dist/themes/classic.min.css';   // 'classic' theme
 import Pickr from '@simonwep/pickr';
 
-export class Palette extends React.Component{
-    constructor(props){
+interface PaletteProps {
+    updateStrokeWidth(width: number): void,
+    updateColor(color: string): void
+}
+
+interface PaletteState {
+    strokeWidth: number,
+    color: string,
+}
+
+export class Palette extends React.Component<PaletteProps, PaletteState>{
+    private palette: any;
+    public state: PaletteState;
+    constructor(props: PaletteProps){
         super(props);
         this.state = {
             strokeWidth: 3,
@@ -47,25 +59,26 @@ export class Palette extends React.Component{
 				}
 			}
 		});
-		this.palette.on('save', (color, instance) => {
+		this.palette.on('save', (color: Pickr.HSVaColor, _: any) => {
             this.palette.hide();
-            this.handleColorChange(color, instance);
+            this.handleColorChange(color);
         });
         this.props.updateStrokeWidth(this.state.strokeWidth);
     }
-    handleColorChange = (newColor, instance) => {
+    handleColorChange = (newColor: Pickr.HSVaColor) => {
         this.setState({
             color: newColor.toRGBA().toString()
         });
         this.props.updateColor(this.state.color);
     }
-    handleStrokeWidthChange = (event) => {
+    handleStrokeWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
-            strokeWidth: event.target.value
+            strokeWidth: +event.target.value
         }, () => {
             this.props.updateStrokeWidth(this.state.strokeWidth);
         });
         event.preventDefault();
+
     }
     render(){
         return (
@@ -75,7 +88,7 @@ export class Palette extends React.Component{
                     <input type="range" min="1" max="30"
                         className="slider"
                         value={this.state.strokeWidth}
-                        onChange={this.handleStrokeWidthChange}     
+                        onChange={this.handleStrokeWidthChange}
                     />
                 </div>
             </div>

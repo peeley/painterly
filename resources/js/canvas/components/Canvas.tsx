@@ -2,7 +2,7 @@ import * as React from 'react';
 import axios from 'axios';
 import './Canvas.css';
 import { ToolController } from './ToolController';
-import { Tool } from './Tool';
+import { Tool, CanvasInputEvent } from './Tool';
 import { PanStroke } from './PanTool';
 import { VersionController } from './VersionController';
 import { MenuBar } from './MenuBar';
@@ -76,7 +76,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         if (event.buttons === 4) {
             // TODO shortcut for panning
         }
-        let inputEvent = {
+        let inputEvent: CanvasInputEvent = {
             clientX: event.clientX,
             clientY: event.clientY,
             leftOffset: this.leftOffset,

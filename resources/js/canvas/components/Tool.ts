@@ -1,5 +1,15 @@
 import Stroke from './Stroke';
 
+export interface CanvasInputEvent {
+    clientX: number,
+    clientY: number,
+    leftOffset: number,
+    topOffset: number,
+    scaleFactor: number,
+    buttons: number,
+    type: string,
+};
+
 export class Tool {
     protected strokeType: string;
     protected mouseDown: boolean;
@@ -27,7 +37,7 @@ export class Tool {
     setStrokeWidth(width: number){
         this.strokeWidth = width;
     }
-    handleEvent(_: any, __: CanvasRenderingContext2D): Stroke|void {
+    handleEvent(_: CanvasInputEvent, __: CanvasRenderingContext2D): Stroke|void {
         return new Stroke('', '');
     }
 }

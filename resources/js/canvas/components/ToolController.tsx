@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Tool } from './Tool';
-import { Palette } from './Palette.js';
+import { Palette } from './Palette';
 import { PenTool } from './PenTool';
 import { RectTool } from './RectTool';
 import { PanTool } from './PanTool';

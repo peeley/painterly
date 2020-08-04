@@ -2,43 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\PaintingUpdateRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\DB;
 use \App\Painting;
+use Illuminate\Support\Facades\Gate;
 
 class PaintingController extends Controller
 {
-    public function createPainting(){
+    public function createPainting()
+    {
         $user = Auth::user();
         $painting = $user->paintings()->create();
         return response()->json($painting);
     }
 
-    public function show(Painting $painting){
+    public function show(Painting $painting)
+    {
         Gate::authorize('view-painting', $painting);
         return view('app', ['title' => $painting->title, 'id' => $painting->id]);
     }
-    public function getPainting(Painting $painting){
+    public function getPainting(Painting $painting)
+    {
         return $painting;
     }
-    public function putPainting(Request $request, Painting $painting){
-        if(!Auth::check()){
-            return response('Not Logged In', 401);
-        }
-        Gate::authorize('edit-painting', $painting);
-        $validated = $request->validate([
-            'title' => 'max:255|min:1',
-            'strokes' => 'json'
-        ]);
+    public function putPainting(PaintingUpdateRequest $request, Painting $painting)
+    {
+        $request->authorize();
+        $validated = $request->validate();
+
         $painting->strokes = isset($validated['strokes']) ?
             json_decode($validated['strokes']) : $painting->strokes;
         $painting->title = $validated['title'] ?? $painting->title;
         $painting->save();
         return response()->json($painting);
     }
-    public function deletePainting(Painting $painting){
+    public function deletePainting(Painting $painting)
+    {
         $painting->delete();
         return response('OK', 200);
     }

@@ -13,7 +13,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        // 'App\Model' => 'App\Policies\ModelPolicy',
+        'App\Painting' => 'App\Policies\PaintingPolicy',
     ];
 
     /**
@@ -25,36 +25,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('edit-painting', function($user, $painting) {
-            if($user->id === $painting->user_id){
-                return true;
-            }
-            foreach($painting->permissions as $perm){
-                if($perm->user_id === $user->id && 
-                        $perm->painting_id === $painting->id){
-                    return $perm->permissions === 'read_write';
-                }
-            }
-            return false;
-        });
-        Gate::define('view-painting', function($user, $painting) {
-            if(!$painting->view_private){
-                return true;
-            }
-            else if($user){
-                if($painting->user_id === $user->id){
-                    return true;
-                }
-                foreach($painting->permissions as $perm){
-                    if($perm->user_id === $user->id && $perm->permissions){
-                        return true;
-                    }
-                }
-            }
-            return false;
-        });
-        Gate::define('edit-permissions', function($user, $painting) {
-            return $user->id === $painting->user_id;
-        });
+        Gate::define('edit-painting', 'PaintingPolicy@update');
+        Gate::define('view-painting', 'PaintingPolicy@view');
+        Gate::define('edit-permissions', 'PaintingPolicy@edit');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Painting;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Gate;
@@ -15,7 +16,8 @@ class PaintingUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        Gate::authorize('edit-painting', $painting);
+        $painting = Painting::find($this->route('painting'))->first();
+        return $painting && Gate::allows('update', $painting);
     }
 
     /**
@@ -28,7 +30,7 @@ class PaintingUpdateRequest extends FormRequest
         return [
             'title' => 'max:255|min:1',
             'strokes' => 'json',
-            'action' => Rule::in(['add', 'undo', 'redo', 'clear'])
+            //'action' => Rule::in(['add', 'undo', 'redo', 'clear'])
         ];
     }
 }

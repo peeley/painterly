@@ -24,9 +24,5 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
-        Gate::define('edit-painting', 'PaintingPolicy@update');
-        Gate::define('view-painting', 'PaintingPolicy@view');
-        Gate::define('edit-permissions', 'PaintingPolicy@edit');
     }
 }

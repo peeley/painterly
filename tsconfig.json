@@ -6,6 +6,7 @@
     "noImplicitAny": false,
     "jsx" : "react",
     "skipLibCheck": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },
   "include": ["resources/js/**/*"]

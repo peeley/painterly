@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PaintingUpdateRequest;
 use Illuminate\Support\Facades\Auth;
 use \App\Painting;
-use Illuminate\Support\Facades\Gate;
 
 class PaintingController extends Controller
 {
@@ -18,7 +17,7 @@ class PaintingController extends Controller
 
     public function show(Painting $painting)
     {
-        Gate::authorize('view-painting', $painting);
+        $this->authorize('view', $painting);
         return view('app', ['title' => $painting->title, 'id' => $painting->id]);
     }
     public function getPainting(Painting $painting)
@@ -27,8 +26,7 @@ class PaintingController extends Controller
     }
     public function putPainting(PaintingUpdateRequest $request, Painting $painting)
     {
-        $request->authorize();
-        $validated = $request->validate();
+        $validated = $request->validated();
 
         $painting->strokes = isset($validated['strokes']) ?
             json_decode($validated['strokes']) : $painting->strokes;

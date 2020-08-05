@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PaintingUpdateRequest;
 use Illuminate\Support\Facades\Auth;
-use \App\Painting;
+use App\Painting;
+use App\UpdateProtocol;
 
 class PaintingController extends Controller
 {
@@ -29,11 +30,9 @@ class PaintingController extends Controller
         $this->authorize('update', $painting);
         $validated = $request->validated();
 
-        $painting->strokes = isset($validated['strokes']) ?
-            json_decode($validated['strokes']) : $painting->strokes;
-        $painting->title = $validated['title'] ?? $painting->title;
+        UpdateProtocol::update($painting, $validated);
         $painting->save();
-        return response()->json($painting);
+        return response('Painting successfully updated.', 200);
     }
     public function deletePainting(Painting $painting)
     {

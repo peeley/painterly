@@ -35,8 +35,18 @@ export class VersionController {
         this.currentVersion += 1;
     }
     undo = (drawSurface: React.RefObject<HTMLCanvasElement>) => {
-        // TODO call PUT endpoint with undo action
         if(this.currentVersion > 0){
+            axios.put(`${process.env.MIX_APP_URL}/api/p/${this.paintingId}`,
+                        { action: 'undo' },
+                        { headers: { 'Content-Type': 'application/json' } })
+                .then(response => {
+                    if (response.status === 401) { // not logged in
+                        window.location.replace(`${process.env.MIX_APP_URL}/login`);
+                    }
+                    else if (response.status === 403) { // not authorized
+                        alert('You do not have permissions to edit this item.');
+                    }
+                });
             this.currentVersion -= 1;
             this.redrawCanvas(drawSurface);
         }

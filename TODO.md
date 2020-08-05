@@ -1,20 +1,15 @@
 # TODO
-- User organizations
 - Automatically push changes in canvas to all viewers
     - possibly have others view stroke indicators - may not be performant
 - Bugfix - fill tool not properly assigning bytes to image data
-- Make logout timer not so obnoxious/learn how authentication actually works lmao
 - Add painting preview in home screen
-- Split home screen into blade components
 - Fix automatic canvas sizing to fit screen, have canvas visual size
   and programmatic size be different.
-- Increase performance, perhaps rework painting serialization/protocol?
-  - currently frontend sends entire painting JSON to backend, perhaps send only diffs?
-  - current protocol definitely won't scale to multiple users in same session
 - TESTING!
+- Figure out method for self-hosting
+    - Docker image?
 
 # In Progress
-- Refactoring frontend code to TypeScript
 - Revamp landing page
 - Add new tool types
     - Shapes
@@ -23,6 +18,10 @@
     - Charts/tables
     
 # Done
+- Split home screen into blade components (note: converted /home to React)
+- Make logout timer not so obnoxious/learn how authentication actually works lmao
+- Refactoring frontend code to TypeScript
+- Increase performance, perhaps rework painting serialization/protocol?
 - Rewrite stroke objects to be ES6 classes, get rid of lack of polymorphism in
   VersionController
 - Refactor coordinate offsets into Context object instead of being tracked by 

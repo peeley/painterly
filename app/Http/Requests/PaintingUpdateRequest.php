@@ -16,8 +16,7 @@ class PaintingUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        $painting = Painting::find($this->route('painting'))->first();
-        return $painting && Gate::allows('update', $painting);
+        return true;
     }
 
     /**

@@ -26,6 +26,7 @@ class PaintingController extends Controller
     }
     public function putPainting(PaintingUpdateRequest $request, Painting $painting)
     {
+        $this->authorize('update', $painting);
         $validated = $request->validated();
 
         $painting->strokes = isset($validated['strokes']) ?

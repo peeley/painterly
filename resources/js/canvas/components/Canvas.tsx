@@ -20,7 +20,7 @@ interface CanvasState {
 };
 
 class Canvas extends React.Component<CanvasProps, CanvasState> {
-    private versionController: VersionController = new VersionController;
+    private versionController: VersionController;
     private leftBoundary: number = 0;
     private topBoundary: number = 0;
     private leftOffset: number = 0;
@@ -34,6 +34,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     };
     constructor(props: CanvasProps) {
         super(props);
+        this.versionController = new VersionController(this.props.paintingId);
     }
     componentDidMount() {
         document.addEventListener('keydown', (event) => {
@@ -92,9 +93,6 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 this.leftOffset = this.leftBoundary - newItem.shiftedX;
                 this.topOffset = this.topBoundary - newItem.shiftedY;
             }
-            if (!newItem.getIndicator()) {
-                this.pushCanvas();
-            }
             this.clearCanvas();
             this.versionController.redrawCanvas(this.state.drawSurface);
         }
@@ -112,27 +110,13 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         const height = context.canvas.height;
         context.clearRect(0, 0, width, height);
     }
-    pushCanvas(){
-        let history = this.versionController.serializeHistory();
-        axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`,
-            { strokes: JSON.stringify(history) },
-            { headers: { 'Content-Type': 'application/json' } })
-            .then(response => {
-                if (response.status === 401) { // not logged in
-                    window.location.replace(`${process.env.MIX_APP_URL}/login`);
-                }
-                else if (response.status === 403) { // not authorized
-                    alert('You do not have permissions to edit this item.');
-                    this.versionController.undo(this.state.drawSurface);
-                }
-            })
-    }
     getCanvas(){
         axios.get(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`)
             .then(response => {
                 this.setState({
                     title: response.data.title
                 });
+                console.log(`deserializing ${JSON.stringify(response.data.strokes)}`);
                 this.versionController.deserializeHistory(response.data.strokes);
                 this.versionController.redrawCanvas(this.state.drawSurface);
             });
@@ -140,22 +124,22 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             loading: false
         }, () => this.setBoundaries());
     }
-    zoomIn(){
+    zoomIn = () => {
         this.setState({
             scaleFactor: this.state.scaleFactor + 0.25
         }, () => this.scaleCanvas());
     }
-    zoomOut(){
+    zoomOut = () => {
         this.setState({
             scaleFactor: this.state.scaleFactor - 0.25
         }, () => this.scaleCanvas());
     }
-    resetZoom(){
+    resetZoom = () => {
         this.setState({
             scaleFactor: 1
         }, () => this.scaleCanvas());
     }
-    handleZoom(event: React.WheelEvent){
+    handleZoom = (event: React.WheelEvent) => {
         if (event.deltaY < 0) {
             this.zoomIn();
         }
@@ -197,7 +181,6 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                         <button onClick = { () => {
                             this.clearCanvas();
                             this.versionController.wipeHistory();
-                            this.pushCanvas();
                             }}>
                             Clear
                         </button>

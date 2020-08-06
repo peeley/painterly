@@ -2,6 +2,7 @@ import { PenStroke } from './PenTool';
 import { RectStroke } from './RectTool';
 import Stroke from './Stroke';
 import axios from 'axios';
+import Pusher from 'pusher-js';
 
 export class VersionController {
     private paintingId: number;
@@ -10,6 +11,14 @@ export class VersionController {
 
     constructor(id: number){
         this.paintingId = id;
+        Pusher.logToConsole = true;
+        let pusher = new Pusher(`${process.env.MIX_PUSHER_APP_KEY}`, {
+            cluster: `${process.env.MIX_PUSHER_APP_CLUSTER}`
+        });
+        let channel = pusher.subscribe(`painting.${this.paintingId}`);
+        channel.bind('painting-update', (data) => {
+            console.log(data);
+        })
     }
 
     push(item: Stroke){

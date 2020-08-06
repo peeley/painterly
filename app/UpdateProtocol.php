@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Painting;
+use App\Events\PaintingUpdateEvent as Event;
 
 class UpdateProtocol
 {
@@ -25,5 +26,6 @@ class UpdateProtocol
         $painting->save();
 
         // TODO error handling, broadcast to other users viewing painting
+        event(new Event($update, $painting));
     }
 }

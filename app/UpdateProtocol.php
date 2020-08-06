@@ -9,7 +9,7 @@ class UpdateProtocol
 
     public static function update(Painting $painting, array $update)
     {
-        $action = $update['action'];
+        $action = $update['action'] ?? null;
         if ($action === 'clear') {
             $painting->strokes = [];
         } else if ($action === 'undo') {

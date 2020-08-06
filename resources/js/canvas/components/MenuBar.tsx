@@ -55,14 +55,14 @@ export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
         axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`,
             { title: this.state.title },
             { headers: { 'Content-Type' : 'application/json'}})
-        .then( _ => {
+        .then( () => {
             this.setState({
                 savedTitle: this.state.title
             });
         })
         .catch( error => {
             if(error.response.status === 422){ // invalid title
-                alert(error.response.data.errors.title[0]);
+                alert(error.response.data.message);
                 this.setState({
                     title: this.state.savedTitle
                 })
@@ -87,7 +87,7 @@ export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
                     <div>
                         { this.state.titleSelected ?
                             ( <form onSubmit={this.postTitle}>
-                                <input type="text" 
+                                <input type="text"
                                     value={this.state.title}
                                     onChange={this.handleTitleChange}
                                     placeholder="Edit Title" />
@@ -100,9 +100,9 @@ export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
                     </div>
                 </div>
                 <div className="row">
-                    <a className="btn btn-outline-primary btn-sm" 
+                    <a className="btn btn-outline-primary btn-sm"
                         onMouseEnter={this.updateImgLink}
-                        href={this.state.imgLink} 
+                        href={this.state.imgLink}
                         download={this.state.savedTitle}>
                         Save
                     </a>

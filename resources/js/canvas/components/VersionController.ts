@@ -114,7 +114,6 @@ export class VersionController {
     }
     // TODO create type for serialized strokes
     deserializeHistory = (history: Array<any>) => {
-        console.log(history);
         for(const json of history){
             let stroke: Stroke;
             switch(json.type){

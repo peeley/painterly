@@ -116,7 +116,6 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 this.setState({
                     title: response.data.title
                 });
-                console.log(`deserializing ${JSON.stringify(response.data.strokes)}`);
                 this.versionController.deserializeHistory(response.data.strokes);
                 this.versionController.redrawCanvas(this.state.drawSurface);
             });

@@ -14,10 +14,10 @@ class PaintingUpdateEvent implements ShouldBroadcast {
 
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    private int $paintingId;
-    private string $action;
-    private $strokes;
-    private $title;
+    public int $paintingId;
+    public string $action;
+    public $strokes;
+    public $title;
 
     public function __construct(array $update, Painting $painting)
     {

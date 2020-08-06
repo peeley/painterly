@@ -1,6 +1,4 @@
 # TODO
-- Automatically push changes in canvas to all viewers
-    - possibly have others view stroke indicators - may not be performant
 - Bugfix - fill tool not properly assigning bytes to image data
 - Add painting preview in home screen
 - Fix automatic canvas sizing to fit screen, have canvas visual size
@@ -8,9 +6,15 @@
 - TESTING!
 - Figure out method for self-hosting
     - Docker image?
+- Convert this doc to org-mode lol
 
 # In Progress
 - Revamp landing page
+- Automatically push changes in canvas to all viewers
+    - Setup/install Redis for Broadcasting backend
+    - Push changes to channel from update protocol on backend
+    - Write channel listeners on frontend
+    - Others view stroke indicators? May not be performant
 - Add new tool types
     - Shapes
     - Image insertion

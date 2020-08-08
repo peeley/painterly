@@ -25,7 +25,7 @@ class UpdateProtocol
         }
         $painting->save();
 
-        // TODO error handling, broadcast to other users viewing painting
-        event(new Event($update, $painting));
+        // TODO error handling
+        broadcast(new Event($update, $painting))->toOthers();
     }
 }

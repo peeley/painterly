@@ -3,6 +3,7 @@ import { RectStroke } from './RectTool';
 import Stroke from './Stroke';
 import axios from 'axios';
 import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
 
 export class VersionController {
     private paintingId: number;
@@ -28,13 +29,20 @@ export class VersionController {
                         console.log('Received bad `add` event');
                         return;
                     }
-                    this.addItemToHistory(this.deserializeItem(data.strokes));
+                    this.pushItemToHistory(this.deserializeItem(data.strokes));
+                    break;
+                case 'undo':
+                    this.currentVersion -= 1;
+                    break;
+                case 'clear':
+                    this.versionHistory = [];
+                    this.currentVersion = 0;
                     break;
             }
             this.redrawCanvas();
         });
     }
-    addItemToHistory = (item: Stroke) => {
+    pushItemToHistory = (item: Stroke) => {
         if(!item.getIndicator()){
             if(this.currentVersion !== this.versionHistory.length){
                 this.versionHistory = this.versionHistory.slice(
@@ -48,7 +56,7 @@ export class VersionController {
         if(!item.getIndicator()){
             this.sendEvent({ strokes: JSON.stringify(item.serialize()),
                              action: 'add' }, () => {
-                                 this.addItemToHistory(item);
+                                 this.pushItemToHistory(item);
                              });
         }
         this.versionHistory.push(item);

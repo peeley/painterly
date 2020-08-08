@@ -7,85 +7,82 @@ import Echo from 'laravel-echo';
 export class VersionController {
     private paintingId: number;
     private versionHistory: Array<Stroke> = [];
+    private drawSurface: React.RefObject<HTMLCanvasElement>;
     private currentVersion: number = 0;
 
-    constructor(id: number){
+    constructor(id: number, drawSurface: React.RefObject<HTMLCanvasElement>){
         this.paintingId = id;
-        //Pusher.logToConsole = `${process.env.APP_DEBUG}` === 'true';
+        this.drawSurface = drawSurface;
         let echo = new Echo({
             broadcaster: 'pusher',
-            key: `${process.env.MIX_PUSHER_APP_KEY}`,
-            cluster: `${process.env.MIX_PUSHER_APP_CLUSTER}`,
+            key: process.env.MIX_PUSHER_APP_KEY,
+            cluster: process.env.MIX_PUSHER_APP_CLUSTER,
             forceTLS: true
         });
         echo.channel(`painting.${this.paintingId}`)
-        .listen('painting-update', (data: PaintingUpdateEvent) => {
+        .listen('PaintingUpdateEvent', (data: PaintingUpdateEvent) => {
+            console.log('received data from channel: ', data);
             switch(data.action){
                 case 'add':
                     if(!data.strokes){
                         console.log('Received bad `add` event');
                         return;
                     }
-                    this.push(this.deserializeItem(data.strokes));
+                    this.addItemToHistory(this.deserializeItem(data.strokes));
                     break;
             }
-        })
+            this.redrawCanvas();
+        });
     }
-
-    push(item: Stroke){
-        if(this.currentVersion !== this.versionHistory.length){
-            this.versionHistory = this.versionHistory.slice(
-                                    0, this.currentVersion);
-        }
+    addItemToHistory = (item: Stroke) => {
         if(!item.getIndicator()){
-            axios.put(`${process.env.MIX_APP_URL}/api/p/${this.paintingId}`,
-                      { strokes: JSON.stringify(item.serialize()),
-                        action: 'add' },
-                      { headers: { 'Content-Type': 'application/json' } })
-                .then(response => {
-                    if (response.status === 401) { // not logged in
-                        window.location.replace(`${process.env.MIX_APP_URL}/login`);
-                    }
-                    else if (response.status === 403) { // not authorized
-                        alert('You do not have permissions to edit this item.');
-                    }
-                });
+            if(this.currentVersion !== this.versionHistory.length){
+                this.versionHistory = this.versionHistory.slice(
+                    0, this.currentVersion);
+            }
         }
         this.versionHistory.push(item);
         this.currentVersion += 1;
     }
-    undo = (drawSurface: React.RefObject<HTMLCanvasElement>) => {
+    push = (item: Stroke) => {
+        if(!item.getIndicator()){
+            this.sendEvent({ strokes: JSON.stringify(item.serialize()),
+                             action: 'add' }, () => {
+                                 this.addItemToHistory(item);
+                             });
+        }
+        this.versionHistory.push(item);
+        this.currentVersion += 1;
+    }
+    undo = () => {
         if(this.currentVersion > 0){
-            axios.put(`${process.env.MIX_APP_URL}/api/p/${this.paintingId}`,
-                        { action: 'undo' },
-                        { headers: { 'Content-Type': 'application/json' } })
-                .then(response => {
-                    if (response.status === 401) { // not logged in
-                        window.location.replace(`${process.env.MIX_APP_URL}/login`);
-                    }
-                    else if (response.status === 403) { // not authorized
-                        alert('You do not have permissions to edit this item.');
-                    }
-                });
-            this.currentVersion -= 1;
-            this.redrawCanvas(drawSurface);
+            this.sendEvent({action: 'undo'}, () => {
+                this.currentVersion -= 1;
+                this.redrawCanvas();
+            });
         }
     }
-    redo = (drawSurface: React.RefObject<HTMLCanvasElement>) => {
+    redo = () => {
         // TODO call PUT endpoint, figure out how to implement redo
         if(this.currentVersion < this.versionHistory.length){
             this.currentVersion += 1;
-            this.redrawCanvas(drawSurface);
+            this.redrawCanvas();
         }
     }
     wipeHistory = () => {
+        this.sendEvent({ action: 'clear'}, () => {
+            this.versionHistory = [];
+            this.currentVersion = 0;
+        });
+    }
+    // TODO define outgoing event type
+    sendEvent = (event: any, callback: Function) => {
         axios.put(`${process.env.MIX_APP_URL}/api/p/${this.paintingId}`,
-                  { action: 'clear' },
+                  event,
                   { headers: { 'Content-Type': 'application/json' } })
             .then(response => {
                 if (response.status === 200) {
-                    this.versionHistory = [];
-                    this.currentVersion = 0;
+                    callback();
                 }
                 else if (response.status === 401) { // not logged in
                     window.location.replace(`${process.env.MIX_APP_URL}/login`);
@@ -95,11 +92,11 @@ export class VersionController {
                 }
             });
     }
-    redrawCanvas = (drawSurface: React.RefObject<HTMLCanvasElement>) => {
-        if(!drawSurface.current){
+    redrawCanvas = () => {
+        if(!this.drawSurface.current){
             return;
         }
-        let context = drawSurface.current.getContext('2d');
+        let context = this.drawSurface.current.getContext('2d');
         if(!context){
             return;
         }

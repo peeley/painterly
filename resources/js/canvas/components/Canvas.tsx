@@ -34,17 +34,17 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     };
     constructor(props: CanvasProps) {
         super(props);
-        this.versionController = new VersionController(this.props.paintingId);
+        this.versionController = new VersionController(this.props.paintingId, this.state.drawSurface);
     }
     componentDidMount() {
         document.addEventListener('keydown', (event) => {
             if (event.ctrlKey) {
                 switch (event.key) {
                     case 'z':
-                        this.versionController.undo(this.state.drawSurface);
+                        this.versionController.undo();
                         break;
                     case 'y':
-                        this.versionController.redo(this.state.drawSurface);
+                        this.versionController.redo();
                         break;
                     default:
                 }
@@ -94,7 +94,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 this.topOffset = this.topBoundary - newItem.shiftedY;
             }
             this.clearCanvas();
-            this.versionController.redrawCanvas(this.state.drawSurface);
+            this.versionController.redrawCanvas();
         }
         event.preventDefault();
     }
@@ -117,7 +117,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                     title: response.data.title
                 });
                 this.versionController.deserializeHistory(response.data.strokes);
-                this.versionController.redrawCanvas(this.state.drawSurface);
+                this.versionController.redrawCanvas();
             });
         this.setState({
             loading: false
@@ -153,7 +153,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 this.clearCanvas();
                 ctx.resetTransform();
                 ctx.scale(this.state.scaleFactor, this.state.scaleFactor);
-                this.versionController.redrawCanvas(this.state.drawSurface);
+                this.versionController.redrawCanvas();
             }
         }
     }
@@ -169,11 +169,11 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                         handleToolSelect = { this.handleToolSelect } />
                     <div className="versionButtons pt-2 pl-5" >
                         <button onClick={ () => {
-                            this.versionController.undo(this.state.drawSurface)}}>
+                            this.versionController.undo()}}>
                             Undo
                         </button>
                         <button onClick = { () => {
-                            this.versionController.redo(this.state.drawSurface)
+                            this.versionController.redo()
                             }}>
                             Redo
                         </button>

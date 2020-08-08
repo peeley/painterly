@@ -31,8 +31,4 @@ class PaintingUpdateEvent implements ShouldBroadcast {
     {
         return ['painting.' . $this->paintingId];
     }
-
-    public function broadcastAs(){
-        return 'painting-update';
-    }
 }

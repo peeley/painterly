@@ -7,6 +7,8 @@
 - Figure out method for self-hosting
     - Docker image?
 - Convert this doc to org-mode lol
+- Maybe contribute to laravel-echo, typescript typings are basically
+  nonexistant
 
 # In Progress
 - Revamp landing page

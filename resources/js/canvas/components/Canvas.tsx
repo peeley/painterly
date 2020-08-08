@@ -117,11 +117,13 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                     title: response.data.title
                 });
                 this.versionController.deserializeHistory(response.data.strokes);
+            })
+            .then(() => this.setState({
+                loading: false
+            }, () => {
+                this.setBoundaries();
                 this.versionController.redrawCanvas();
-            });
-        this.setState({
-            loading: false
-        }, () => this.setBoundaries());
+            }));
     }
     zoomIn = () => {
         this.setState({
@@ -150,6 +152,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         if(this.state.drawSurface.current){
             let ctx = this.state.drawSurface.current.getContext('2d');
             if(ctx){
+                this.setBoundaries();
                 this.clearCanvas();
                 ctx.resetTransform();
                 ctx.scale(this.state.scaleFactor, this.state.scaleFactor);

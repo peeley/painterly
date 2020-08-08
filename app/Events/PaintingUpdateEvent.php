@@ -23,7 +23,7 @@ class PaintingUpdateEvent implements ShouldBroadcast {
     {
         $this->paintingId = $painting->id;
         $this->action = $update['action'] ?? null;
-        $this->strokes = $update['strokes'] ?? null;
+        $this->strokes = isset($update['strokes']) ? json_decode($update['strokes']) : null;
         $this->title = $update['title'] ?? null;
     }
 

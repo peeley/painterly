@@ -2,7 +2,7 @@ import { PenStroke } from './PenTool';
 import { RectStroke } from './RectTool';
 import Stroke from './Stroke';
 import axios from 'axios';
-import Pusher from 'pusher-js';
+import Echo from 'laravel-echo';
 
 export class VersionController {
     private paintingId: number;
@@ -11,13 +11,24 @@ export class VersionController {
 
     constructor(id: number){
         this.paintingId = id;
-        Pusher.logToConsole = true;
-        let pusher = new Pusher(`${process.env.MIX_PUSHER_APP_KEY}`, {
-            cluster: `${process.env.MIX_PUSHER_APP_CLUSTER}`
+        //Pusher.logToConsole = `${process.env.APP_DEBUG}` === 'true';
+        let echo = new Echo({
+            broadcaster: 'pusher',
+            key: `${process.env.MIX_PUSHER_APP_KEY}`,
+            cluster: `${process.env.MIX_PUSHER_APP_CLUSTER}`,
+            forceTLS: true
         });
-        let channel = pusher.subscribe(`painting.${this.paintingId}`);
-        channel.bind('painting-update', (data) => {
-            console.log(data);
+        echo.channel(`painting.${this.paintingId}`)
+        .listen('painting-update', (data: PaintingUpdateEvent) => {
+            switch(data.action){
+                case 'add':
+                    if(!data.strokes){
+                        console.log('Received bad `add` event');
+                        return;
+                    }
+                    this.push(this.deserializeItem(data.strokes));
+                    break;
+            }
         })
     }
 
@@ -114,21 +125,35 @@ export class VersionController {
     }
     // TODO create type for serialized strokes
     deserializeHistory = (history: Array<any>) => {
-        for(const json of history){
-            let stroke: Stroke;
-            switch(json.type){
-                case 'pen':
-                    stroke = new PenStroke(json.strokeWidth, json.color);
-                    break;
-                case 'rect':
-                    stroke = new RectStroke(json.color);
-                    break;
-                default:
-                    continue;
-            }
-            stroke.deserialize(json);
+        history.map( json => {
+            let stroke = this.deserializeItem(json);
             this.versionHistory.push(stroke);
             this.currentVersion += 1;
-        }
+            return stroke;
+        });
     }
+    deserializeItem = (json: any): Stroke => {
+        let stroke: Stroke;
+        switch(json.type){
+            case 'pen':
+                stroke = new PenStroke(json.strokeWidth, json.color);
+                break;
+            case 'rect':
+                stroke = new RectStroke(json.color);
+                break;
+            default:
+                console.log('unable to deserialize stroke');
+                stroke = new Stroke('n/a', 'n/a');
+                return stroke;
+        }
+        stroke.deserialize(json);
+        return stroke;
+    }
+}
+
+interface PaintingUpdateEvent {
+    paintingId: number,
+    action: "add" | "clear" | "undo" | "redo" | null,
+    strokes: Stroke | null
+    title: string | null
 }

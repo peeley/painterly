@@ -3,7 +3,6 @@ import { RectStroke } from './RectTool';
 import Stroke from './Stroke';
 import axios from 'axios';
 import Echo from 'laravel-echo';
-import Pusher from 'pusher-js';
 
 export class VersionController {
     private paintingId: number;
@@ -54,17 +53,24 @@ export class VersionController {
     }
     push = (item: Stroke) => {
         if(!item.getIndicator()){
+            console.log(`current version: ${this.currentVersion}`);
+            console.log(`version history: ${this.versionHistory}`);
             this.sendEvent({ strokes: JSON.stringify(item.serialize()),
                              action: 'add' }, () => {
-                                 this.pushItemToHistory(item);
+                                 // TODO undo on bad response?
                              });
+            this.pushItemToHistory(item);
+            this.redrawCanvas();
         }
-        this.versionHistory.push(item);
-        this.currentVersion += 1;
+        else{
+            this.versionHistory.push(item);
+            this.currentVersion += 1;
+        }
     }
     undo = () => {
         if(this.currentVersion > 0){
             this.sendEvent({action: 'undo'}, () => {
+                console.log('undoing locally');
                 this.currentVersion -= 1;
                 this.redrawCanvas();
             });

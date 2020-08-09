@@ -3,6 +3,7 @@ import axios from 'axios';
 import './Canvas.css';
 import { ToolController } from './ToolController';
 import { Tool, CanvasInputEvent } from './Tool';
+import { PanTool } from './PanTool';
 import { PanStroke } from './PanTool';
 import { VersionController } from './VersionController';
 import { MenuBar } from './MenuBar';
@@ -16,7 +17,8 @@ interface CanvasState {
     title: string,
     loading: boolean,
     drawSurface: React.RefObject<HTMLCanvasElement>,
-    scaleFactor: number
+    scaleFactor: number,
+    panning: boolean,
 };
 
 class Canvas extends React.Component<CanvasProps, CanvasState> {
@@ -25,16 +27,19 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     private topBoundary: number = 0;
     private leftOffset: number = 0;
     private topOffset: number = 0;
+    private panTool: PanTool;
     public state: CanvasState = {
         tool: new Tool('generic'),
         title: '',
         loading: true,
         drawSurface: React.createRef<HTMLCanvasElement>(),
         scaleFactor: 1.0,
+        panning: false,
     };
     constructor(props: CanvasProps) {
         super(props);
         this.versionController = new VersionController(this.props.paintingId, this.state.drawSurface);
+        this.panTool = new PanTool();
     }
     componentDidMount() {
         document.addEventListener('keydown', (event) => {
@@ -74,9 +79,6 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         if(!context){
             return;
         }
-        if (event.buttons === 4) {
-            // TODO shortcut for panning
-        }
         let inputEvent: CanvasInputEvent = {
             clientX: event.clientX,
             clientY: event.clientY,
@@ -86,12 +88,21 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             buttons: event.buttons,
             type: event.type,
         }
-        let newItem = this.state.tool.handleEvent(inputEvent, context);
+        let newItem;
+        if (event.buttons === 4 || this.state.panning) {
+            this.setState({
+                panning: event.buttons === 4
+            });
+            newItem = this.panTool.handleEvent(inputEvent, context);
+        }
+        else{
+            newItem = this.state.tool.handleEvent(inputEvent, context);
+        }
         if (newItem != null) {
             this.versionController.push(newItem);
             if (newItem instanceof PanStroke) {
-                this.leftOffset = this.leftBoundary - newItem.shiftedX;
-                this.topOffset = this.topBoundary - newItem.shiftedY;
+                this.leftOffset = this.leftBoundary - (newItem.shiftedX * this.state.scaleFactor);
+                this.topOffset = this.topBoundary - (newItem.shiftedY * this.state.scaleFactor);
             }
             this.clearCanvas();
             this.versionController.redrawCanvas();
@@ -128,17 +139,27 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     zoomIn = () => {
         this.setState({
             scaleFactor: this.state.scaleFactor + 0.25
-        }, () => this.scaleCanvas());
+        }, () => {
+            this.scaleCanvas();
+        });
     }
     zoomOut = () => {
-        this.setState({
-            scaleFactor: this.state.scaleFactor - 0.25
-        }, () => this.scaleCanvas());
+        if(this.state.scaleFactor > 0.25){
+            this.setState({
+                scaleFactor: this.state.scaleFactor - 0.25
+            }, () => {
+                this.scaleCanvas();
+            });
+        }
     }
     resetZoom = () => {
         this.setState({
             scaleFactor: 1
-        }, () => this.scaleCanvas());
+        }, () => {
+            this.panTool.resetDistanceShifted();
+            this.setBoundaries();
+            this.scaleCanvas();
+        });
     }
     handleZoom = (event: React.WheelEvent) => {
         if (event.deltaY < 0) {
@@ -152,7 +173,6 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         if(this.state.drawSurface.current){
             let ctx = this.state.drawSurface.current.getContext('2d');
             if(ctx){
-                this.setBoundaries();
                 this.clearCanvas();
                 ctx.resetTransform();
                 ctx.scale(this.state.scaleFactor, this.state.scaleFactor);

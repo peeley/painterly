@@ -7,16 +7,19 @@
 - Figure out method for self-hosting
     - Docker image?
 - Convert this doc to org-mode lol
-- Maybe contribute to laravel-echo, typescript typings are basically
-  nonexistant
+- Maybe contribute to laravel-echo? Typescript typings are basically
+  nonexistant, low hanging fruit
+- Refactor PanTool to not be a Tool
+    - Remove 'Pan' button from ToolController
+    - Add mouse/keyboard binding for panning instead
+- Deal with max size of broadcast events
 
 # In Progress
 - Revamp landing page
-- Automatically push changes in canvas to all viewers
-    - Setup/install Redis for Broadcasting backend
-    - Push changes to channel from update protocol on backend
-    - Write channel listeners on frontend
-    - Others view stroke indicators? May not be performant
+- Fix offsets after zoom, yet again 
+- Work on performance of broadcast events
+    - Waiting for 200 OK before showing changes locally feels
+      really slow, bad UX
 - Add new tool types
     - Shapes
     - Image insertion
@@ -24,6 +27,11 @@
     - Charts/tables
     
 # Done
+- Automatically push changes in canvas to all viewers
+    - Setup/install Redis for Broadcasting backend
+    - Push changes to channel from update protocol on backend
+    - Write channel listeners on frontend
+    - Others view stroke indicators? May not be performant
 - Split home screen into blade components (note: converted /home to React)
 - Make logout timer not so obnoxious/learn how authentication actually works lmao
 - Refactoring frontend code to TypeScript

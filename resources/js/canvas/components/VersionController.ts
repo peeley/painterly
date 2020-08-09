@@ -21,7 +21,6 @@ export class VersionController {
         });
         echo.channel(`painting.${this.paintingId}`)
         .listen('PaintingUpdateEvent', (data: PaintingUpdateEvent) => {
-            console.log('received data from channel: ', data);
             switch(data.action){
                 case 'add':
                     if(!data.strokes){
@@ -53,8 +52,6 @@ export class VersionController {
     }
     push = (item: Stroke) => {
         if(!item.getIndicator()){
-            console.log(`current version: ${this.currentVersion}`);
-            console.log(`version history: ${this.versionHistory}`);
             this.sendEvent({ strokes: JSON.stringify(item.serialize()),
                              action: 'add' }, () => {
                                  // TODO undo on bad response?

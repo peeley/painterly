@@ -21,7 +21,7 @@ export class PanTool extends Tool {
     handleEvent(event: any, context: CanvasRenderingContext2D): PanStroke|void {
         const xCoord = event.clientX / event.scaleFactor;
         const yCoord = event.clientY / event.scaleFactor;
-        if(!this.mouseDown && (event.buttons === 1 || event.buttons === 4)){
+        if(!this.mouseDown){
             this.mouseDown = true;
             this.lastX = xCoord;
             this.lastY = yCoord;
@@ -63,6 +63,10 @@ export class PanTool extends Tool {
     }
     isInsideHeightBounds(coord: number, context: CanvasRenderingContext2D): boolean {
         return (coord > 0 && coord < context.canvas.height);
+    }
+    resetDistanceShifted(){
+        this.shiftedY = 0;
+        this.shiftedX = 0;
     }
 }
 

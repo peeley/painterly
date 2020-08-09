@@ -3,8 +3,7 @@ import axios from 'axios';
 import './Canvas.css';
 import { ToolController } from './ToolController';
 import { Tool, CanvasInputEvent } from './Tool';
-import { PanTool } from './PanTool';
-import { PanStroke } from './PanTool';
+import { PanHandler } from './PanHandler';
 import { VersionController } from './VersionController';
 import { MenuBar } from './MenuBar';
 
@@ -27,7 +26,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     private topBoundary: number = 0;
     private leftOffset: number = 0;
     private topOffset: number = 0;
-    private panTool: PanTool;
+    private panHandler: PanHandler;
     public state: CanvasState = {
         tool: new Tool('generic'),
         title: '',
@@ -39,7 +38,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     constructor(props: CanvasProps) {
         super(props);
         this.versionController = new VersionController(this.props.paintingId, this.state.drawSurface);
-        this.panTool = new PanTool();
+        this.panHandler = new PanHandler();
     }
     componentDidMount() {
         document.addEventListener('keydown', (event) => {
@@ -60,8 +59,8 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     setBoundaries(){
         if(this.state.drawSurface.current){
             let rect = this.state.drawSurface.current.getBoundingClientRect();
-            this.leftBoundary = rect.left / this.state.scaleFactor;
-            this.topBoundary = rect.top / this.state.scaleFactor;
+            this.leftBoundary = rect.left;
+            this.topBoundary = rect.top;
             this.leftOffset = this.leftBoundary;
             this.topOffset = this.topBoundary;
         }
@@ -88,24 +87,25 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             buttons: event.buttons,
             type: event.type,
         }
-        let newItem;
         if (event.buttons === 4 || this.state.panning) {
+            console.log('panning shortcut');
             this.setState({
                 panning: event.buttons === 4
             });
-            newItem = this.panTool.handleEvent(inputEvent, context);
-        }
-        else{
-            newItem = this.state.tool.handleEvent(inputEvent, context);
-        }
-        if (newItem != null) {
-            this.versionController.push(newItem);
-            if (newItem instanceof PanStroke) {
-                this.leftOffset = this.leftBoundary - (newItem.shiftedX * this.state.scaleFactor);
-                this.topOffset = this.topBoundary - (newItem.shiftedY * this.state.scaleFactor);
-            }
+            let [shiftedX, shiftedY] = this.panHandler.pan(inputEvent, context);
+            console.log(shiftedX, shiftedY);
+            this.leftOffset = this.leftBoundary - (shiftedX * this.state.scaleFactor);
+            this.topOffset = this.topBoundary - (shiftedY * this.state.scaleFactor);
             this.clearCanvas();
             this.versionController.redrawCanvas();
+        }
+        else{
+            let newStroke = this.state.tool.handleEvent(inputEvent, context);
+            if (newStroke) {
+                this.versionController.push(newStroke);
+                this.clearCanvas();
+                this.versionController.redrawCanvas();
+            }
         }
         event.preventDefault();
     }
@@ -136,40 +136,29 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 this.versionController.redrawCanvas();
             }));
     }
-    zoomIn = () => {
+    zoom = (diff: number) => {
         this.setState({
-            scaleFactor: this.state.scaleFactor + 0.25
-        }, () => {
-            this.scaleCanvas();
-        });
-    }
-    zoomOut = () => {
-        if(this.state.scaleFactor > 0.25){
-            this.setState({
-                scaleFactor: this.state.scaleFactor - 0.25
-            }, () => {
-                this.scaleCanvas();
-            });
-        }
+            scaleFactor: this.state.scaleFactor + diff
+        }, () => this.scaleCanvas());
     }
     resetZoom = () => {
         this.setState({
             scaleFactor: 1
         }, () => {
-            this.panTool.resetDistanceShifted();
-            this.setBoundaries();
             this.scaleCanvas();
         });
     }
     handleZoom = (event: React.WheelEvent) => {
         if (event.deltaY < 0) {
-            this.zoomIn();
+            this.zoom(0.25);
         }
         else {
-            this.zoomOut();
+            this.zoom(-0.25);
         }
     }
     scaleCanvas(){
+        this.panHandler.resetDistanceShifted();
+        this.setBoundaries();
         if(this.state.drawSurface.current){
             let ctx = this.state.drawSurface.current.getContext('2d');
             if(ctx){
@@ -206,11 +195,12 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                             }}>
                             Clear
                         </button>
-                        <button onClick = { this.zoomIn } >
+                        <button onClick = { () => this.zoom(0.25) } >
                             Zoom In
                         </button>
                         <span> Zoom Level: { this.state.scaleFactor } x </span>
-                        <button onClick = { this.zoomOut } >
+                        <button disabled={this.state.scaleFactor <= 0.25}
+                            onClick = { () => this.zoom(-0.25) } >
                             Zoom Out
                         </button>
                         <button onClick = { this.resetZoom } >

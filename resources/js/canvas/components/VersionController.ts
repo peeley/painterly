@@ -67,7 +67,6 @@ export class VersionController {
     undo = () => {
         if(this.currentVersion > 0){
             this.sendEvent({action: 'undo'}, () => {
-                console.log('undoing locally');
                 this.currentVersion -= 1;
                 this.redrawCanvas();
             });

@@ -88,12 +88,10 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             type: event.type,
         }
         if (event.buttons === 4 || this.state.panning) {
-            console.log('panning shortcut');
             this.setState({
                 panning: event.buttons === 4
             });
             let [shiftedX, shiftedY] = this.panHandler.pan(inputEvent, context);
-            console.log(shiftedX, shiftedY);
             this.leftOffset = this.leftBoundary - (shiftedX * this.state.scaleFactor);
             this.topOffset = this.topBoundary - (shiftedY * this.state.scaleFactor);
             this.clearCanvas();
@@ -215,15 +213,17 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                             <span className="sr-only" > Loading...</span>
                         </div>
                     </> :
-                    <canvas className = "row" id = "drawSurface"
-                        onMouseDown = { this.handleInput }
-                        onMouseMove = { this.handleInput }
-                        onMouseLeave = { this.handleInput }
-                        onMouseUp = { this.handleInput }
-                        onWheel = { this.handleZoom }
-                        height = { window.innerHeight * .9 }
-                        width = { window.innerWidth * .95 }
-                        ref = { this.state.drawSurface } />
+                    <div className="row">
+                        <canvas className = "row" id = "drawSurface"
+                            onMouseDown = { this.handleInput }
+                            onMouseMove = { this.handleInput }
+                            onMouseLeave = { this.handleInput }
+                            onMouseUp = { this.handleInput }
+                            onWheel = { this.handleZoom }
+                            height = { window.innerHeight * .85 }
+                            width = { window.innerWidth * .975 }
+                            ref = { this.state.drawSurface } />
+                    </div>
                 }
             </div>
         )

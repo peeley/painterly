@@ -20,7 +20,7 @@ export class Tool {
     constructor(strokeType: string){
         this.strokeType = strokeType;
         this.mouseDown = false;
-        this.color = "rgba(66, 68, 90, 1)";
+        this.color = "rgba(128, 128, 128, 1)";
         this.strokeWidth = 1;
         this.toolName = 'generic';
         this.displayName = 'tool';

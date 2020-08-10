@@ -19,7 +19,7 @@ export class Palette extends React.Component<PaletteProps, PaletteState>{
         super(props);
         this.state = {
             strokeWidth: 3,
-            color: "#42445A"
+            color: "rgba(128, 128, 128, 1)",
         }
 	}
 	componentDidMount(){
@@ -43,6 +43,8 @@ export class Palette extends React.Component<PaletteProps, PaletteState>{
 				'rgba(255, 235, 59, 0.95)',
 				'rgba(255, 193, 7, 1)'
 			],
+
+            default: this.state.color,
 
 			components: {
 

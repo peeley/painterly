@@ -1,0 +1,111 @@
+#+TODO: TODO IN-PROGRESS IDEA | DONE CANCELLED
+
+* Front End
+** TODO Finish fill tool
+- this [[https://ben.akrin.com/?p=7888][blog]] might have some ideas
+
+** TODO Add painting preview in home screen
+** TODO Fix automatic canvas sizing to fit screen, have canvas visual size and programmatic size be different.
+** TODO Revamp landing page
+** IN-PROGRESS UI/UX overhaul *ongoing*
+- theming
+- keybinds/ergonomics
+
+** IN-PROGRESS Add new tool types
+- Shapes
+- Image insertion
+- Text
+- Charts/tables
+
+** IN-PROGRESS Change pan tool to be unable to pan beyond canvas boundaries
+** DONE Fix offsets after zoom, yet again
+   CLOSED: [2020-08-11 Tue 01:19]
+** DONE Refactor PanTool to not be a Tool
+   CLOSED: [2020-08-11 Tue 01:28]
+** DONE Split home screen into blade components (note: converted /home to React)
+   CLOSED: [2020-08-11 Tue 01:21]
+** DONE Refactoring frontend code to TypeScript
+   CLOSED: [2020-08-11 Tue 01:22]
+** DONE Rewrite stroke objects to be ES6 classes, get rid of lack of polymorphism in VersionController
+   CLOSED: [2020-08-11 Tue 01:22]
+** DONE Refactor coordinate offsets into Context object instead of being tracked by each tool individually
+   CLOSED: [2020-08-11 Tue 01:22]
+** DONE Loading animation while strokes object is being downloaded/rendered
+   CLOSED: [2020-08-11 Tue 01:22]
+** DONE Refactor `fetch` calls in React to use `axios`
+   CLOSED: [2020-08-11 Tue 01:24]
+** DONE Zoom in on, pan over sketch
+   CLOSED: [2020-08-11 Tue 01:22]
+- Fix mouse coordinate offsets when zoomed
+- Zoom in at mouse location
+- Zoom hotkeys
+- Reset button zoom level to default, zoom level indicators
+
+** DONE Indicator/shadow for certain tools
+   CLOSED: [2020-08-11 Tue 01:21]
+** DONE Utility bar at top to download sketch, share link, edit title, etc.
+   CLOSED: [2020-08-11 Tue 01:23]
+** DONE JQuery really isn't cutting it even for simpler interactions like in the home page * maybe start working on React component
+   CLOSED: [2020-08-11 Tue 01:24]
+** CANCELLED Make clearing screen an undo*able action
+  CLOSED: [2020-08-11 Tue 01:26]
+- didn't do, makes for worse user experience overall, feels like not what you'd predict.*
+
+** DONE Draw on canvas w/ pen, see changes instantly
+   CLOSED: [2020-08-11 Tue 01:22]
+- Edit color, width of stroke
+
+** DONE Undo/redo functionality, version history
+   CLOSED: [2020-08-11 Tue 01:22]
+- Redraw canvas after undo/redo
+- Make sure undo then draw isn't fucked
+
+** DONE From home screen be able to delete painting, edit title, make private
+   CLOSED: [2020-08-11 Tue 01:24]
+
+
+
+* Back End
+** TODO TESTING!
+** TODO Deal with max size of broadcast events
+** TODO Work on performance of broadcast events
+- Waiting for 200 OK before showing changes locally feels really slow, bad UX
+
+** DONE Automatically push changes in canvas to all viewers
+  CLOSED: [2020-08-11 Tue 01:20]
+- Setup/install Redis for Broadcasting backend
+- Push changes to channel from update protocol on backend
+- Write channel listeners on frontend
+- Others view stroke indicators? May not be performant
+
+** DONE Make logout timer not so obnoxious/learn how authentication actually works lmao
+  CLOSED: [2020-08-11 Tue 01:21]
+** DONE Increase performance, perhaps rework painting serialization/protocol?
+  CLOSED: [2020-08-11 Tue 01:22]
+** DONE Synchronise canvas after clearing backend
+   CLOSED: [2020-08-11 Tue 01:36]
+** DONE Add backend & database
+   CLOSED: [2020-08-11 Tue 01:23]
+- Save sketches to acct
+- User auth, accounts
+
+** DONE Add new users to painting when private
+  CLOSED: [2020-08-11 Tue 01:22]
+- Create backend controller
+- Create form in options modal in /home
+
+** DONE Distinguish between permissions to view/edit sketch
+   CLOSED: [2020-08-11 Tue 01:42]
+
+
+* DevOps/Misc
+** TODO Figure out method for self-hosting
+- Docker image?
+
+** IN-PROGRESS Convert this doc to org-mode lol
+** DONE Edit build script to detect changes in React app, build automatically
+   CLOSED: [2020-08-11 Tue 01:24]
+- Add debug .env flag for debug printing
+
+** IDEA Maybe contribute to laravel-echo
+- Typescript typings are basically nonexistant, low hanging fruit

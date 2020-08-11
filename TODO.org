@@ -1,23 +1,25 @@
 #+TODO: TODO IN-PROGRESS IDEA | DONE CANCELLED
 
 * Front End
-** TODO Finish fill tool
-- this [[https://ben.akrin.com/?p=7888][blog]] might have some ideas
-
 ** TODO Add painting preview in home screen
 ** TODO Fix automatic canvas sizing to fit screen, have canvas visual size and programmatic size be different.
-** TODO Revamp landing page
+   Related: [[*Change pan tool to be unable to pan beyond canvas boundaries]]
+
 ** IN-PROGRESS UI/UX overhaul *ongoing*
-- theming
-- keybinds/ergonomics
-
+*** TODO Landing page
+*** theming
+*** keybinds/ergonomics
 ** IN-PROGRESS Add new tool types
-- Shapes
-- Image insertion
-- Text
-- Charts/tables
+*** TODO Fill tool
+    This [[https://ben.akrin.com/?p=7888][blog]] might have some ideas
 
+*** Shapes
+*** Image insertion
+*** Text
+*** Charts/tables
 ** IN-PROGRESS Change pan tool to be unable to pan beyond canvas boundaries
+   This might be blocked by [[Fix automatic canvas sizing to fit screen, have canvas visual size and programmatic size be different.][this]], need to make decision on if canvases should have fixed size or not
+
 ** DONE Fix offsets after zoom, yet again
    CLOSED: [2020-08-11 Tue 01:19]
 ** DONE Refactor PanTool to not be a Tool
@@ -47,10 +49,6 @@
    CLOSED: [2020-08-11 Tue 01:23]
 ** DONE JQuery really isn't cutting it even for simpler interactions like in the home page * maybe start working on React component
    CLOSED: [2020-08-11 Tue 01:24]
-** CANCELLED Make clearing screen an undo*able action
-  CLOSED: [2020-08-11 Tue 01:26]
-- didn't do, makes for worse user experience overall, feels like not what you'd predict.*
-
 ** DONE Draw on canvas w/ pen, see changes instantly
    CLOSED: [2020-08-11 Tue 01:22]
 - Edit color, width of stroke
@@ -63,13 +61,16 @@
 ** DONE From home screen be able to delete painting, edit title, make private
    CLOSED: [2020-08-11 Tue 01:24]
 
+** CANCELLED Make clearing screen an undo*able action
+  CLOSED: [2020-08-11 Tue 01:26]
+- didn't do, makes for worse user experience overall, feels like not what you'd predict.*
 
 
 * Back End
-** TODO TESTING!
+** TODO *!!TESTING!!*
 ** TODO Deal with max size of broadcast events
 ** TODO Work on performance of broadcast events
-- Waiting for 200 OK before showing changes locally feels really slow, bad UX
+   Waiting for 200 OK before showing changes locally feels really slow, bad UX
 
 ** DONE Automatically push changes in canvas to all viewers
   CLOSED: [2020-08-11 Tue 01:20]
@@ -100,12 +101,12 @@
 
 * DevOps/Misc
 ** TODO Figure out method for self-hosting
-- Docker image?
+   Docker image?
 
 ** IN-PROGRESS Convert this doc to org-mode lol
 ** DONE Edit build script to detect changes in React app, build automatically
    CLOSED: [2020-08-11 Tue 01:24]
-- Add debug .env flag for debug printing
+   Add debug .env flag for debug printing
 
 ** IDEA Maybe contribute to laravel-echo
 - Typescript typings are basically nonexistant, low hanging fruit

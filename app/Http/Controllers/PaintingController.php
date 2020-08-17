@@ -23,6 +23,7 @@ class PaintingController extends Controller
     }
     public function getPainting(Painting $painting)
     {
+        $this->authorize('view', $painting);
         return $painting;
     }
     public function putPainting(PaintingUpdateRequest $request, Painting $painting)

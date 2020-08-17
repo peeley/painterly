@@ -15,7 +15,7 @@ class PaintingUpdateEvent implements ShouldBroadcast {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public int $paintingId;
-    public string $action;
+    public $action;
     public $strokes;
     public $title;
 

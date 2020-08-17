@@ -4,9 +4,11 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 use App\Painting;
 use App\User;
+use App\UpdateProtocol;
 
 class PaintingTest extends TestCase
 {
@@ -23,6 +25,9 @@ class PaintingTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+
+        Event::fake();
+
         $this->testUser = User::create([
             'name' => 'Test McUser',
             'email' => 'test@example.com',
@@ -44,7 +49,27 @@ class PaintingTest extends TestCase
         $this->assertTrue($painting->edit_public === false);
         $response = $this->actingAs($this->testUser)
             ->getJson("/api/p/$painting->id");
-        $response->assertStatus(200)->assertJson(['strokes' => []]);
+        $response->assertStatus(200)->assertJson([
+            'strokes' => [],
+            'view_public' => false,
+            'edit_public' => false,
+            'title' => "Blank painting"
+        ]);
+    }
+
+    public function testSetTitle()
+    {
+        $painting = $this->testUser->paintings()->create();
+        $test_title = 'New title!';
+
+        $response = $this->actingAs($this->testUser)
+            ->putJson("/api/p/$painting->id", ['title' => $test_title]);
+        $response->assertStatus(200);
+
+        $response = $this->actingAs($this->testUser)
+            ->getJson("/api/p/$painting->id");
+        $response->assertStatus(200)
+            ->assertJson(['title' => $test_title]);
     }
 
     public function testPaintingPermissions()
@@ -65,12 +90,5 @@ class PaintingTest extends TestCase
         $auth_response = $this->actingAs($this->otherUser)
             ->getJson("/api/p/$painting->id");
         $auth_response->assertStatus(200);
-    }
-
-    public function testExample()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
     }
 }

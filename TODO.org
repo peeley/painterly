@@ -67,11 +67,11 @@
 
 
 * Back End
-** TODO *!!TESTING!!*
 ** TODO Deal with max size of broadcast events
 ** TODO Work on performance of broadcast events
    Waiting for 200 OK before showing changes locally feels really slow, bad UX
 
+** IN-PROGRESS *!!TESTING!!*
 ** DONE Automatically push changes in canvas to all viewers
   CLOSED: [2020-08-11 Tue 01:20]
 - Setup/install Redis for Broadcasting backend

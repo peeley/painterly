@@ -103,7 +103,7 @@ class PaintingTest extends TestCase
             ->assertJson(['strokes' => ["new stroke!"]]);
 
         $clear_response = $this->actingAs($this->testUser)
-            ->putJson("/api/p/$painting->id", ['action' => 'undo']);
+            ->putJson("/api/p/$painting->id", ['action' => 'clear']);
         $clear_response->assertStatus(200);
 
         $get_response = $this->actingAs($this->testUser)

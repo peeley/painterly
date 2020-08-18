@@ -75,20 +75,38 @@ class PaintingTest extends TestCase
     public function testPaintingPermissions()
     {
         $painting = $this->testUser->paintings()->create();
-        $good_response = $this->actingAs($this->testUser)
+        $response = $this->actingAs($this->testUser)
             ->getJson("/api/p/$painting->id");
-        $good_response->assertStatus(200);
+        $response->assertStatus(200);
 
         $this->assertTrue($painting->view_public === false);
 
-        $unauth_response = $this->actingAs($this->otherUser)
+        $unauth_get_response = $this->actingAs($this->otherUser)
             ->getJson("/api/p/$painting->id");
-        $unauth_response->assertStatus(403);
+        $unauth_get_response->assertStatus(403);
 
         $painting->view_public = true;
         $painting->save();
-        $auth_response = $this->actingAs($this->otherUser)
+        $auth_get_response = $this->actingAs($this->otherUser)
             ->getJson("/api/p/$painting->id");
-        $auth_response->assertStatus(200);
+        $auth_get_response->assertStatus(200);
+
+        $this->assertTrue($painting->edit_public === false);
+
+        $unauth_put_response = $this->actingAs($this->otherUser)
+            ->putJson("/api/p/$painting->id", [
+                'action' => 'add',
+                'strokes' => json_encode([])
+            ]);
+        $unauth_put_response->assertStatus(403);
+
+        $painting->edit_public = true;
+        $painting->save();
+        $auth_put_response = $this->actingAs($this->otherUser)
+            ->putJson("/api/p/$painting->id", [
+                'action' => 'add',
+                'strokes' => json_encode([])
+            ]);
+        $auth_put_response->assertStatus(200);
     }
 }

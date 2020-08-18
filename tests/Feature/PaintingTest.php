@@ -72,6 +72,46 @@ class PaintingTest extends TestCase
             ->assertJson(['title' => $test_title]);
     }
 
+    public function testAddStrokes()
+    {
+        $painting = $this->testUser->paintings()->create();
+        $request_json = [
+            'action' => 'add',
+            'strokes' => json_encode("new stroke!")
+        ];
+
+        $first_add_response = $this->actingAs($this->testUser)
+            ->putJson("/api/p/$painting->id", $request_json);
+        $first_add_response->assertStatus(200);
+        $request_json['strokes'] = json_encode("new stroke two!");
+        $second_add_response = $this->actingAs($this->testUser)
+            ->putJson("/api/p/$painting->id", $request_json);
+        $second_add_response->assertStatus(200);
+
+        $get_response = $this->actingAs($this->testUser)
+            ->getJson("/api/p/$painting->id");
+        $get_response->assertStatus(200)
+                 ->assertJson(['strokes' => ["new stroke!", "new stroke two!"]]);
+
+        $undo_response = $this->actingAs($this->testUser)
+                         ->putJson("/api/p/$painting->id", ['action' => 'undo']);
+        $undo_response->assertStatus(200);
+
+        $get_response = $this->actingAs($this->testUser)
+            ->getJson("/api/p/$painting->id");
+        $get_response->assertStatus(200)
+            ->assertJson(['strokes' => ["new stroke!"]]);
+
+        $clear_response = $this->actingAs($this->testUser)
+            ->putJson("/api/p/$painting->id", ['action' => 'undo']);
+        $clear_response->assertStatus(200);
+
+        $get_response = $this->actingAs($this->testUser)
+            ->getJson("/api/p/$painting->id");
+        $get_response->assertStatus(200)
+            ->assertJson(['strokes' => []]);
+    }
+
     public function testPaintingPermissions()
     {
         $painting = $this->testUser->paintings()->create();

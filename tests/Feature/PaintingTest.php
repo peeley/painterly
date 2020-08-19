@@ -112,7 +112,7 @@ class PaintingTest extends TestCase
             ->assertJson(['strokes' => []]);
     }
 
-    public function testPaintingPermissions()
+    public function testViewPublicSetting()
     {
         $painting = $this->testUser->paintings()->create();
         $response = $this->actingAs($this->testUser)
@@ -130,7 +130,10 @@ class PaintingTest extends TestCase
         $auth_get_response = $this->actingAs($this->otherUser)
             ->getJson("/api/p/$painting->id");
         $auth_get_response->assertStatus(200);
+    }
 
+    public function testEditPublicSetting(){
+        $painting = $this->testUser->paintings()->create();
         $this->assertTrue($painting->edit_public === false);
 
         $unauth_put_response = $this->actingAs($this->otherUser)
@@ -148,5 +151,16 @@ class PaintingTest extends TestCase
                 'strokes' => json_encode([])
             ]);
         $auth_put_response->assertStatus(200);
+    }
+
+    public function testDeletePainting(){
+        $painting = $this->testUser->paintings()->create();
+        $painting->save();
+
+        $response = $this->actingAs($this->testUser)
+             ->deleteJson("/api/p/$painting->id");
+
+        $response->assertStatus(200);
+        $this->assertTrue(Painting::find($painting->id) === null);
     }
 }

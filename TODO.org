@@ -72,6 +72,11 @@
    Waiting for 200 OK before showing changes locally feels really slow, bad UX
 
 ** IN-PROGRESS *!!TESTING!!*
+*** IN-PROGRESS Painting tests
+*** IN-PROGRESS Permission tests
+    Kind of overlaps with painting tests, maybe just test add/deleting permissions
+*** TODO Broadcast testing?
+*** TODO Browser/API tests
 ** DONE Automatically push changes in canvas to all viewers
   CLOSED: [2020-08-11 Tue 01:20]
 - Setup/install Redis for Broadcasting backend

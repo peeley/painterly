@@ -33,8 +33,8 @@ class UserPermissionList extends React.Component {
     }
     addUser = () => {
         axios.post(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}/perms`,
-                   null,
-                   { params: {'email': this.state.searchText, 'perms': 'read_write'}})
+                   {'email': this.state.searchText, 'perms': 'read_write'},
+                   { headers: {'Content-Type' : 'application/json'}})
         .then( response => {
             this.setState({
                 permissions: this.state.permissions.concat([response.data])

@@ -54,7 +54,7 @@ class PaintingPolicy
         return false;
     }
 
-    public function edit(User $user, Painting $painting)
+    public function editPermissions(User $user, Painting $painting)
     {
         return $user->id === $painting->user_id;
     }

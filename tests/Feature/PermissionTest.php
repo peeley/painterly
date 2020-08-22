@@ -67,6 +67,34 @@ class PermissionTest extends TestCase
             ]);
     }
 
+    public function testEditPermission(){
+        $painting = $this->testUser->paintings()->create();
+        $painting->save();
+
+        $this->actingAs($this->testUser)
+            ->postJson("/api/p/$painting->id/perms", [
+                'perms' => 'read_write',
+                'email' => $this->otherUser->email,
+            ])
+            ->assertStatus(200);
+
+        $this->actingAs($this->testUser)
+            ->postJson("/api/p/$painting->id/perms", [
+                'perms' => 'read',
+                'email' => $this->otherUser->email,
+            ])
+            ->assertStatus(200);
+
+        $this->actingAs($this->testUser)
+            ->getJson("/api/p/$painting->id/perms")
+            ->assertStatus(200)
+            ->assertJsonFragment([
+                'user_id' => $this->otherUser->id,
+                'user_email' => $this->otherUser->email,
+                'permissions' => 'read',
+            ]);
+    }
+
     public function testDeletePermission()
     {
         $painting = $this->testUser->paintings()->create();

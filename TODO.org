@@ -4,7 +4,8 @@
 ** TODO Add painting preview in home screen
 ** TODO Fix automatic canvas sizing to fit screen, have canvas visual size and programmatic size be different.
    Related: [[*Change pan tool to be unable to pan beyond canvas boundaries]]
-
+** TODO Add flow for editing existing permission on painting
+   Also need to fix "Submit" button in modal, for some reason is pinging `/api/p/{id}`
 ** IN-PROGRESS UI/UX overhaul *ongoing*
 *** TODO Landing page
 *** theming

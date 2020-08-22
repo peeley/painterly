@@ -2,29 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
+use \App\Http\Requests\PermissionRequest;
 use \App\Painting;
 use \App\User;
 
 class PermissionController extends Controller
 {
-    public function getPermissions(Painting $painting){
+    public function getPermissions(Painting $painting)
+    {
         $this->authorize('view', $painting);
         return response()->json($painting->permissions);
     }
-    public function addUser(Request $request, Painting $painting){
+    public function addUser(PermissionRequest $request, Painting $painting)
+    {
         $this->authorize('editPermissions', $painting);
-        // TODO make validator
-        $perms = $request->get('perms');
-        if(!($perms === 'read' || $perms === 'read_write')){
-            return response('Invalid permissions', 422);
-        }
-        $email = $request->get('email');
+        $validated = $request->validated();
+        $perms = $validated['perms'];
+        $email = $validated['email'];
         $user = User::where('email', $email)->first();
-        if(!$user){
-            return response("No matching user with email $email", 404);
-        }
         $newPerm = $painting->permissions()->firstOrCreate(
             ['user_id' => $user->id],
             ['permissions' => $perms, 'user_email' => $email]
@@ -33,7 +28,8 @@ class PermissionController extends Controller
 
         // TODO notify user when added to painting
     }
-    public function removeUser(Painting $painting, User $user){
+    public function removeUser(Painting $painting, User $user)
+    {
         $this->authorize('editPermissions', $painting);
         $painting->permissions->where('user_id', $user->id)->first()->delete();
         return response('Permission removed', 200);

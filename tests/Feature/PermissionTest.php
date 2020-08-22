@@ -80,8 +80,7 @@ class PermissionTest extends TestCase
 
         $this->actingAs($this->testUser)
             ->delete("/api/p/$painting->id/perms/" . $this->otherUser->id)
-             ->dump()
-             ->assertStatus(200);
+            ->assertStatus(200);
         $this->actingAs($this->testUser)
             ->getJson("/api/p/$painting->id/perms")
             ->assertStatus(200)

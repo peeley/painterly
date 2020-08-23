@@ -15,25 +15,14 @@ class PermissionTest extends TestCase
     {
         parent::setUp();
         // TODO make factory for users
-        $this->testUser = User::create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password123',
-        ]);
-        $this->testUser->save();
+        $this->testUser = factory(User::class)->create();
 
-        $this->otherUser = User::create([
-            'name' => 'Other User',
-            'email' => 'test2@example.com',
-            'password' => 'password123'
-        ]);
-        $this->otherUser->save();
+        $this->otherUser = factory(User::class)->create();
     }
 
     public function testGetPermissionsOnNewPainting()
     {
         $painting = $this->testUser->paintings()->create();
-        $painting->save();
 
         $this->actingAs($this->testUser)
             ->getJson("/api/p/$painting->id/perms")
@@ -48,7 +37,6 @@ class PermissionTest extends TestCase
     public function testAddPermission()
     {
         $painting = $this->testUser->paintings()->create();
-        $painting->save();
 
         $this->actingAs($this->testUser)
             ->postJson("/api/p/$painting->id/perms", [
@@ -70,7 +58,6 @@ class PermissionTest extends TestCase
     public function testEditPermission()
     {
         $painting = $this->testUser->paintings()->create();
-        $painting->save();
 
         $this->actingAs($this->testUser)
             ->postJson("/api/p/$painting->id/perms", [
@@ -99,7 +86,6 @@ class PermissionTest extends TestCase
     public function testDeletePermission()
     {
         $painting = $this->testUser->paintings()->create();
-        $painting->save();
 
         $this->actingAs($this->testUser)
             ->postJson("/api/p/$painting->id/perms", [
@@ -119,7 +105,6 @@ class PermissionTest extends TestCase
     public function testEditPublicPermissions()
     {
         $painting = $this->testUser->paintings()->create();
-        $painting->save();
 
         $this->actingAs($this->testUser)
             ->get("/api/p/" . $painting->id)

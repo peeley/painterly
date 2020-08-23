@@ -2,6 +2,7 @@
 
 * Front End
 ** TODO Add painting preview in home screen
+** TODO Fix centering of toggles in PrivacyEditor
 ** TODO Fix automatic canvas sizing to fit screen, have canvas visual size and programmatic size be different.
    Related: [[*Change pan tool to be unable to pan beyond canvas boundaries]]
 ** IN-PROGRESS UI/UX overhaul *ongoing*
@@ -67,7 +68,7 @@
 ** DONE From home screen be able to delete painting, edit title, make private
    CLOSED: [2020-08-11 Tue 01:24]
 
-** CANCELLED Make clearing screen an undo*able action
+** CANCELLED Make clearing screen an undoable action
   CLOSED: [2020-08-11 Tue 01:26]
 - didn't do, makes for worse user experience overall, feels like not what you'd predict.*
 
@@ -116,7 +117,8 @@
 ** TODO Figure out method for self-hosting
    Docker image?
 
-** IN-PROGRESS Convert this doc to org-mode lol
+** DONE Convert this doc to org-mode lol
+   CLOSED: [2020-08-23 Sun 14:53]
 ** DONE Edit build script to detect changes in React app, build automatically
    CLOSED: [2020-08-11 Tue 01:24]
    Add debug .env flag for debug printing

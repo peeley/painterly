@@ -28,16 +28,9 @@ class PaintingTest extends TestCase
 
         Event::fake();
 
-        $this->testUser = User::create([
-            'name' => 'Test McUser',
-            'email' => 'test@example.com',
-            'password' => 'test1234'
-        ]);
-        $this->otherUser = User::create([
-            'name' => 'Other McUser',
-            'email' => 'test2@example.com',
-            'password' => 'test1234'
-        ]);
+        $this->testUser = factory(User::class)->create();
+
+        $this->otherUser = factory(User::class)->create();
     }
 
     public function testCreatePainting()
@@ -155,7 +148,6 @@ class PaintingTest extends TestCase
 
     public function testDeletePainting(){
         $painting = $this->testUser->paintings()->create();
-        $painting->save();
 
         $response = $this->actingAs($this->testUser)
              ->deleteJson("/api/p/$painting->id");

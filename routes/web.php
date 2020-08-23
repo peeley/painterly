@@ -29,7 +29,7 @@ Route::put('/api/p/{painting}', 'PaintingController@putPainting')->middleware('a
 Route::delete('/api/p/{painting}', 'PaintingController@deletePainting')->middleware('auth');
 
 Route::get('/api/p/{painting}/perms', 'PermissionController@getPermissions')->middleware('auth');
-Route::post('/api/p/{painting}/perms', 'PermissionController@addUser')->middleware('auth');
+Route::post('/api/p/{painting}/perms', 'PermissionController@addPermission')->middleware('auth');
 Route::delete('/api/p/{painting}/perms/{user}', 'PermissionController@removeUser')->middleware('auth');
 
 Route::get('/api/u/{user}/paintings', 'UserController@getPaintings')->middleware('auth');

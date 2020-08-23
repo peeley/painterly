@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use \App\Http\Requests\PermissionRequest;
 use \App\Painting;
 use \App\User;
+use \App\Permission;
 
 class PermissionController extends Controller
 {
@@ -13,14 +14,14 @@ class PermissionController extends Controller
         $this->authorize('view', $painting);
         return response()->json($painting->permissions);
     }
-    public function addUser(PermissionRequest $request, Painting $painting)
+    public function addPermission(PermissionRequest $request, Painting $painting)
     {
         $this->authorize('editPermissions', $painting);
         $validated = $request->validated();
         $perms = $validated['perms'];
         $email = $validated['email'];
         $user = User::where('email', $email)->first();
-        $newPerm = $painting->permissions()->firstOrCreate(
+        $newPerm = $painting->permissions()->updateOrCreate(
             ['user_id' => $user->id],
             ['permissions' => $perms, 'user_email' => $email]
         );

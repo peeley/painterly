@@ -67,7 +67,8 @@ class PermissionTest extends TestCase
             ]);
     }
 
-    public function testEditPermission(){
+    public function testEditPermission()
+    {
         $painting = $this->testUser->paintings()->create();
         $painting->save();
 
@@ -113,5 +114,35 @@ class PermissionTest extends TestCase
             ->getJson("/api/p/$painting->id/perms")
             ->assertStatus(200)
             ->assertExactJson([]);
+    }
+
+    public function testEditPublicPermissions()
+    {
+        $painting = $this->testUser->paintings()->create();
+        $painting->save();
+
+        $this->actingAs($this->testUser)
+            ->get("/api/p/" . $painting->id)
+            ->assertStatus(200)
+            ->assertJson([
+                'view_public' => false,
+                'edit_public' => false,
+            ]);
+
+        $this->actingAs($this->testUser)
+            ->putJson("/api/p/" . $painting->id . "/perms", [
+                'view_public' => true,
+                'edit_public' => true,
+            ])
+             ->dump()
+            ->assertStatus(200);
+
+        $this->actingAs($this->testUser)
+            ->get("/api/p/" . $painting->id)
+            ->assertStatus(200)
+            ->assertJson([
+                'view_public' => true,
+                'edit_public' => true,
+            ]);
     }
 }

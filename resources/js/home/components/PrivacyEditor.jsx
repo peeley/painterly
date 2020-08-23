@@ -17,7 +17,10 @@ class PrivacyEditor extends React.Component {
             if(!this.state.view_public && this.state.edit_public){
                 this.setState({
                     edit_public: false
-                });
+                }, () => this.submitSettings());
+            }
+            else {
+                this.submitSettings();
             }
         });
     }
@@ -28,12 +31,15 @@ class PrivacyEditor extends React.Component {
             if(!this.state.view_public && this.state.edit_public){
                 this.setState({
                     view_public: true
-                });
+                }, () => this.submitSettings());
+            }
+            else {
+                this.submitSettings();
             }
         });
     }
     submitSettings = () => {
-        axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`,
+        axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}/perms`,
                   {'view_public': this.state.view_public,
                    'edit_public': this.state.edit_public },
                   {'Content-Type': 'application/json'}
@@ -84,13 +90,6 @@ class PrivacyEditor extends React.Component {
                             { !this.state.view_public || ! this.state.edit_public ?
                                 <UserPermissionList paintingId={this.props.paintingId} /> : null
                                 }
-                        </div>
-                        <div className="modal-footer" >
-                            <button className="btn btn-primary"
-                                onClick={ this.submitSettings }
-                                data-dismiss="modal">
-                                Submit
-                            </button>
                         </div>
                     </div>
                 </div>

@@ -134,7 +134,6 @@ class PermissionTest extends TestCase
                 'view_public' => true,
                 'edit_public' => true,
             ])
-             ->dump()
             ->assertStatus(200);
 
         $this->actingAs($this->testUser)

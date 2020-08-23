@@ -4,9 +4,6 @@
 ** TODO Add painting preview in home screen
 ** TODO Fix automatic canvas sizing to fit screen, have canvas visual size and programmatic size be different.
    Related: [[*Change pan tool to be unable to pan beyond canvas boundaries]]
-** TODO Fix "Submit" button on PrivacyEditor to point to correct endpoint
-** IN-PROGRESS Add flow for editing existing permission on painting
-   Also need to fix "Submit" button in modal, for some reason is pinging `/api/p/{id}`
 ** IN-PROGRESS UI/UX overhaul *ongoing*
 *** TODO Landing page
 *** theming
@@ -22,6 +19,13 @@
 ** IN-PROGRESS Change pan tool to be unable to pan beyond canvas boundaries
    This might be blocked by [[Fix automatic canvas sizing to fit screen, have canvas visual size and programmatic size be different.][this]], need to make decision on if canvases should have fixed size or not
 
+** DONE Fix "Submit" button on PrivacyEditor to point to correct endpoint
+   CLOSED: [2020-08-22 Sat 23:57]
+   Actually just removed "Submit" button, toggles on `edit_public` and `view_public` just send PUT request independently
+
+** DONE Add flow for editing existing permission on painting
+   CLOSED: [2020-08-22 Sat 23:51]
+   Also need to fix "Submit" button in modal, for some reason is pinging `/api/p/{id}`
 ** DONE Fix offsets after zoom, yet again
    CLOSED: [2020-08-11 Tue 01:19]
 ** DONE Refactor PanTool to not be a Tool

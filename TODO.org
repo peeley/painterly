@@ -5,6 +5,7 @@
 ** TODO Fix centering of toggles in PrivacyEditor
 ** TODO Fix automatic canvas sizing to fit screen, have canvas visual size and programmatic size be different.
    Related: [[*Change pan tool to be unable to pan beyond canvas boundaries]]
+** TODO Convert /home from JS to TypeScript
 ** IN-PROGRESS UI/UX overhaul *ongoing*
 *** TODO Landing page
 *** theming
@@ -82,7 +83,8 @@
 *** DONE Painting tests
     CLOSED: [2020-08-20 Thu 14:57]
 
-*** IN-PROGRESS Permission tests
+*** DONE Permission tests
+    CLOSED: [2020-08-23 Sun 21:32]
     Kind of overlaps with painting tests, maybe just test add/deleting permissions
 *** TODO Broadcast testing?
 *** TODO Browser/API tests

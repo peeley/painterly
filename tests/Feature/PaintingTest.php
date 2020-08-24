@@ -3,12 +3,10 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 use App\Painting;
 use App\User;
-use App\UpdateProtocol;
 
 class PaintingTest extends TestCase
 {
@@ -29,7 +27,6 @@ class PaintingTest extends TestCase
         Event::fake();
 
         $this->testUser = factory(User::class)->create();
-
         $this->otherUser = factory(User::class)->create();
     }
 
@@ -84,10 +81,10 @@ class PaintingTest extends TestCase
         $get_response = $this->actingAs($this->testUser)
             ->getJson("/api/p/$painting->id");
         $get_response->assertStatus(200)
-                 ->assertJson(['strokes' => ["new stroke!", "new stroke two!"]]);
+            ->assertJson(['strokes' => ["new stroke!", "new stroke two!"]]);
 
         $undo_response = $this->actingAs($this->testUser)
-                         ->putJson("/api/p/$painting->id", ['action' => 'undo']);
+            ->putJson("/api/p/$painting->id", ['action' => 'undo']);
         $undo_response->assertStatus(200);
 
         $get_response = $this->actingAs($this->testUser)
@@ -125,7 +122,8 @@ class PaintingTest extends TestCase
         $auth_get_response->assertStatus(200);
     }
 
-    public function testEditPublicSetting(){
+    public function testEditPublicSetting()
+    {
         $painting = $this->testUser->paintings()->create();
         $this->assertTrue($painting->edit_public === false);
 
@@ -146,11 +144,12 @@ class PaintingTest extends TestCase
         $auth_put_response->assertStatus(200);
     }
 
-    public function testDeletePainting(){
+    public function testDeletePainting()
+    {
         $painting = $this->testUser->paintings()->create();
 
         $response = $this->actingAs($this->testUser)
-             ->deleteJson("/api/p/$painting->id");
+            ->deleteJson("/api/p/$painting->id");
 
         $response->assertStatus(200);
         $this->assertTrue(Painting::find($painting->id) === null);

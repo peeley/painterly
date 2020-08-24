@@ -14,9 +14,8 @@ class PermissionTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        // TODO make factory for users
-        $this->testUser = factory(User::class)->create();
 
+        $this->testUser = factory(User::class)->create();
         $this->otherUser = factory(User::class)->create();
     }
 

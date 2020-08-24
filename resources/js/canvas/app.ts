@@ -12,4 +12,4 @@ require('../bootstrap.js');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-require('./components/index.js');
+require('./components/index.ts');

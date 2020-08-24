@@ -1,7 +1,21 @@
-import React from 'react';
+import * as React from 'react';
+import axios from 'axios';
 
-class TitleEditor extends React.Component {
-    constructor(props){
+type TitleEditorProps = {
+    paintingId: number,
+    title: string,
+    titleChangeCallback: (title: string) => void,
+}
+
+type TitleEditorState = {
+    title: string,
+    savedTitle: string,
+    errors: any, // TODO define error type
+}
+
+class TitleEditor extends React.Component<TitleEditorProps, TitleEditorState> {
+    public state: TitleEditorState;
+    constructor(props: TitleEditorProps){
         super(props);
         this.state = {
             title: props.title,
@@ -9,7 +23,7 @@ class TitleEditor extends React.Component {
             errors: null
         };
     }
-    handleChange = (event) => {
+    handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             title: event.target.value
         });
@@ -18,13 +32,16 @@ class TitleEditor extends React.Component {
         axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`,
                   {title: this.state.title},
                   {headers: { 'Content-Type': 'application/json'}})
-            .then( response => {
+            .then( _ => {
                 this.setState({
                     savedTitle: this.state.title,
                     errors: null
                 });
                 this.props.titleChangeCallback(this.state.title);
-                $(`#titleModal${this.props.paintingId}`).modal('hide');
+                let titleModal = $(`#titleModal${this.props.paintingId}`);
+                if(titleModal){
+                    titleModal.modal('hide');
+                }
             })
             .catch( error => {
                 console.log(error);
@@ -40,7 +57,7 @@ class TitleEditor extends React.Component {
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title">Edit Title</h5>
-                            <button type="close" className="close" data-dismiss="modal" aria-label="Close">
+                            <button className="close" data-dismiss="modal" aria-label="Close">
                                 <span>&times;</span>
                             </button>
                         </div>
@@ -48,7 +65,7 @@ class TitleEditor extends React.Component {
                             <input id={"titleForm_" + this.props.paintingId} className="col-8"
                                 onChange={this.handleChange} type="text" placeholder="Edit title"
                                 value={ this.state.title } />
-                            <button id={ this.props.paintingId }
+                            <button id={ `${this.props.paintingId}` }
                                 className="btn btn-primary editTitleSubmitButton"
                                 onClick={this.submitTitle}>
                                 Submit

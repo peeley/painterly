@@ -1,8 +1,22 @@
-import React from 'react';
-import UserPermissionList from './UserPermissionList.jsx';
+import * as React from 'react';
+import axios from 'axios';
+import UserPermissionList from './UserPermissionList';
 
-class PrivacyEditor extends React.Component {
-    constructor(props){
+type PrivacyEditorProps = {
+    paintingId: number,
+    view_public: boolean,
+    edit_public: boolean,
+}
+
+type PrivacyEditorState = {
+    view_public: boolean,
+    edit_public: boolean,
+    errors: null, // TODO define error type
+}
+
+class PrivacyEditor extends React.Component<PrivacyEditorProps, PrivacyEditorState> {
+    public state: PrivacyEditorState;
+    constructor(props: PrivacyEditorProps){
         super(props);
         this.state = {
             view_public: this.props.view_public,
@@ -41,9 +55,7 @@ class PrivacyEditor extends React.Component {
     submitSettings = () => {
         axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}/perms`,
                   {'view_public': this.state.view_public,
-                   'edit_public': this.state.edit_public },
-                  {'Content-Type': 'application/json'}
-        )
+                   'edit_public': this.state.edit_public })
         .catch( error => {
             this.setState({
                 errors: error
@@ -58,7 +70,7 @@ class PrivacyEditor extends React.Component {
                     <div className="modal-content" >
                         <div className="modal-header" >
                             <h3 className="modal-title" >Edit Privacy Settings</h3>
-                            <button type="close" className="close" data-dismiss="modal" aria-label="Close">
+                            <button className="close" data-dismiss="modal" aria-label="Close">
                                 <span>&times;</span>
                             </button>
                         </div>

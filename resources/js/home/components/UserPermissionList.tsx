@@ -1,12 +1,26 @@
 import React from 'react';
+import axios from 'axios';
 
-class UserPermissionList extends React.Component {
-    constructor(props){
+type PermissionListProps = {
+    paintingId: number,
+}
+
+type PermissionListState = {
+    permissions: Array<any> // TODO define type to permission
+    searchText: string,
+    value: "read"|"read_write",
+    errors: string, // TODO define error type too
+}
+
+class UserPermissionList extends React.Component<PermissionListProps, PermissionListState> {
+    public state: PermissionListState;
+    constructor(props: PermissionListProps){
         super(props);
         this.state = {
             permissions: [],
             searchText: "",
-            selectedPermission: "read"
+            value: "read",
+            errors: "",
         };
     }
     componentDidMount(){
@@ -20,16 +34,19 @@ class UserPermissionList extends React.Component {
             console.log(error);
         });
     }
-    handleSearchChange = (event) => {
+    handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             searchText: event.target.value
         });
         // TODO interactive search, usernames pop up
     }
-    handlePermSelect = (event) => {
-        this.setState({
-            selectedPermission: event.target.value
-        });
+    handlePermSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        let selected = event.target.value;
+        if(selected === "read" || selected === "read_write"){
+            this.setState({
+                value: selected,
+            });
+        }
     }
     addUser = () => {
         axios.post(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}/perms`,
@@ -45,9 +62,9 @@ class UserPermissionList extends React.Component {
             // TODO error handling
         })
     }
-    removeUser = (userId) => {
+    removeUser = (userId: number) => {
         axios.delete(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}/perms/${userId}`)
-        .then( response => {
+        .then( _ => {
             this.setState({
                 permissions: this.state.permissions.filter( p => p.user_id !== userId)
             });
@@ -57,7 +74,7 @@ class UserPermissionList extends React.Component {
             // TODO error handling
         });
     }
-    permToString = (perm) => {
+    permToString = (perm: string) => {
         if(perm === "read"){
             return "Read"
         }
@@ -100,7 +117,7 @@ class UserPermissionList extends React.Component {
                     <tbody>
                     { this.state.permissions.map( perm => {
                         return (
-                            <tr key={perm.id} scope="row">
+                            <tr key={perm.id}>
                                 <td>{perm.user_email}</td>
                                 <td>{this.permToString(perm.permissions)}</td>
                                 <td>

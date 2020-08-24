@@ -1,12 +1,24 @@
-import React from 'react';
-import TitleEditor from './TitleEditor.js';
-import PrivacyEditor from './PrivacyEditor.jsx';
+import * as React from 'react';
+import axios from 'axios';
+import TitleEditor from './TitleEditor';
+import PrivacyEditor from './PrivacyEditor';
 
-class PaintingOptions extends React.Component {
+type OptionsProps = {
+    paintingId: number,
+    paintingTitle: string,
+    edit_public: boolean,
+    view_public: boolean,
+    titleChangeCallback: (title: string) => void,
+    deletePaintingCallback: (id: number) => void,
+}
+
+type OptionsState = {}
+
+class PaintingOptions extends React.Component<OptionsProps, OptionsState> {
     handleDelete = () => {
         if(confirm(`Really delete painting '${this.props.paintingTitle}'?`)){
             axios.delete(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`)
-            .then( response => {
+            .then( _ => {
                 this.props.deletePaintingCallback(this.props.paintingId);
             })
             .catch( error => {

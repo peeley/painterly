@@ -81,9 +81,10 @@ export class VersionController {
     }
     wipeHistory = () => {
         this.sendEvent({ action: 'clear'}, () => {
-            this.versionHistory = [];
-            this.currentVersion = 0;
+            // TODO handle bad response?
         });
+        this.versionHistory = [];
+        this.currentVersion = 0;
     }
     // TODO define outgoing event type
     sendEvent = (event: any, callback: Function) => {

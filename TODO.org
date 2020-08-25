@@ -3,6 +3,7 @@
 * Front End
 ** TODO Add painting preview in home screen
 ** TODO Fix centering of toggles in PrivacyEditor
+** TODO Fix drifting coordinate offsets as mouse nears right edge of canvas
 ** IN-PROGRESS Fix automatic canvas sizing to fit screen, have canvas visual size and programmatic size be different.
    Related: [[*Change pan tool to be unable to pan beyond canvas boundaries]]
 ** IN-PROGRESS UI/UX overhaul *ongoing*

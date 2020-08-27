@@ -213,15 +213,15 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                             <span className="sr-only" > Loading...</span>
                         </div>
                     </> :
-                    <div className="row px-2 pt-1 pb-4 overflow-hidden">
-                        <canvas id="drawSurface"
+                    <div className="row">
+                        <canvas className = "row" id = "drawSurface"
                             onMouseDown = { this.handleInput }
                             onMouseMove = { this.handleInput }
                             onMouseLeave = { this.handleInput }
                             onMouseUp = { this.handleInput }
                             onWheel = { this.handleZoom }
-                            height = { window.innerHeight * .875 }
-                            width = { window.innerWidth }
+                            height = { window.innerHeight * .85 }
+                            width = { window.innerWidth * .975 }
                             ref = { this.state.drawSurface } />
                     </div>
                 }

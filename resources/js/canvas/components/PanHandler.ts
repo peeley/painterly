@@ -19,7 +19,7 @@ export class PanHandler {
             this.lastX = xCoord;
             this.lastY = yCoord;
         }
-        else if (event.type === 'mouseup') {
+        else if (event.type === 'mouseup' || event.type === 'mouseleave') {
             this.mouseDown = false;
         }
         else if (this.mouseDown && event.type === 'mousemove') {

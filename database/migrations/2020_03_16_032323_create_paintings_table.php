@@ -16,7 +16,7 @@ class CreatePaintingsTable extends Migration
     {
         Schema::create('paintings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained()->onDelete('set null');
             $table->timestamps();
             $table->string('title')->default('Blank painting');
             $table->json('strokes')->default(new Expression('(json_array())'));

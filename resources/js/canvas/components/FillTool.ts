@@ -37,8 +37,8 @@ function floodFill(context: CanvasRenderingContext2D,
             throw new Error(`Unable to fill at coordinates ${shifted}`);
         }
         let [x, y] = shifted;
-        const imgData = context.getImageData(x, y, 1, 1);
-        const pixelColor = imgData.data;
+        const imgData: ImageData = context.getImageData(x, y, 1, 1);
+        const pixelColor: RGBA = imgData.data;
         if (x < 0 || y < 0 || x > width || y > height) {
             continue;
         }
@@ -49,10 +49,8 @@ function floodFill(context: CanvasRenderingContext2D,
             console.log(`filling pixel at ${x},${y} with ${fillColor}`);
             console.log(`imgData before: `, context.getImageData(x, y, 1, 1));
             for (let i = 0; i < pixelColor.length; i++) {
-                console.log(pixelColor[i], fillColor[i]);
                 pixelColor[i] = fillColor[i];
             }
-            console.log(imgData.data);
             context.putImageData(imgData, x, y);
             console.log(`imgData after: `, context.getImageData(x, y, 1, 1));
             fillQueue.push([x + 1, y]);
@@ -69,11 +67,11 @@ export class FillTool extends Tool {
         super('fill');
         this.toolName = 'fill';
         this.displayName = 'Fill';
-        this.stroke = new FillStroke(this.color, new Uint8ClampedArray());
+        this.stroke = new FillStroke(this.color, new Uint8ClampedArray(4));
     }
     handleEvent(event: any, context: CanvasRenderingContext2D) {
-        const xCoord = (Math.floor(event.clientX) - event.leftOffset) / event.scaleFactor;
-        const yCoord = (Math.floor(event.clientY) - event.topOffset) / event.scaleFactor;
+        const xCoord = (event.clientX - event.leftOffset) / event.scaleFactor;
+        const yCoord = (event.clientY - event.topOffset) / event.scaleFactor;
         if (event.type === 'mousedown') {
             const backgroundColor = context.getImageData(xCoord, yCoord, 1, 1).data;
             this.stroke.setColor(this.color);
@@ -96,5 +94,19 @@ export class FillStroke extends Stroke {
         const backgroundColor = this.backgroundColor;
         let [xCoord, yCoord] = [this.coords[0][0], this.coords[0][1]];
         floodFill(context, xCoord, yCoord, color, backgroundColor);
+    }
+    serialize = () => {
+        return {
+            type: this.type,
+            color: this.color,
+            backgroundColor: this.backgroundColor,
+            coords: this.coords,
+        };
+    }
+    deserialize = (json: any) => {
+        this.type = json.type;
+        this.color = json.color;
+        this.backgroundColor = json.backgroundColor;
+        this.coords = json.coords;
     }
 }

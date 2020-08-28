@@ -153,5 +153,9 @@ class PaintingTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertTrue(Painting::find($painting->id) === null);
+
+        $response = $this->actingAs($this->testUser)
+            ->getJson("/api/p/$painting->id")
+            ->assertStatus(404);
     }
 }

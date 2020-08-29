@@ -7,7 +7,7 @@ type RGBA = Uint8ClampedArray;
 let hexToRGBA = (color: string): RGBA => {
     let RGBAstr = color.split('(')[1].split(')')[0].split(',');
     let RGBAtuple = RGBAstr.map(item => +item); // + is unary operator for numeric cast
-    if(RGBAtuple.length !== 4){
+    if (RGBAtuple.length !== 4) {
         throw new Error(`Mangled RGBA color: ${RGBAtuple}`);
     }
     return new Uint8ClampedArray([RGBAtuple[0], RGBAtuple[1], RGBAtuple[2], RGBAtuple[3]]);
@@ -27,22 +27,22 @@ function colorsEqual(color1: RGBA, color2: RGBA): boolean {
 }
 
 function floodFill(context: CanvasRenderingContext2D,
-                   xCoord: number,
-                   yCoord: number,
-                   fillColor: RGBA,
-                   backgroundColor: RGBA): void {
+    xCoord: number,
+    yCoord: number,
+    fillColor: RGBA,
+    backgroundColor: RGBA): void {
     const canvas = context.canvas;
     const [height, width] = [canvas.height, canvas.width];
+    const imgData: ImageData = context.getImageData(0, 0, width, height);
     let fillQueue = [[xCoord, yCoord]];
     let idx = 0;
-    while (fillQueue.length >= 1 && idx < 100000){
+    while (fillQueue.length >= 1 && idx < 1000) {
         let shifted = fillQueue.shift();
-        if(!shifted){
+        if (!shifted) {
             throw new Error(`Unable to fill at coordinates ${shifted}`);
         }
         let [x, y] = shifted;
-        const imgData: ImageData = context.getImageData(x, y, 1, 1);
-        const pixelColor: RGBA = imgData.data;
+        const pixelColor: RGBA = imgData.data.slice((y * width + x) * 4, ((y * width + x) * 4) + 4);
         if (x < 0 || y < 0 || x > width || y > height) {
             continue;
         }
@@ -50,10 +50,9 @@ function floodFill(context: CanvasRenderingContext2D,
             continue;
         }
         else if (colorsEqual(pixelColor, backgroundColor)) {
-            for(let i = 0; i < pixelColor.length; i++){
-                pixelColor[i] = fillColor[i];
+            for (let i = (y*width + x)*4; i < ((y*width + x)*4) + 4; i++) {
+                imgData.data[i] = fillColor[i - (y*width + x)*4];
             }
-            context.putImageData(imgData, x, y);
             fillQueue.push([x + 1, y]);
             fillQueue.push([x, y + 1]);
             fillQueue.push([x - 1, y]);
@@ -61,6 +60,7 @@ function floodFill(context: CanvasRenderingContext2D,
         }
         idx += 1;
     }
+    context.putImageData(imgData, 0, 0);
 }
 export class FillTool extends Tool {
     private stroke: FillStroke;

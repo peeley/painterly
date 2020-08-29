@@ -13,6 +13,10 @@ let hexToRGBA = (color: string): RGBA => {
     return new Uint8ClampedArray([RGBAtuple[0], RGBAtuple[1], RGBAtuple[2], RGBAtuple[3]]);
 }
 
+let RGBAtoHex = (color: RGBA): string => {
+    return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${color[3]})`;
+}
+
 // determines equality of two colors in RGBA array format
 function colorsEqual(color1: RGBA, color2: RGBA): boolean {
     return (
@@ -29,9 +33,9 @@ function floodFill(context: CanvasRenderingContext2D,
                    backgroundColor: RGBA): void {
     const canvas = context.canvas;
     const [height, width] = [canvas.height, canvas.width];
-    let iterIndex = 0;
     let fillQueue = [[xCoord, yCoord]];
-    while (fillQueue.length >= 1 && iterIndex < 100) {
+    let idx = 0;
+    while (fillQueue.length >= 1 && idx < 100000){
         let shifted = fillQueue.shift();
         if(!shifted){
             throw new Error(`Unable to fill at coordinates ${shifted}`);
@@ -46,19 +50,16 @@ function floodFill(context: CanvasRenderingContext2D,
             continue;
         }
         else if (colorsEqual(pixelColor, backgroundColor)) {
-            console.log(`filling pixel at ${x},${y} with ${fillColor}`);
-            console.log(`imgData before: `, context.getImageData(x, y, 1, 1));
-            for (let i = 0; i < pixelColor.length; i++) {
+            for(let i = 0; i < pixelColor.length; i++){
                 pixelColor[i] = fillColor[i];
             }
             context.putImageData(imgData, x, y);
-            console.log(`imgData after: `, context.getImageData(x, y, 1, 1));
             fillQueue.push([x + 1, y]);
             fillQueue.push([x, y + 1]);
             fillQueue.push([x - 1, y]);
             fillQueue.push([x, y - 1]);
         }
-        iterIndex += 1;
+        idx += 1;
     }
 }
 export class FillTool extends Tool {
@@ -70,15 +71,17 @@ export class FillTool extends Tool {
         this.stroke = new FillStroke(this.color, new Uint8ClampedArray(4));
     }
     handleEvent(event: any, context: CanvasRenderingContext2D) {
-        const xCoord = (event.clientX - event.leftOffset) / event.scaleFactor;
-        const yCoord = (event.clientY - event.topOffset) / event.scaleFactor;
+        const xCoord = Math.floor((event.clientX - event.leftOffset) / event.scaleFactor);
+        const yCoord = Math.floor((event.clientY - event.topOffset) / event.scaleFactor);
         if (event.type === 'mousedown') {
             const backgroundColor = context.getImageData(xCoord, yCoord, 1, 1).data;
             this.stroke.setColor(this.color);
             console.log(`filling ${backgroundColor} from ${xCoord},${yCoord} with ${this.stroke.getColor()}`);
             this.stroke.pushCoords([xCoord, yCoord]);
             this.stroke.backgroundColor = backgroundColor;
-            return this.stroke;
+            let finishedStroke = this.stroke;
+            this.stroke = new FillStroke(this.color, new Uint8ClampedArray(4));
+            return finishedStroke;
         }
     }
 }
@@ -91,9 +94,8 @@ export class FillStroke extends Stroke {
     }
     redoStroke(context: CanvasRenderingContext2D) {
         const color = hexToRGBA(this.color);
-        const backgroundColor = this.backgroundColor;
         let [xCoord, yCoord] = [this.coords[0][0], this.coords[0][1]];
-        floodFill(context, xCoord, yCoord, color, backgroundColor);
+        floodFill(context, xCoord, yCoord, color, this.backgroundColor);
     }
     serialize = () => {
         return {

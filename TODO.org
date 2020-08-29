@@ -10,8 +10,10 @@
 *** theming
 *** keybinds/ergonomics
 ** IN-PROGRESS Add new tool types
-*** TODO Fill tool
+*** IN-PROGRESS Fill tool
     This [[https://ben.akrin.com/?p=7888][blog]] might have some ideas
+    Need to increase performance, filling more than once or without limit to amount of pixels replaced gives huge
+    slowdown. Also need to fix problem with alpha values in `rgba()` strings needing to be 255.
 
 *** Shapes
 *** Image insertion

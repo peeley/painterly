@@ -4,16 +4,19 @@ import Stroke from './Stroke';
 type RGBA = Uint8ClampedArray;
 
 // converts hexadecimal string to RGBA array
-let hexToRGBA = (color: string): RGBA => {
+let stringToTuple = (color: string): RGBA => {
     let RGBAstr = color.split('(')[1].split(')')[0].split(',');
     let RGBAtuple = RGBAstr.map(item => +item); // + is unary operator for numeric cast
     if (RGBAtuple.length !== 4) {
         throw new Error(`Mangled RGBA color: ${RGBAtuple}`);
     }
+    if(RGBAtuple[3] <= 1.0){
+        RGBAtuple[3] *= 255;
+    }
     return new Uint8ClampedArray([RGBAtuple[0], RGBAtuple[1], RGBAtuple[2], RGBAtuple[3]]);
 }
 
-let RGBAtoHex = (color: RGBA): string => {
+let tupleToString = (color: RGBA): string => {
     return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${color[3]})`;
 }
 
@@ -93,7 +96,7 @@ export class FillStroke extends Stroke {
         this.backgroundColor = bgColor
     }
     redoStroke(context: CanvasRenderingContext2D) {
-        const color = hexToRGBA(this.color);
+        const color = stringToTuple(this.color);
         let [xCoord, yCoord] = [this.coords[0][0], this.coords[0][1]];
         floodFill(context, xCoord, yCoord, color, this.backgroundColor);
     }

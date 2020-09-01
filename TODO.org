@@ -10,7 +10,8 @@
 *** theming
 *** keybinds/ergonomics
 ** IN-PROGRESS Add new tool types
-*** IN-PROGRESS Fill tool
+*** DONE Fill tool
+    CLOSED: [2020-08-31 Mon 22:17] - Should look for performance gains in the future.
     This [[https://ben.akrin.com/?p=7888][blog]] might have some ideas
     Need to increase performance, filling more than once or without limit to amount of pixels replaced gives huge
     slowdown. Also need to fix problem with alpha values in `rgba()` strings needing to be 255.

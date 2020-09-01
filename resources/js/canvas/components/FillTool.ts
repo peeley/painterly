@@ -10,14 +10,10 @@ let stringToTuple = (color: string): RGBA => {
     if (RGBAtuple.length !== 4) {
         throw new Error(`Mangled RGBA color: ${RGBAtuple}`);
     }
-    if(RGBAtuple[3] <= 1.0){
+    if (RGBAtuple[3] <= 1.0) {
         RGBAtuple[3] *= 255;
     }
     return new Uint8ClampedArray([RGBAtuple[0], RGBAtuple[1], RGBAtuple[2], RGBAtuple[3]]);
-}
-
-let tupleToString = (color: RGBA): string => {
-    return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${color[3]})`;
 }
 
 // determines equality of two colors in RGBA array format
@@ -30,41 +26,88 @@ function colorsEqual(color1: RGBA, color2: RGBA): boolean {
 }
 
 function floodFill(context: CanvasRenderingContext2D,
-    xCoord: number,
-    yCoord: number,
-    fillColor: RGBA,
-    backgroundColor: RGBA): void {
-    const canvas = context.canvas;
-    const [height, width] = [canvas.height, canvas.width];
-    const imgData: ImageData = context.getImageData(0, 0, width, height);
-    let fillQueue = [[xCoord, yCoord]];
-    let idx = 0;
-    while (fillQueue.length >= 1 && idx < 1000) {
-        let shifted = fillQueue.shift();
-        if (!shifted) {
-            throw new Error(`Unable to fill at coordinates ${shifted}`);
+    x: number,
+    y: number,
+    color: RGBA,
+    backgroundColor: RGBA) {
+    let pixel_stack = [{ x: x, y: y }];
+    let canvas = context.canvas;
+    let pixels = context.getImageData(0, 0, canvas.width, canvas.height);
+    let linear_cords = (y * canvas.width + x) * 4;
+    const original_color = {
+        r: backgroundColor[0],
+        g: backgroundColor[1],
+        b: backgroundColor[2],
+        a: backgroundColor[3]
+    };
+
+    while (pixel_stack.length > 0) {
+        let new_pixel = pixel_stack.shift();
+        if (!new_pixel) {
+            return;
         }
-        let [x, y] = shifted;
-        const pixelColor: RGBA = imgData.data.slice((y * width + x) * 4, ((y * width + x) * 4) + 4);
-        if (x < 0 || y < 0 || x > width || y > height) {
-            continue;
+        x = new_pixel.x;
+        y = new_pixel.y;
+
+        //console.log( x + ", " + y ) ;
+
+        linear_cords = (y * canvas.width + x) * 4;
+        while (y-- >= 0 &&
+            (pixels.data[linear_cords] == original_color.r &&
+                pixels.data[linear_cords + 1] == original_color.g &&
+                pixels.data[linear_cords + 2] == original_color.b &&
+                pixels.data[linear_cords + 3] == original_color.a)) {
+            linear_cords -= canvas.width * 4;
         }
-        else if (colorsEqual(pixelColor, fillColor)) {
-            continue;
-        }
-        else if (colorsEqual(pixelColor, backgroundColor)) {
-            for (let i = (y*width + x)*4; i < ((y*width + x)*4) + 4; i++) {
-                imgData.data[i] = fillColor[i - (y*width + x)*4];
+        linear_cords += canvas.width * 4;
+        y++;
+
+        var reached_left = false;
+        var reached_right = false;
+        while (y++ < canvas.height &&
+            (pixels.data[linear_cords] == original_color.r &&
+                pixels.data[linear_cords + 1] == original_color.g &&
+                pixels.data[linear_cords + 2] == original_color.b &&
+                pixels.data[linear_cords + 3] == original_color.a)) {
+            pixels.data[linear_cords] = color[0];
+            pixels.data[linear_cords + 1] = color[1];
+            pixels.data[linear_cords + 2] = color[2];
+            pixels.data[linear_cords + 3] = color[3];
+
+            if (x > 0) {
+                if (pixels.data[linear_cords - 4] == original_color.r &&
+                    pixels.data[linear_cords - 4 + 1] == original_color.g &&
+                    pixels.data[linear_cords - 4 + 2] == original_color.b &&
+                    pixels.data[linear_cords - 4 + 3] == original_color.a) {
+                    if (!reached_left) {
+                        pixel_stack.push({ x: x - 1, y: y });
+                        reached_left = true;
+                    }
+                } else if (reached_left) {
+                    reached_left = false;
+                }
             }
-            fillQueue.push([x + 1, y]);
-            fillQueue.push([x, y + 1]);
-            fillQueue.push([x - 1, y]);
-            fillQueue.push([x, y - 1]);
+
+            if (x < canvas.width - 1) {
+                if (pixels.data[linear_cords + 4] == original_color.r &&
+                    pixels.data[linear_cords + 4 + 1] == original_color.g &&
+                    pixels.data[linear_cords + 4 + 2] == original_color.b &&
+                    pixels.data[linear_cords + 4 + 3] == original_color.a) {
+                    if (!reached_right) {
+                        pixel_stack.push({ x: x + 1, y: y });
+                        reached_right = true;
+                    }
+                } else if (reached_right) {
+                    reached_right = false;
+                }
+            }
+
+            linear_cords += canvas.width * 4;
         }
-        idx += 1;
     }
-    context.putImageData(imgData, 0, 0);
+    context.putImageData(pixels, 0, 0);
 }
+
 export class FillTool extends Tool {
     private stroke: FillStroke;
     constructor() {

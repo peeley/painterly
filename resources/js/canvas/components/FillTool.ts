@@ -16,14 +16,6 @@ let stringToTuple = (color: string): RGBA => {
     return new Uint8ClampedArray([RGBAtuple[0], RGBAtuple[1], RGBAtuple[2], RGBAtuple[3]]);
 }
 
-// determines equality of two colors in RGBA array format
-function colorsEqual(color1: RGBA, color2: RGBA): boolean {
-    return (
-        color1[0] === color2[0] &&
-        color1[1] === color2[1] &&
-        color1[2] === color2[2] &&
-        color1[3] === color2[3]);
-}
 
 function floodFill(context: CanvasRenderingContext2D,
     x: number,
@@ -48,8 +40,6 @@ function floodFill(context: CanvasRenderingContext2D,
         }
         x = new_pixel.x;
         y = new_pixel.y;
-
-        //console.log( x + ", " + y ) ;
 
         linear_cords = (y * canvas.width + x) * 4;
         while (y-- >= 0 &&

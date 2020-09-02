@@ -3,6 +3,10 @@
 * Front End
 ** TODO Add painting preview in home screen
 ** TODO Fix centering of toggles in PrivacyEditor
+** IN-PROGRESS Refactor canvas code to use Fabric.js
+   This is really long overdue. Feels like giving up on large part of project, but tbh it's nice to find
+   a library that's 100% solved all the annoying reccuring bugs I've had to solve over and over.
+
 ** IN-PROGRESS Fix automatic canvas sizing to fit screen, have canvas visual size and programmatic size be different.
    Related: [[*Change pan tool to be unable to pan beyond canvas boundaries]]
 ** IN-PROGRESS UI/UX overhaul *ongoing*
@@ -20,6 +24,11 @@
 *** Image insertion
 *** Text
 *** Charts/tables
+*** TODO Create tool options menu specific to each kind of tool
+    - Pen tool has stroke width, stroke style, etc.
+    - Shapes have filled vs outline
+    - Text has font, font size, etc.
+
 ** DONE Change pan tool to be unable to pan beyond canvas boundaries
    CLOSED: [2020-08-24 Mon 22:08]
    This might be blocked by [[Fix automatic canvas sizing to fit screen, have canvas visual size and programmatic size be different.][this]], need to make decision on if canvases should have fixed size or not

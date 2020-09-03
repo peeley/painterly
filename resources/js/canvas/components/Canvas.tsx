@@ -78,6 +78,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             this.state.drawSurface.freeDrawingBrush.width = 5;
             this.state.drawSurface.freeDrawingBrush.color = 'rgba(255, 0, 0, 1)';
             this.state.drawSurface.on('mouse:down', this.handleInput);
+            this.state.drawSurface.on('mouse:wheel', this.handleZoom);
         });
     }
     getCanvas() {
@@ -93,20 +94,27 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             }, this.mountFabric
             ));
     }
-    zoom = (factor: number) => {
+    zoom = (x: number, y: number, factor: number) => {
         this.setState({
             scaleFactor: factor
-        }, () => this.state.drawSurface.setZoom(this.state.scaleFactor));
+        }, () =>
+            this.state.drawSurface.zoomToPoint(new fabric.Point(x, y),
+                                               this.state.scaleFactor)
+        );
     }
     resetZoom = () => {
-        this.zoom(1.0);
+        this.setState({
+            scaleFactor: 1.0
+        }, () =>
+            this.state.drawSurface.setViewportTransform([1,0,0,1,0,0])
+        );
     }
-    handleZoom = (event: React.WheelEvent) => {
-        if (event.deltaY < 0) {
-            this.zoom(this.state.scaleFactor + 0.25);
+    handleZoom = (event: any) => {
+        if (event.e.deltaY < 0) {
+            this.zoom(event.e.offsetX, event.e.offsetY, this.state.scaleFactor + 0.25);
         }
         else {
-            this.zoom(this.state.scaleFactor - 0.25);
+            this.zoom(event.e.offsetX, event.e.offsetY, this.state.scaleFactor - 0.25);
         }
     }
     render(): JSX.Element {
@@ -132,12 +140,12 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                         }}>
                             Clear
                         </button>
-                        <button onClick={() => this.zoom(this.state.scaleFactor + 0.25)} >
+                        <button onClick={() => this.zoom(0, 0, this.state.scaleFactor + 0.25)} >
                             Zoom In
                         </button>
                         <span> Zoom Level: {this.state.scaleFactor} x </span>
                         <button disabled={this.state.scaleFactor <= 0.25}
-                            onClick={() => this.zoom(this.state.scaleFactor - 0.25)} >
+                            onClick={() => this.zoom(0, 0, this.state.scaleFactor - 0.25)} >
                             Zoom Out
                         </button>
                         <button onClick={this.resetZoom} >

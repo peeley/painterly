@@ -13,7 +13,7 @@ export class PenTool extends Tool {
         this.stroke = new PenStroke(this.strokeWidth, this.color);
     }
     // TODO define event type
-    handleEvent(event: fabric.IEvent, context: fabric.Canvas): PenStroke|void {
+    handleEvent(event: any, context: CanvasRenderingContext2D): PenStroke|void {
         const xCoord = (event.clientX - event.leftOffset) / event.scaleFactor;
         const yCoord = (event.clientY - event.topOffset) / event.scaleFactor;
         if(event.type === "mousedown"){

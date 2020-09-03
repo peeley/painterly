@@ -1,5 +1,6 @@
 import { Tool } from './Tool';
 import Stroke from './Stroke';
+import { fabric } from 'fabric';
 
 type RGBA = Uint8ClampedArray;
 
@@ -106,7 +107,8 @@ export class FillTool extends Tool {
         this.displayName = 'Fill';
         this.stroke = new FillStroke(this.color, new Uint8ClampedArray(4));
     }
-    handleEvent(event: any, context: CanvasRenderingContext2D) {
+    handleEvent(type: string, event: any, context: fabric.Canvas) {
+        /*
         const xCoord = Math.floor((event.clientX - event.leftOffset) / event.scaleFactor);
         const yCoord = Math.floor((event.clientY - event.topOffset) / event.scaleFactor);
         if (event.type === 'mousedown') {
@@ -118,7 +120,7 @@ export class FillTool extends Tool {
             let finishedStroke = this.stroke;
             this.stroke = new FillStroke(this.color, new Uint8ClampedArray(4));
             return finishedStroke;
-        }
+        }*/
     }
 }
 

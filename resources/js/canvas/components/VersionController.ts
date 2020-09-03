@@ -1,17 +1,17 @@
-import { PenStroke } from './PenTool';
 import { RectStroke } from './RectTool';
 import { FillStroke } from './FillTool';
 import Stroke from './Stroke';
 import axios from 'axios';
+import { fabric } from 'fabric';
 import Echo from 'laravel-echo';
 
 export class VersionController {
     private paintingId: number;
     private versionHistory: Array<Stroke> = [];
-    private drawSurface: React.RefObject<HTMLCanvasElement>;
+    private drawSurface: fabric.Canvas;
     private currentVersion: number = 0;
 
-    constructor(id: number, drawSurface: React.RefObject<HTMLCanvasElement>){
+    constructor(id: number, drawSurface: fabric.Canvas){
         this.paintingId = id;
         this.drawSurface = drawSurface;
         let echo = new Echo({
@@ -105,9 +105,7 @@ export class VersionController {
             });
     }
     redrawCanvas = () => {
-        if(!this.drawSurface.current){
-            return;
-        }
+        /*
         let context = this.drawSurface.current.getContext('2d');
         if(!context){
             return;
@@ -126,7 +124,7 @@ export class VersionController {
             else{
                 versionCounter += 1;
             }
-        }
+        }*/
     }
     serializeHistory = () => {
         let history = this.versionHistory.map( stroke => { return stroke.serialize(); });
@@ -144,9 +142,6 @@ export class VersionController {
     deserializeItem = (json: any): Stroke => {
         let stroke: Stroke;
         switch(json.type){
-            case 'pen':
-                stroke = new PenStroke(json.strokeWidth, json.color);
-                break;
             case 'rect':
                 stroke = new RectStroke(json.color);
                 break;

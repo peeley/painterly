@@ -7,6 +7,7 @@ import { Tool, CanvasInputEvent } from './Tool';
 import { PanHandler } from './PanHandler';
 import { VersionController } from './VersionController';
 import { MenuBar } from './MenuBar';
+import { IEvent } from 'fabric/fabric-impl';
 
 interface CanvasProps {
     paintingId: number;
@@ -22,7 +23,7 @@ interface CanvasState {
 };
 
 class Canvas extends React.Component<CanvasProps, CanvasState> {
-    //private versionController: VersionController;
+    private versionController: VersionController;
     //private panHandler: PanHandler;
     public state: CanvasState = {
         tool: new Tool('generic'),
@@ -34,7 +35,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     };
     constructor(props: CanvasProps) {
         super(props);
-        //this.versionController = new VersionController(this.props.paintingId, this.state.drawSurface);
+        this.versionController = new VersionController(this.props.paintingId, this.state.drawSurface);
         //this.panHandler = new PanHandler();
     }
     componentDidMount() {
@@ -58,13 +59,12 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             tool: tool
         });
     }
-    handleInput = (event: fabric.IEvent) => {
-        console.log(JSON.stringify(event));
+    handleInput = (type: string, event: fabric.IEvent) => {
         if (event.button === 4 || this.state.panning) {
             // pan
         }
         else {
-            // let stroke = this.state.tool.handleEvent(event, this.drawSurface);
+            this.state.tool.handleEvent(type, event, this.state.drawSurface);
         }
     }
     clearCanvas() {
@@ -74,11 +74,13 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         this.setState({
             drawSurface: new fabric.Canvas('drawSurface')
         }, () => {
-            this.state.drawSurface.isDrawingMode = true;
-            this.state.drawSurface.freeDrawingBrush.width = 5;
-            this.state.drawSurface.freeDrawingBrush.color = 'rgba(255, 0, 0, 1)';
-            this.state.drawSurface.on('mouse:down', this.handleInput);
-            this.state.drawSurface.on('mouse:wheel', this.handleZoom);
+            this.state.drawSurface.on({
+                'mouse:down': (o) => this.handleInput('mouse:down', o),
+                'mouse:move': (o) => this.handleInput('mouse:move', o),
+                'mouse:up': (o) => this.handleInput('mouse:up', o),
+                'mouse:wheel': this.handleZoom,
+                'object:added' : () => console.log('object added!!!'),
+            });
         });
     }
     getCanvas() {
@@ -110,11 +112,12 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         );
     }
     handleZoom = (event: any) => {
-        if (event.e.deltaY < 0) {
-            this.zoom(event.e.offsetX, event.e.offsetY, this.state.scaleFactor + 0.25);
+        let wheelEvent: MouseWheelEvent = event.e;
+        if (wheelEvent.deltaY < 0) {
+            this.zoom(wheelEvent.offsetX, wheelEvent.offsetY, this.state.scaleFactor + 0.25);
         }
         else {
-            this.zoom(event.e.offsetX, event.e.offsetY, this.state.scaleFactor - 0.25);
+            this.zoom(wheelEvent.offsetX, wheelEvent.offsetY, this.state.scaleFactor - 0.25);
         }
     }
     render(): JSX.Element {

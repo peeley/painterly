@@ -1,5 +1,6 @@
 import { Tool } from './Tool';
 import Stroke from './Stroke';
+import { fabric } from 'fabric';
 
 export class RectTool extends Tool {
     private startX: number;
@@ -14,11 +15,10 @@ export class RectTool extends Tool {
         this.stroke = new RectStroke(this.color);
     }
     // TODO define event type
-    handleEvent(event: any, context: CanvasRenderingContext2D): RectStroke|void {
+    handleEvent(type: string, event: any, context: fabric.Canvas): fabric.Rect | void {
         const xCoord = Math.floor((event.clientX - event.leftOffset) / event.scaleFactor);
         const yCoord = Math.floor((event.clientY - event.topOffset) / event.scaleFactor);
         if(event.type === "mousedown"){
-            context.beginPath();
             this.mouseDown = true;
             this.startX = xCoord;
             this.startY = yCoord;
@@ -28,10 +28,8 @@ export class RectTool extends Tool {
         }
         else if(event.type === "mouseup" ||
                 (this.mouseDown && event.type === "mousemove")){
-            context.fillStyle = this.color;
             const width = xCoord - this.startX;
             const height = yCoord - this.startY;
-            context.fillRect(this.startX, this.startY, width, height);
             this.stroke.setWidth(width);
             this.stroke.setHeight(height);
             let finishedStroke = this.stroke;
@@ -43,7 +41,7 @@ export class RectTool extends Tool {
             else{
                 finishedStroke.setIndicator(true);
             }
-            return finishedStroke;
+            //return finishedStroke;
         }
     }
 }

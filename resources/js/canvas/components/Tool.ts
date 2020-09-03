@@ -1,4 +1,5 @@
 import Stroke from './Stroke';
+import { fabric } from 'fabric';
 
 export interface CanvasInputEvent {
     clientX: number,
@@ -37,7 +38,7 @@ export class Tool {
     setStrokeWidth(width: number){
         this.strokeWidth = width;
     }
-    handleEvent(_: CanvasInputEvent, __: CanvasRenderingContext2D): Stroke|void {
-        return new Stroke('', '');
+    handleEvent(_: string, __: any, ___: fabric.Canvas): fabric.Object |void {
+        //return new Stroke('', '');
     }
 }

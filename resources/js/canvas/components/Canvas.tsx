@@ -19,24 +19,24 @@ interface CanvasState {
     loading: boolean,
     drawSurface: fabric.Canvas,
     scaleFactor: number,
-    panning: boolean,
 };
 
 class Canvas extends React.Component<CanvasProps, CanvasState> {
     private versionController: VersionController;
-    //private panHandler: PanHandler;
+    private panHandler: PanHandler;
+    private panning: boolean;
     public state: CanvasState = {
         tool: new Tool('generic'),
         title: '',
         loading: true,
         drawSurface: new fabric.Canvas(''),
         scaleFactor: 1.0,
-        panning: false,
     };
     constructor(props: CanvasProps) {
         super(props);
         this.versionController = new VersionController(this.props.paintingId, this.state.drawSurface);
-        //this.panHandler = new PanHandler();
+        this.panning = false;
+        this.panHandler = new PanHandler();
     }
     componentDidMount() {
         document.addEventListener('keydown', (event) => {
@@ -60,15 +60,20 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         }
         if (this.state.tool.toolName !== 'selector') {
             this.state.drawSurface.selection = false;
-            this.state.drawSurface.forEachObject( (obj) => { obj.selectable = false });
+            this.state.drawSurface.forEachObject((obj) => { obj.selectable = false });
         }
         this.setState({
             tool: tool
         });
     }
     handleInput = (type: string, event: fabric.IEvent) => {
-        if (event.button === 4 || this.state.panning) {
-            // pan
+        // TODO clean up, maybe consolidate pan stuff into PanHandler
+        if (event.button === 2) {
+            this.panning = type === 'mouse:down';
+        }
+        if (this.panning) {
+            console.log('panning');
+            this.panHandler.pan(type, event, this.state.drawSurface);
         }
         else {
             this.state.tool.handleEvent(type, event, this.state.drawSurface);
@@ -79,7 +84,11 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     }
     mountFabric = () => {
         this.setState({
-            drawSurface: new fabric.Canvas('drawSurface')
+            drawSurface: new fabric.Canvas('drawSurface', {
+                fireRightClick: true,
+                fireMiddleClick: true,
+                stopContextMenu: true,
+            })
         }, () => {
             this.state.drawSurface.on({
                 'mouse:down': (o) => this.handleInput('mouse:down', o),

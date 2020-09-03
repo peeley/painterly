@@ -55,6 +55,13 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         this.getCanvas();
     }
     handleToolSelect = (tool: Tool): void => {
+        if (this.state.tool.toolName === 'pen') {
+            this.state.drawSurface.isDrawingMode = false;
+        }
+        if (this.state.tool.toolName !== 'selector') {
+            this.state.drawSurface.selection = false;
+            this.state.drawSurface.forEachObject( (obj) => { obj.selectable = false });
+        }
         this.setState({
             tool: tool
         });
@@ -79,7 +86,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 'mouse:move': (o) => this.handleInput('mouse:move', o),
                 'mouse:up': (o) => this.handleInput('mouse:up', o),
                 'mouse:wheel': this.handleZoom,
-                'object:added' : () => console.log('object added!!!'),
+                'object:added': (_) => console.log('object added'),
             });
         });
     }
@@ -101,14 +108,14 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             scaleFactor: factor
         }, () =>
             this.state.drawSurface.zoomToPoint(new fabric.Point(x, y),
-                                               this.state.scaleFactor)
+                this.state.scaleFactor)
         );
     }
     resetZoom = () => {
         this.setState({
             scaleFactor: 1.0
         }, () =>
-            this.state.drawSurface.setViewportTransform([1,0,0,1,0,0])
+            this.state.drawSurface.setViewportTransform([1, 0, 0, 1, 0, 0])
         );
     }
     handleZoom = (event: any) => {

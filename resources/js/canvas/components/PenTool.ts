@@ -6,6 +6,7 @@ export class PenTool extends Tool {
     private readonly lineCap: CanvasLineCap = 'round';
     constructor(){
         super('pen');
+        this.toolName = 'pen';
         this.displayName = 'Pen';
         this.strokeWidth = 3;
     }

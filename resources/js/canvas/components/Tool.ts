@@ -15,7 +15,7 @@ export class Tool {
     protected strokeType: string;
     protected mouseDown: boolean;
     protected color: string;
-    protected toolName: string;
+    public toolName: string;
     protected displayName: string;
     protected strokeWidth: number;
     constructor(strokeType: string){

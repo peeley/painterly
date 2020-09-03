@@ -1,4 +1,3 @@
-import { RectStroke } from './RectTool';
 import { FillStroke } from './FillTool';
 import Stroke from './Stroke';
 import axios from 'axios';
@@ -142,9 +141,6 @@ export class VersionController {
     deserializeItem = (json: any): Stroke => {
         let stroke: Stroke;
         switch(json.type){
-            case 'rect':
-                stroke = new RectStroke(json.color);
-                break;
             case 'fill':
                 stroke = new FillStroke(json.color, json.backgroundColor);
                 break;

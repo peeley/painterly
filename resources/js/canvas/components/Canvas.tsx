@@ -113,12 +113,14 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             ));
     }
     zoom = (x: number, y: number, factor: number) => {
-        this.setState({
-            scaleFactor: factor
-        }, () =>
-            this.state.drawSurface.zoomToPoint(new fabric.Point(x, y),
-                this.state.scaleFactor)
-        );
+        if(factor > 0){
+            this.setState({
+                scaleFactor: factor
+            }, () => {
+                this.state.drawSurface.zoomToPoint(new fabric.Point(x, y),
+                                                   this.state.scaleFactor)
+            });
+        }
     }
     resetZoom = () => {
         this.setState({

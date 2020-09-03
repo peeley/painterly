@@ -1,4 +1,3 @@
-import Stroke from './Stroke';
 import { fabric } from 'fabric';
 
 export interface CanvasInputEvent {

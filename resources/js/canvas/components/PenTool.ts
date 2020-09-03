@@ -1,5 +1,6 @@
 import { Tool } from './Tool';
 import Stroke from './Stroke';
+import { fabric } from 'fabric';
 
 export class PenTool extends Tool {
     private readonly joinType: CanvasLineJoin = 'round';
@@ -12,7 +13,7 @@ export class PenTool extends Tool {
         this.stroke = new PenStroke(this.strokeWidth, this.color);
     }
     // TODO define event type
-    handleEvent(event: any, context: CanvasRenderingContext2D): PenStroke|void {
+    handleEvent(event: fabric.IEvent, context: fabric.Canvas): PenStroke|void {
         const xCoord = (event.clientX - event.leftOffset) / event.scaleFactor;
         const yCoord = (event.clientY - event.topOffset) / event.scaleFactor;
         if(event.type === "mousedown"){

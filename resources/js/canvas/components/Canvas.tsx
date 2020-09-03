@@ -23,10 +23,6 @@ interface CanvasState {
 
 class Canvas extends React.Component<CanvasProps, CanvasState> {
     //private versionController: VersionController;
-    private leftBoundary: number = 0;
-    private topBoundary: number = 0;
-    private leftOffset: number = 0;
-    private topOffset: number = 0;
     //private panHandler: PanHandler;
     public state: CanvasState = {
         tool: new Tool('generic'),
@@ -38,7 +34,6 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     };
     constructor(props: CanvasProps) {
         super(props);
-        //this.state.drawSurface.on('mouse:down', this.handleInput);
         //this.versionController = new VersionController(this.props.paintingId, this.state.drawSurface);
         //this.panHandler = new PanHandler();
     }
@@ -64,15 +59,16 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         });
     }
     handleInput = (event: fabric.IEvent) => {
+        console.log(JSON.stringify(event));
         if (event.button === 4 || this.state.panning) {
             // pan
         }
         else {
-            // this.state.tool.handleEvent(event, this.drawSurface);
+            // let stroke = this.state.tool.handleEvent(event, this.drawSurface);
         }
     }
     clearCanvas() {
-        //context.clearRect(0, 0, width, height);
+        this.state.drawSurface.clear();
     }
     mountFabric = () => {
         this.setState({
@@ -81,6 +77,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             this.state.drawSurface.isDrawingMode = true;
             this.state.drawSurface.freeDrawingBrush.width = 5;
             this.state.drawSurface.freeDrawingBrush.color = 'rgba(255, 0, 0, 1)';
+            this.state.drawSurface.on('mouse:down', this.handleInput);
         });
     }
     getCanvas() {

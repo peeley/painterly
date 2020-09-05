@@ -10,7 +10,7 @@ export interface CanvasInputEvent {
     type: string,
 };
 
-export class Tool {
+export abstract class Tool {
     protected strokeType: string;
     protected mouseDown: boolean;
     protected color: string;
@@ -25,6 +25,8 @@ export class Tool {
         this.toolName = 'generic';
         this.displayName = 'tool';
     }
+    abstract select(canvas: fabric.Canvas);
+    abstract deselect(canvas: fabric.Canvas);
     setColor = (color: string) => {
         this.color = color;
     }
@@ -37,7 +39,5 @@ export class Tool {
     setStrokeWidth(width: number){
         this.strokeWidth = width;
     }
-    handleEvent(_: string, __: any, ___: fabric.Canvas): fabric.Object |void {
-        //return new Stroke('', '');
-    }
+    abstract handleEvent(_: string, __: any, ___: fabric.Canvas): fabric.Object |void;
 }

@@ -10,10 +10,15 @@ export class PenTool extends Tool {
         this.displayName = 'Pen';
         this.strokeWidth = 3;
     }
-    // TODO define event type
-    handleEvent(type: string, event: any, context: fabric.Canvas): fabric.Path | void {
-        context.isDrawingMode = true;
-        context.freeDrawingBrush.width = this.strokeWidth;
-        context.freeDrawingBrush.color = this.color;
+    select = (canvas: fabric.Canvas) => {
+        canvas.isDrawingMode = true;
+        canvas.freeDrawingBrush.width = this.strokeWidth;
+        canvas.freeDrawingBrush.color = this.color;
+        console.log('pen tool selected!');
+        console.log(canvas);
     }
+    deselect = (canvas: fabric.Canvas) => {
+        canvas.isDrawingMode = false;
+    }
+    handleEvent(type: string, event: any, context: fabric.Canvas): fabric.Path | void {}
 }

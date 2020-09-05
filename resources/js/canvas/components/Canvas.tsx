@@ -4,10 +4,10 @@ import { fabric } from 'fabric';
 import './Canvas.css';
 import { ToolController } from './ToolController';
 import { Tool, CanvasInputEvent } from './Tool';
+import { PenTool } from './PenTool';
 import { PanHandler } from './PanHandler';
 import { VersionController } from './VersionController';
 import { MenuBar } from './MenuBar';
-import { IEvent } from 'fabric/fabric-impl';
 
 interface CanvasProps {
     paintingId: number;
@@ -17,7 +17,6 @@ interface CanvasState {
     tool: Tool,
     title: string,
     loading: boolean,
-    drawSurface: fabric.Canvas,
     scaleFactor: number,
 };
 
@@ -25,16 +24,22 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     private versionController: VersionController;
     private panHandler: PanHandler;
     private panning: boolean;
+    private drawSurface: fabric.Canvas;
     public state: CanvasState = {
-        tool: new Tool('generic'),
+        tool: new PenTool(),
         title: '',
         loading: true,
-        drawSurface: new fabric.Canvas(''),
         scaleFactor: 1.0,
     };
     constructor(props: CanvasProps) {
         super(props);
-        this.versionController = new VersionController(this.props.paintingId, this.state.drawSurface);
+        this.drawSurface = new fabric.Canvas('drawSurface', {
+            fireRightClick: true,
+            fireMiddleClick: true,
+            stopContextMenu: true,
+        });
+        this.mountFabric();
+        this.versionController = new VersionController(this.props.paintingId, this.drawSurface);
         this.panning = false;
         this.panHandler = new PanHandler();
     }
@@ -55,16 +60,10 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         this.getCanvas();
     }
     handleToolSelect = (tool: Tool): void => {
-        if (this.state.tool.toolName === 'pen') {
-            this.state.drawSurface.isDrawingMode = false;
-        }
-        if (this.state.tool.toolName !== 'selector') {
-            this.state.drawSurface.selection = false;
-            this.state.drawSurface.forEachObject((obj) => { obj.selectable = false });
-        }
+        this.state.tool.deselect(this.drawSurface);
         this.setState({
             tool: tool
-        });
+        }, () => this.state.tool.select(this.drawSurface));
     }
     handleInput = (type: string, event: fabric.IEvent) => {
         // TODO clean up, maybe consolidate pan stuff into PanHandler
@@ -73,31 +72,25 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         }
         if (this.panning) {
             console.log('panning');
-            this.panHandler.pan(type, event, this.state.drawSurface);
+            this.panHandler.pan(type, event, this.drawSurface);
         }
         else {
-            this.state.tool.handleEvent(type, event, this.state.drawSurface);
+            this.state.tool.handleEvent(type, event, this.drawSurface);
         }
     }
     clearCanvas() {
-        this.state.drawSurface.clear();
+        this.drawSurface.clear();
     }
     mountFabric = () => {
-        this.setState({
-            drawSurface: new fabric.Canvas('drawSurface', {
-                fireRightClick: true,
-                fireMiddleClick: true,
-                stopContextMenu: true,
-            })
-        }, () => {
-            this.state.drawSurface.on({
-                'mouse:down': (o) => this.handleInput('mouse:down', o),
-                'mouse:move': (o) => this.handleInput('mouse:move', o),
-                'mouse:up': (o) => this.handleInput('mouse:up', o),
-                'mouse:wheel': this.handleZoom,
-                'object:added': (_) => console.log('object added'),
-            });
+        this.drawSurface.on({
+            'mouse:down': (o) => this.handleInput('mouse:down', o),
+            'mouse:move': (o) => this.handleInput('mouse:move', o),
+            'mouse:up': (o) => this.handleInput('mouse:up', o),
+            'mouse:wheel': this.handleZoom,
+            'object:added': (_) => console.log('object added'),
         });
+        this.drawSurface.selection = false;
+        this.drawSurface.forEachObject((obj) => { obj.selectable = false });
     }
     getCanvas() {
         axios.get(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`)
@@ -109,7 +102,15 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             })
             .then(() => this.setState({
                 loading: false
-            }, this.mountFabric
+            }, () => {
+                this.drawSurface = new fabric.Canvas('drawSurface', {
+                    fireRightClick: true,
+                    fireMiddleClick: true,
+                    stopContextMenu: true,
+                });
+                this.mountFabric();
+                this.handleToolSelect(this.state.tool);
+            }
             ));
     }
     zoom = (x: number, y: number, factor: number) => {
@@ -117,7 +118,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             this.setState({
                 scaleFactor: factor
             }, () => {
-                this.state.drawSurface.zoomToPoint(new fabric.Point(x, y),
+                this.drawSurface.zoomToPoint(new fabric.Point(x, y),
                     this.state.scaleFactor)
             });
         }
@@ -126,7 +127,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         this.setState({
             scaleFactor: 1.0
         }, () =>
-            this.state.drawSurface.setViewportTransform([1, 0, 0, 1, 0, 0])
+            this.drawSurface.setViewportTransform([1, 0, 0, 1, 0, 0])
         );
     }
     handleZoom = (event: any) => {
@@ -139,6 +140,9 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         }
     }
     render(): JSX.Element {
+        let canvasStyle = {
+            visibility: this.state.loading ? "hidden" as "hidden" : "visible" as "visible"
+        };
         return (
             <div className="container col px-5" >
                 <div className="row pl-5" >
@@ -174,17 +178,16 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                         </button>
                     </div>
                 </div>
-                {this.state.loading ?
-                    <>
-                        <canvas > </canvas>
-                        <div className="spinner-border text-success" role="status" >
+                {this.state.loading
+                    ? <div className="spinner-border text-success" role="status" >
                             <span className="sr-only" > Loading...</span>
-                        </div>
-                    </> :
-                    <canvas className="row" id="drawSurface"
-                        height={window.innerHeight * .85}
-                        width={window.innerWidth * .975} />
+                      </div>
+                    : null
                 }
+                <canvas className="row" id="drawSurface"
+                    style={canvasStyle}
+                    height={window.innerHeight * .85}
+                    width={window.innerWidth * .975} />
             </div>
         )
     }

@@ -14,7 +14,8 @@ export class RectTool extends Tool {
         this.mouseDown = false;
         this.stroke = new fabric.Rect({ selectable: false });
     }
-    // TODO define event type
+    select = (_: fabric.Canvas) => {}
+    deselect = (_: fabric.Canvas) => {}
     handleEvent(type: string, event: any, context: fabric.Canvas): fabric.Rect | void {
         const pointer = context.getPointer(event.e);
         const xCoord = pointer.x;

@@ -106,6 +106,8 @@ export class FillTool extends Tool {
         this.displayName = 'Fill';
         // this.stroke = new FillStroke(this.color, new Uint8ClampedArray(4));
     }
+    select = (_: fabric.Canvas) => {}
+    deselect = (_: fabric.Canvas) => {}
     handleEvent(type: string, event: any, context: fabric.Canvas) {
         /*
         const xCoord = Math.floor((event.clientX - event.leftOffset) / event.scaleFactor);

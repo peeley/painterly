@@ -1,11 +1,12 @@
 import * as React from 'react';
 import axios from 'axios';
+import { fabric } from 'fabric';
 import { ShareModal } from './ShareModal';
 
 type MenuBarProps = {
     title: string,
     paintingId: number,
-    surface: React.RefObject<HTMLCanvasElement>
+    surface: fabric.Canvas,
 };
 
 type MenuBarState = {
@@ -34,11 +35,7 @@ export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
         }
     }
     updateImgLink = () => {
-        let canvas = this.props.surface.current;
-        if(!canvas){
-            return;
-        }
-        let imgUrl = canvas.toDataURL('image/jpg');
+        let imgUrl = this.props.surface.toDataURL();
         this.setState({
             imgLink: imgUrl
         });
@@ -77,6 +74,7 @@ export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
         event.preventDefault();
     }
     render(){
+        // TODO loading indicator while changed title is POSTing to backend
         return (
             <>
                 <div className="row pt-3">

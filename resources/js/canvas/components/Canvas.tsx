@@ -138,6 +138,10 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         };
         return (
             <div className="container col px-5" >
+                <MenuBar
+                    title={ this.state.title }
+                    surface = { this.drawSurface }
+                    paintingId = { this.props.paintingId } />
                 <div className="row pl-5" >
                     <ToolController
                         handleToolSelect={this.handleToolSelect} />

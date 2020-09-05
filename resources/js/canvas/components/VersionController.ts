@@ -21,11 +21,11 @@ export class VersionController {
             .listen('PaintingUpdateEvent', (data: PaintingUpdateEvent) => {
                 switch (data.action) {
                     case 'add':
-                        if (!data.strokes) {
+                        if (!data.objects) {
                             console.log('Received bad `add` event');
                             return;
                         }
-                        this.pushItemToHistory(this.deserializeItem(data.strokes));
+                        this.pushItemToHistory(this.deserializeItem(data.objects));
                         break;
                     case 'undo':
                         this.currentVersion -= 1;
@@ -44,7 +44,7 @@ export class VersionController {
     }
     push = (item: fabric.Object) => {
         this.sendEvent({
-            strokes: JSON.stringify(item),
+            objects: item.toJSON(),
             action: 'add'
         }, () => {
             // TODO undo on bad response?
@@ -92,7 +92,7 @@ export class VersionController {
         // let history = this.versionHistory.map( stroke => { return stroke.serialize(); });
         // return history;
     }
-    // TODO create type for serialized strokes
+    // TODO create type for serialized objects
     deserializeHistory = (history: Array<any>) => {
         history.map(json => {
             let stroke = this.deserializeItem(json);
@@ -119,7 +119,7 @@ export class VersionController {
 
 interface PaintingUpdateEvent {
     paintingId: number,
-    action: "add" | "clear" | "undo" | "redo" | null,
-    strokes: fabric.Object | null
+    action: "modify" | "add" | "remove" | "clear" | "undo" | "redo" | null,
+    objects: fabric.Object | null
     title: string | null
 }

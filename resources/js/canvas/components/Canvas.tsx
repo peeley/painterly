@@ -24,6 +24,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     private versionController: VersionController;
     private panHandler: PanHandler;
     private drawSurface: fabric.Canvas;
+    private testSquare: fabric.Rect;
     public state: CanvasState = {
         tool: new PenTool(),
         title: '',
@@ -33,13 +34,18 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     constructor(props: CanvasProps) {
         super(props);
         this.drawSurface = new fabric.Canvas('drawSurface', {
-            fireRightClick: true,
             fireMiddleClick: true,
-            stopContextMenu: true,
         });
         this.mountFabric();
         this.versionController = new VersionController(this.props.paintingId, this.drawSurface);
         this.panHandler = new PanHandler();
+        this.testSquare = new fabric.Rect({
+            top: 100,
+            left: 100,
+            width: 100,
+            height: 100,
+            fill: 'blue',
+        })
     }
     componentDidMount() {
         document.addEventListener('keydown', (event) => {
@@ -86,7 +92,13 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                     target.selectable = false;
                     this.versionController.push(target);
                 }
+                console.log(this.drawSurface.toJSON());
             },
+            'object:modified': (o) => {
+                let target = o.target;
+                if (!target) { return; }
+                this.testSquare.set(target);
+            }
         });
         this.drawSurface.selection = false;
     }
@@ -96,7 +108,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 this.setState({
                     title: response.data.title
                 });
-                // this.versionController.deserializeHistory(response.data.strokes);
+                this.drawSurface.loadFromJSON({objects: response.data.objects}, () => {});
             })
             .then(() => this.setState({
                 loading: false
@@ -106,6 +118,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                     fireMiddleClick: true,
                     stopContextMenu: true,
                 });
+                this.drawSurface.add(this.testSquare);
                 this.mountFabric();
                 this.handleToolSelect(this.state.tool);
             }

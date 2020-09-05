@@ -23,7 +23,6 @@ interface CanvasState {
 class Canvas extends React.Component<CanvasProps, CanvasState> {
     private versionController: VersionController;
     private panHandler: PanHandler;
-    private panning: boolean;
     private drawSurface: fabric.Canvas;
     public state: CanvasState = {
         tool: new PenTool(),
@@ -40,7 +39,6 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         });
         this.mountFabric();
         this.versionController = new VersionController(this.props.paintingId, this.drawSurface);
-        this.panning = false;
         this.panHandler = new PanHandler();
     }
     componentDidMount() {
@@ -66,8 +64,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         }, () => this.state.tool.select(this.drawSurface));
     }
     handleInput = (type: string, event: fabric.IEvent) => {
-        // TODO clean up, maybe consolidate pan stuff into PanHandler
-        if (event.button === 2 || this.panHandler.isPanning() ) {
+        if (event.button === 2 || this.panHandler.isPanning()) {
             this.panHandler.pan(type, event, this.drawSurface);
         }
         else {
@@ -176,8 +173,8 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 </div>
                 {this.state.loading
                     ? <div className="spinner-border text-success" role="status" >
-                            <span className="sr-only" > Loading...</span>
-                      </div>
+                        <span className="sr-only" > Loading...</span>
+                    </div>
                     : null
                 }
                 <canvas className="row" id="drawSurface"

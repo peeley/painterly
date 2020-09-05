@@ -17,7 +17,7 @@ export class PanHandler {
             this.lastY = yCoord;
             this.panning = true;
         }
-        else if(type === 'mouse:move') {
+        else if (type === 'mouse:move') {
             const deltaX = xCoord - this.lastX;
             const deltaY = yCoord - this.lastY;
             let transform = context.viewportTransform;

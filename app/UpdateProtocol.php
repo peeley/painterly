@@ -12,12 +12,12 @@ class UpdateProtocol
     {
         $action = $update['action'] ?? null;
         if ($action === 'clear') {
-            $painting->strokes = [];
+            $painting->objects = [];
         } else if ($action === 'undo') {
-            $painting->strokes = array_slice($painting->strokes, 0, -1);
+            $painting->objects = array_slice($painting->objects, 0, -1);
         } else if ($action === 'add') {
-            $new_stroke = json_decode($update['strokes']);
-            $painting->strokes = array_merge($painting->strokes, [$new_stroke]);
+            $new_stroke = json_decode($update['objects']);
+            $painting->objects = array_merge($painting->objects, [$new_stroke]);
         }
 
         if (isset($update['title'])) {

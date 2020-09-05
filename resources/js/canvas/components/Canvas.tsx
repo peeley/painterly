@@ -92,7 +92,6 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                     target.selectable = false;
                     this.versionController.push(target);
                 }
-                console.log(this.drawSurface.toJSON());
             },
             'object:modified': (o) => {
                 let target = o.target;
@@ -108,21 +107,21 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 this.setState({
                     title: response.data.title
                 });
-                this.drawSurface.loadFromJSON({objects: response.data.objects}, () => {});
-            })
-            .then(() => this.setState({
-                loading: false
-            }, () => {
-                this.drawSurface = new fabric.Canvas('drawSurface', {
-                    fireRightClick: true,
-                    fireMiddleClick: true,
-                    stopContextMenu: true,
+                console.log(response.data.objects);
+                this.setState({
+                    loading: false
+                }, () => {
+                    this.drawSurface = new fabric.Canvas('drawSurface', {
+                        fireRightClick: true,
+                        fireMiddleClick: true,
+                        stopContextMenu: true,
+                    });
+                    this.drawSurface.add(this.testSquare);
+                    this.mountFabric();
+                    this.handleToolSelect(this.state.tool);
+                    this.drawSurface.loadFromJSON({ objects: response.data.objects }, () => { });
                 });
-                this.drawSurface.add(this.testSquare);
-                this.mountFabric();
-                this.handleToolSelect(this.state.tool);
-            }
-            ));
+            });
     }
     zoom = (x: number, y: number, factor: number) => {
         if (factor > 0) {
@@ -176,7 +175,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                         </button>
                         <button onClick={() => {
                             this.clearCanvas();
-                            // this.versionController.wipeHistory();
+                            this.versionController.wipeHistory();
                         }}>
                             Clear
                         </button>

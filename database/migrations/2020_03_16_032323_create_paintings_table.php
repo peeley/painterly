@@ -19,7 +19,7 @@ class CreatePaintingsTable extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('set null');
             $table->timestamps();
             $table->string('title')->default('Blank painting');
-            $table->json('strokes')->default(new Expression('(json_array())'));
+            $table->json('objects')->default(new Expression('(json_array())'));
             $table->boolean('view_public')->default(false);
             $table->boolean('edit_public')->default(false);
         });

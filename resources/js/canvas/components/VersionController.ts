@@ -36,7 +36,7 @@ export class VersionController {
                 }
             });
     }
-    pushItemToHistory = (item: fabric.Object) => {
+    pushItemToHistory = (_item: fabric.Object) => {
         if (this.currentVersion !== this.versionHistory.length) {
             this.versionHistory = this.versionHistory.slice(
                 0, this.currentVersion);
@@ -44,7 +44,7 @@ export class VersionController {
     }
     push = (item: fabric.Object) => {
         this.sendEvent({
-            objects: item.toJSON(),
+            objects: JSON.stringify(item),
             action: 'add'
         }, () => {
             // TODO undo on bad response?

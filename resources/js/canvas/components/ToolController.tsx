@@ -4,6 +4,7 @@ import { Palette } from './Palette';
 import { PenTool } from './PenTool';
 import { RectTool } from './RectTool';
 import { FillTool } from './FillTool';
+import { SelectorTool } from './SelectorTool';
 
 interface ToolControllerProps {
     handleToolSelect(tool: Tool): void,
@@ -25,6 +26,7 @@ export class ToolController extends React.Component<ToolControllerProps, ToolCon
             'pen': new PenTool(),
             'rect': new RectTool(),
             'fill' : new FillTool(),
+            'selector': new SelectorTool(),
         }
         this.selectedTool = this.toolSet['pen'];
         this.props.handleToolSelect(this.selectedTool);

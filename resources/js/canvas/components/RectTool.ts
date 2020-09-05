@@ -12,7 +12,7 @@ export class RectTool extends Tool {
         this.startX = 0;
         this.startY = 0;
         this.mouseDown = false;
-        this.stroke = new fabric.Rect({ selectable: false });
+        this.stroke = new fabric.Rect();
     }
     select = (_: fabric.Canvas) => {}
     deselect = (_: fabric.Canvas) => {}
@@ -40,7 +40,7 @@ export class RectTool extends Tool {
             });
         }
         else if (type === 'mouse:up') {
-            this.stroke = new fabric.Rect({ selectable: false });
+            this.stroke = new fabric.Rect();
             this.mouseDown = false;
         }
         context.renderAll();

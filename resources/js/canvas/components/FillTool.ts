@@ -1,5 +1,5 @@
 import { Tool } from './Tool';
-import Stroke from './Stroke';
+import { fabric } from 'fabric';
 
 type RGBA = Uint8ClampedArray;
 
@@ -99,14 +99,17 @@ function floodFill(context: CanvasRenderingContext2D,
 }
 
 export class FillTool extends Tool {
-    private stroke: FillStroke;
+    //private stroke: FillStroke;
     constructor() {
         super('fill');
         this.toolName = 'fill';
         this.displayName = 'Fill';
-        this.stroke = new FillStroke(this.color, new Uint8ClampedArray(4));
+        // this.stroke = new FillStroke(this.color, new Uint8ClampedArray(4));
     }
-    handleEvent(event: any, context: CanvasRenderingContext2D) {
+    select = (_: fabric.Canvas) => {}
+    deselect = (_: fabric.Canvas) => {}
+    handleEvent(type: string, event: any, context: fabric.Canvas) {
+        /*
         const xCoord = Math.floor((event.clientX - event.leftOffset) / event.scaleFactor);
         const yCoord = Math.floor((event.clientY - event.topOffset) / event.scaleFactor);
         if (event.type === 'mousedown') {
@@ -118,10 +121,11 @@ export class FillTool extends Tool {
             let finishedStroke = this.stroke;
             this.stroke = new FillStroke(this.color, new Uint8ClampedArray(4));
             return finishedStroke;
-        }
+        }*/
     }
 }
 
+/*
 export class FillStroke extends Stroke {
     public backgroundColor: RGBA;
     constructor(fillColor: string, bgColor: RGBA) {
@@ -148,3 +152,4 @@ export class FillStroke extends Stroke {
         this.coords = json.coords;
     }
 }
+*/

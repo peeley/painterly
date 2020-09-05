@@ -1,17 +1,14 @@
-import { PenStroke } from './PenTool';
-import { RectStroke } from './RectTool';
-import { FillStroke } from './FillTool';
-import Stroke from './Stroke';
 import axios from 'axios';
+import { fabric } from 'fabric';
 import Echo from 'laravel-echo';
 
 export class VersionController {
     private paintingId: number;
-    private versionHistory: Array<Stroke> = [];
-    private drawSurface: React.RefObject<HTMLCanvasElement>;
+    private versionHistory: Array<fabric.Object> = [];
+    private drawSurface: fabric.Canvas;
     private currentVersion: number = 0;
 
-    constructor(id: number, drawSurface: React.RefObject<HTMLCanvasElement>){
+    constructor(id: number, drawSurface: fabric.Canvas){
         this.paintingId = id;
         this.drawSurface = drawSurface;
         let echo = new Echo({
@@ -34,36 +31,25 @@ export class VersionController {
                     this.currentVersion -= 1;
                     break;
                 case 'clear':
-                    this.versionHistory = [];
-                    this.currentVersion = 0;
+                    this.drawSurface.clear();
                     break;
             }
             this.redrawCanvas();
         });
     }
-    pushItemToHistory = (item: Stroke) => {
-        if(!item.getIndicator()){
-            if(this.currentVersion !== this.versionHistory.length){
-                this.versionHistory = this.versionHistory.slice(
-                    0, this.currentVersion);
-            }
+    pushItemToHistory = (item: fabric.Object) => {
+        if(this.currentVersion !== this.versionHistory.length){
+            this.versionHistory = this.versionHistory.slice(
+                0, this.currentVersion);
         }
-        this.versionHistory.push(item);
-        this.currentVersion += 1;
     }
-    push = (item: Stroke) => {
-        if(!item.getIndicator()){
-            this.sendEvent({ strokes: JSON.stringify(item.serialize()),
-                             action: 'add' }, () => {
-                                 // TODO undo on bad response?
-                             });
-            this.pushItemToHistory(item);
-            this.redrawCanvas();
-        }
-        else{
-            this.versionHistory.push(item);
-            this.currentVersion += 1;
-        }
+    push = (item: fabric.Object) => {
+        this.sendEvent({ strokes: JSON.stringify(item),
+                            action: 'add' }, () => {
+                                // TODO undo on bad response?
+                            });
+        this.pushItemToHistory(item);
+        this.redrawCanvas();
     }
     undo = () => {
         if(this.currentVersion > 0){
@@ -105,9 +91,7 @@ export class VersionController {
             });
     }
     redrawCanvas = () => {
-        if(!this.drawSurface.current){
-            return;
-        }
+        /*
         let context = this.drawSurface.current.getContext('2d');
         if(!context){
             return;
@@ -118,7 +102,7 @@ export class VersionController {
         context.clearRect(0, 0, width, height);
         while(versionCounter <= this.currentVersion){
             const stroke = this.versionHistory[versionCounter-1];
-            stroke.redoStroke(context);
+            stroke.redofabric.Object(context);
             if(stroke.getIndicator()){
                 this.versionHistory.splice(versionCounter-1, 1);
                 this.currentVersion -= 1;
@@ -126,11 +110,11 @@ export class VersionController {
             else{
                 versionCounter += 1;
             }
-        }
+        }*/
     }
     serializeHistory = () => {
-        let history = this.versionHistory.map( stroke => { return stroke.serialize(); });
-        return history;
+        // let history = this.versionHistory.map( stroke => { return stroke.serialize(); });
+        // return history;
     }
     // TODO create type for serialized strokes
     deserializeHistory = (history: Array<any>) => {
@@ -141,24 +125,18 @@ export class VersionController {
             return stroke;
         });
     }
-    deserializeItem = (json: any): Stroke => {
-        let stroke: Stroke;
+    deserializeItem = (json: any): fabric.Object => {
+        let stroke = new fabric.Object();
         switch(json.type){
-            case 'pen':
-                stroke = new PenStroke(json.strokeWidth, json.color);
-                break;
-            case 'rect':
-                stroke = new RectStroke(json.color);
-                break;
             case 'fill':
-                stroke = new FillStroke(json.color, json.backgroundColor);
+                // stroke = new FillStroke(json.color, json.backgroundColor);
                 break;
             default:
                 console.log('unable to deserialize stroke');
-                stroke = new Stroke('n/a', 'n/a');
+                stroke = new fabric.Object();
                 return stroke;
         }
-        stroke.deserialize(json);
+        // stroke.deserialize(json);
         return stroke;
     }
 }
@@ -166,6 +144,6 @@ export class VersionController {
 interface PaintingUpdateEvent {
     paintingId: number,
     action: "add" | "clear" | "undo" | "redo" | null,
-    strokes: Stroke | null
+    strokes: fabric.Object | null
     title: string | null
 }

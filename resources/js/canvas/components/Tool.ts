@@ -1,20 +1,10 @@
-import Stroke from './Stroke';
+import { fabric } from 'fabric';
 
-export interface CanvasInputEvent {
-    clientX: number,
-    clientY: number,
-    leftOffset: number,
-    topOffset: number,
-    scaleFactor: number,
-    buttons: number,
-    type: string,
-};
-
-export class Tool {
+export abstract class Tool {
     protected strokeType: string;
     protected mouseDown: boolean;
     protected color: string;
-    protected toolName: string;
+    public toolName: string;
     protected displayName: string;
     protected strokeWidth: number;
     constructor(strokeType: string){
@@ -25,6 +15,8 @@ export class Tool {
         this.toolName = 'generic';
         this.displayName = 'tool';
     }
+    abstract select(canvas: fabric.Canvas): void;
+    abstract deselect(canvas: fabric.Canvas): void;
     setColor = (color: string) => {
         this.color = color;
     }
@@ -37,7 +29,5 @@ export class Tool {
     setStrokeWidth(width: number){
         this.strokeWidth = width;
     }
-    handleEvent(_: CanvasInputEvent, __: CanvasRenderingContext2D): Stroke|void {
-        return new Stroke('', '');
-    }
+    abstract handleEvent(_: string, __: any, ___: fabric.Canvas): fabric.Object |void;
 }

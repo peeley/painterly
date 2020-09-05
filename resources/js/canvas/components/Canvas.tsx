@@ -67,11 +67,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     }
     handleInput = (type: string, event: fabric.IEvent) => {
         // TODO clean up, maybe consolidate pan stuff into PanHandler
-        if (event.button === 2) {
-            this.panning = type === 'mouse:down';
-        }
-        if (this.panning) {
-            console.log('panning');
+        if (event.button === 2 || this.panHandler.isPanning() ) {
             this.panHandler.pan(type, event, this.drawSurface);
         }
         else {

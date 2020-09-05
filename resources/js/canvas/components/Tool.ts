@@ -1,15 +1,5 @@
 import { fabric } from 'fabric';
 
-export interface CanvasInputEvent {
-    clientX: number,
-    clientY: number,
-    leftOffset: number,
-    topOffset: number,
-    scaleFactor: number,
-    buttons: number,
-    type: string,
-};
-
 export abstract class Tool {
     protected strokeType: string;
     protected mouseDown: boolean;
@@ -25,8 +15,8 @@ export abstract class Tool {
         this.toolName = 'generic';
         this.displayName = 'tool';
     }
-    abstract select(canvas: fabric.Canvas);
-    abstract deselect(canvas: fabric.Canvas);
+    abstract select(canvas: fabric.Canvas): void;
+    abstract deselect(canvas: fabric.Canvas): void;
     setColor = (color: string) => {
         this.color = color;
     }

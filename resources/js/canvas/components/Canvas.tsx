@@ -3,7 +3,7 @@ import axios from 'axios';
 import { fabric } from 'fabric';
 import './Canvas.css';
 import { ToolController } from './ToolController';
-import { Tool, CanvasInputEvent } from './Tool';
+import { Tool } from './Tool';
 import { PenTool } from './PenTool';
 import { PanHandler } from './PanHandler';
 import { VersionController } from './VersionController';
@@ -80,10 +80,14 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             'mouse:move': (o) => this.handleInput('mouse:move', o),
             'mouse:up': (o) => this.handleInput('mouse:up', o),
             'mouse:wheel': this.handleZoom,
-            'object:added': (_) => console.log('object added'),
+            'object:added': (o) => {
+                let target = o.target;
+                if(target){
+                    target.selectable = false;
+                }
+            },
         });
         this.drawSurface.selection = false;
-        this.drawSurface.forEachObject((obj) => { obj.selectable = false });
     }
     getCanvas() {
         axios.get(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`)
@@ -184,7 +188,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 <canvas className="row" id="drawSurface"
                     style={canvasStyle}
                     height={window.innerHeight * .85}
-                    width={window.innerWidth * .975} />
+                    width={window.innerWidth * .95} />
             </div>
         )
     }

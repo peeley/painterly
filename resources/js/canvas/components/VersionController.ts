@@ -31,8 +31,7 @@ export class VersionController {
                     this.currentVersion -= 1;
                     break;
                 case 'clear':
-                    this.versionHistory = [];
-                    this.currentVersion = 0;
+                    this.drawSurface.clear();
                     break;
             }
             this.redrawCanvas();

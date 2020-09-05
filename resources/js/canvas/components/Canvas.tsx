@@ -46,10 +46,10 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             if (event.ctrlKey) {
                 switch (event.key) {
                     case 'z':
-                        //this.versionController.undo();
+                        this.versionController.undo();
                         break;
                     case 'y':
-                        //this.versionController.redo();
+                        this.versionController.redo();
                         break;
                     default:
                 }
@@ -82,8 +82,9 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             'mouse:wheel': this.handleZoom,
             'object:added': (o) => {
                 let target = o.target;
-                if(target){
+                if (target) {
                     target.selectable = false;
+                    this.versionController.push(target);
                 }
             },
         });
@@ -143,20 +144,20 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         return (
             <div className="container col px-5" >
                 <MenuBar
-                    title={ this.state.title }
-                    surface = { this.drawSurface }
-                    paintingId = { this.props.paintingId } />
+                    title={this.state.title}
+                    surface={this.drawSurface}
+                    paintingId={this.props.paintingId} />
                 <div className="row pl-5" >
                     <ToolController
                         handleToolSelect={this.handleToolSelect} />
                     <div className="versionButtons pt-2 pl-5" >
                         <button onClick={() => {
-                            // this.versionController.undo()
+                            this.versionController.undo()
                         }}>
                             Undo
                         </button>
                         <button onClick={() => {
-                            // this.versionController.redo()
+                            this.versionController.redo()
                         }}>
                             Redo
                         </button>

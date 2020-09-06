@@ -45,11 +45,9 @@ export class VersionController {
     }
     push = (item: any /* fabric.Object */ ) => {
         item.selectable = false;
-        let itemJson = item.toObject();
-        itemJson.uuid = v4();
-        console.log(`adding uuid ${item.uuid} to item`);
+        item.uuid = v4();
         this.sendEvent({
-            objects: JSON.stringify(itemJson),
+            objects: JSON.stringify(item.toJSON(['uuid'])),
             action: 'add'
         }, () => {
             // TODO undo on bad response?
@@ -94,7 +92,7 @@ export class VersionController {
             });
     }
     // TODO create type for serialized objects
-    deserializeHistory = (history: Array<any>) => {
+    deserializeHistory = (history: Array<fabric.Object>) => {
         this.drawSurface.loadFromJSON({ objects: history }, () => {});
     }
     setDrawSurface(canvas: fabric.Canvas): void {

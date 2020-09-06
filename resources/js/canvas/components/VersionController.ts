@@ -12,6 +12,8 @@ export class VersionController {
     constructor(id: number, drawSurface: fabric.Canvas) {
         this.paintingId = id;
         this.drawSurface = drawSurface;
+    }
+    mountChannelListener = () => {
         let echo = new Echo({
             broadcaster: 'pusher',
             key: process.env.MIX_PUSHER_APP_KEY,
@@ -22,10 +24,19 @@ export class VersionController {
             .listen('PaintingUpdateEvent', (data: PaintingUpdateEvent) => {
                 switch (data.action) {
                     case 'add':
+                        console.log(`received 'add' event from other instance`, data);
                         if (!data.objects) {
                             console.log('Received bad `add` event');
                             return;
                         }
+                        this.drawSurface.off('object:added', this.push);
+                        fabric.util.enlivenObjects([data.objects], (objects) => {
+                            objects.forEach((obj) => {
+                                this.drawSurface.add(obj);
+                            });
+                            console.log(`added to canvas: `, this.drawSurface.getObjects());
+                            this.drawSurface.on('object:added', this.push);
+                        }, 'fabric');
                         this.pushItemToHistory(data.objects);
                         break;
                     case 'undo':
@@ -43,7 +54,11 @@ export class VersionController {
                 0, this.currentVersion);
         }
     }
-    push = (item: any /* fabric.Object */ ) => {
+    push = (event: any /* fabric.Object */ ) => {
+        let item = event.target;
+        if(!item){
+            return;
+        }
         item.selectable = false;
         item.uuid = v4();
         this.sendEvent({
@@ -92,8 +107,15 @@ export class VersionController {
             });
     }
     // TODO create type for serialized objects
-    deserializeHistory = (history: Array<fabric.Object>) => {
-        this.drawSurface.loadFromJSON({ objects: history }, () => {});
+    deserializeHistory = (history: Array<any>) => {
+        console.log(`deserializing from backend: `, history);
+        fabric.util.enlivenObjects(history, (objects) => {
+            objects.forEach( (obj) => {
+                this.drawSurface.add(obj);
+            });
+            console.log(`deserialied history: `, this.drawSurface.getObjects());
+            this.drawSurface.renderAll();
+        }, 'fabric');
     }
     setDrawSurface(canvas: fabric.Canvas): void {
         this.drawSurface = canvas;

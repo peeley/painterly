@@ -78,13 +78,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             'mouse:move': (o) => this.handleInput('mouse:move', o),
             'mouse:up': (o) => this.handleInput('mouse:up', o),
             'mouse:wheel': this.handleZoom,
-            'object:added': (o) => {
-                console.log('got an object:added event');
-                let target = o.target;
-                if (target) {
-                    this.versionController.push(target);
-                }
-            },
+            'object:added': this.versionController.push,
             'object:modified': (o) => {
                 let target = o.target;
                 if (!target) { return; }
@@ -110,6 +104,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                     // need to set draw surface again after loading finishes
                     this.versionController.setDrawSurface(this.drawSurface);
                     this.versionController.deserializeHistory(response.data.objects);
+                    this.versionController.mountChannelListener();
                     this.handleToolSelect(this.state.tool);
                     this.mountFabric();
                 });

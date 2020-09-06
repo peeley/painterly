@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { fabric } from 'fabric';
+import { v4 } from 'uuid'
 import Echo from 'laravel-echo';
 
 export class VersionController {
@@ -25,7 +26,7 @@ export class VersionController {
                             console.log('Received bad `add` event');
                             return;
                         }
-                        this.pushItemToHistory(this.deserializeItem(data.objects));
+                        this.pushItemToHistory(data.objects);
                         break;
                     case 'undo':
                         this.currentVersion -= 1;
@@ -42,9 +43,13 @@ export class VersionController {
                 0, this.currentVersion);
         }
     }
-    push = (item: fabric.Object) => {
+    push = (item: any /* fabric.Object */ ) => {
+        item.selectable = false;
+        let itemJson = item.toObject();
+        itemJson.uuid = v4();
+        console.log(`adding uuid ${item.uuid} to item`);
         this.sendEvent({
-            objects: JSON.stringify(item),
+            objects: JSON.stringify(itemJson),
             action: 'add'
         }, () => {
             // TODO undo on bad response?
@@ -88,32 +93,12 @@ export class VersionController {
                 }
             });
     }
-    serializeHistory = () => {
-        // let history = this.versionHistory.map( stroke => { return stroke.serialize(); });
-        // return history;
-    }
     // TODO create type for serialized objects
     deserializeHistory = (history: Array<any>) => {
-        history.map(json => {
-            let stroke = this.deserializeItem(json);
-            this.versionHistory.push(stroke);
-            this.currentVersion += 1;
-            return stroke;
-        });
+        this.drawSurface.loadFromJSON({ objects: history }, () => {});
     }
-    deserializeItem = (json: any): fabric.Object => {
-        let stroke = new fabric.Object();
-        switch (json.type) {
-            case 'fill':
-                // stroke = new FillStroke(json.color, json.backgroundColor);
-                break;
-            default:
-                console.log('unable to deserialize stroke');
-                stroke = new fabric.Object();
-                return stroke;
-        }
-        // stroke.deserialize(json);
-        return stroke;
+    setDrawSurface(canvas: fabric.Canvas): void {
+        this.drawSurface = canvas;
     }
 }
 

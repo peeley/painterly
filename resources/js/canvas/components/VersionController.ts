@@ -58,8 +58,8 @@ export class VersionController {
         let target = object.target;
         if (!target) { return; }
         // TODO add type for objects w/ additional uuid field
-        this.drawSurface.forEachObject( (obj: any) => {
-            if(obj.uuid === target.uuid){
+        this.drawSurface.forEachObject((obj: any) => {
+            if (obj.uuid === target.uuid) {
                 obj.set(target);
                 return;
             }
@@ -72,9 +72,9 @@ export class VersionController {
                 0, this.currentVersion);
         }
     }
-    push = (event: any /* fabric.Object */ ) => {
+    push = (event: any /* fabric.Object */) => {
         let item = event.target;
-        if(!item){
+        if (!item) {
             return;
         }
         item.selectable = false;
@@ -87,15 +87,15 @@ export class VersionController {
         });
         this.pushItemToHistory(item);
     }
-    modify = (event: any ) => {
-        console.log('sending modification to backend: ', event);
+    modify = (event: any) => {
         let item = event.target;
-        if(!item){
+        if (!item) {
             return;
         }
+        console.log('sending modification to backend: ', item.toJSON(['uuid']));
         this.sendEvent({
-            objects: JSON.stringify(item.toJSON['uuid']),
-            aciton: 'modify',
+            objects: JSON.stringify(item.toJSON(['uuid'])),
+            action: 'modify',
         }, () => {
             // TODO do something on modify?
         });
@@ -140,8 +140,8 @@ export class VersionController {
     // TODO create type for serialized objects
     deserializeHistory = (history: Array<any>) => {
         console.log(`deserializing from backend: `, history);
-        this.drawSurface.loadFromJSON({ objects: history}, () => {
-            this.drawSurface.forEachObject( obj => {
+        this.drawSurface.loadFromJSON({ objects: history }, () => {
+            this.drawSurface.forEachObject(obj => {
                 obj.selectable = false;
             })
             this.drawSurface.renderAll();

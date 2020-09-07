@@ -18,6 +18,16 @@ class UpdateProtocol
         } else if ($action === 'add') {
             $new_stroke = json_decode($update['objects']);
             $painting->objects = array_merge($painting->objects, [$new_stroke]);
+        } else if ($action === 'modify') {
+            $modified_object = json_decode($update['objects'], true);
+            $objects = $painting->objects;
+            foreach ($objects as &$object) {
+                if ($object['uuid'] == $modified_object['uuid']) {
+                    $object = $modified_object;
+                    break;
+                }
+            }
+            $painting->objects = $objects;
         }
 
         if (isset($update['title'])) {

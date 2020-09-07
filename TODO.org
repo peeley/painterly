@@ -2,24 +2,23 @@
 
 * Front End
 ** TODO Add painting preview in home screen
+   FabricJS allows for [[http://fabricjs.com/fabric-intro-part-3#serialization][serialization to SVG]], perhaps periodically serialize and store SVG in DB, then fetch on
+   mouseover?
+
 ** TODO Fix centering of toggles in PrivacyEditor
-** IN-PROGRESS Refactor canvas code to use Fabric.js
+   CLOSED: [2020-09-07 Mon 16:06]
    This is really long overdue. Feels like giving up on large part of project, but tbh it's nice to find
    a library that's 100% solved all the annoying reccuring bugs I've had to solve over and over.
 
-** IN-PROGRESS Fix automatic canvas sizing to fit screen, have canvas visual size and programmatic size be different.
-   Related: [[*Change pan tool to be unable to pan beyond canvas boundaries]]
+** TODO Create data structure and functionality for undo/redo
+   Using HTML Canvas, all that was needed was an array of serialized Stroke objects. Now with FabricJS, something more robust
+   may be necessary inside VersionController. Also need to assess backend solutions.
+
 ** IN-PROGRESS UI/UX overhaul *ongoing*
 *** TODO Landing page
 *** theming
 *** keybinds/ergonomics
 ** IN-PROGRESS Add new tool types
-*** DONE Fill tool
-    CLOSED: [2020-08-31 Mon 22:17] - Should look for performance gains in the future.
-    This [[https://ben.akrin.com/?p=7888][blog]] might have some ideas
-    Need to increase performance, filling more than once or without limit to amount of pixels replaced gives huge
-    slowdown. Also need to fix problem with alpha values in `rgba()` strings needing to be 255.
-
 *** Shapes
 *** Image insertion
 *** Text
@@ -28,6 +27,25 @@
     - Pen tool has stroke width, stroke style, etc.
     - Shapes have filled vs outline
     - Text has font, font size, etc.
+
+*** TODO Fill tool
+    This [[https://ben.akrin.com/?p=7888][blog]] might have some ideas
+    Need to increase performance, filling more than once or without limit to amount of pixels replaced gives huge
+    slowdown. Also need to fix problem with alpha values in `rgba()` strings needing to be 255.
+
+    Putting back to TODO, 09-07-2020
+    Now that we're using FabricJS, might need to rethink strategy from basic flood fill since FabricJS isn't really
+    meant for directly manipulating pixels on the canvas.
+
+** DONE Fix automatic canvas sizing to fit screen, have canvas visual size and programmatic size be different.
+   Fixed by overhaul to FabricJS.
+   CLOSED: [2020-09-07 Mon 16:12]
+   Related: [[*Change pan tool to be unable to pan beyond canvas boundaries]]
+
+** DONE Refactor canvas code to use Fabric.js
+   Still need to finish undo/redo management, but most basic features that were present using HTML Canvas are present
+   and much, much more performant and resilient.
+   CLOSED: [2020-09-07 Mon 16:09]
 
 ** DONE Change pan tool to be unable to pan beyond canvas boundaries
    CLOSED: [2020-08-24 Mon 22:08]

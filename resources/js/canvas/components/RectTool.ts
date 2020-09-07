@@ -40,9 +40,9 @@ export class RectTool extends Tool {
             });
             // firing an event on mouse move is really taxing
             // maybe just send single `object:added` event here?
-            context.fire('object:modified', {target: this.stroke});
         }
         else if (type === 'mouse:up') {
+            context.fire('push:added', {target: this.stroke});
             this.stroke = new fabric.Rect();
             this.mouseDown = false;
         }

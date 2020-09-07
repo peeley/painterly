@@ -71,6 +71,7 @@ export class VersionController {
         }
     }
     push = (event: any /* fabric.Object */) => {
+        //console.log('pushing event to backend: ', event);
         let item = event.target;
         if (!item) {
             return;
@@ -90,7 +91,7 @@ export class VersionController {
         if (!item) {
             return;
         }
-        console.log('sending modification to backend: ', item.toJSON(['uuid']));
+        //console.log('sending modification to backend: ', item.toJSON(['uuid']));
         this.sendEvent({
             objects: JSON.stringify(item.toJSON(['uuid'])),
             action: 'modify',
@@ -137,7 +138,7 @@ export class VersionController {
     }
     // TODO create type for serialized objects
     deserializeHistory = (history: Array<any>) => {
-        console.log(`deserializing from backend: `, history);
+        //console.log(`deserializing from backend: `, history);
         this.drawSurface.loadFromJSON({ objects: history }, () => {
             this.drawSurface.forEachObject(obj => {
                 obj.selectable = false;

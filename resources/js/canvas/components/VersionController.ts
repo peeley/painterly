@@ -43,12 +43,10 @@ export class VersionController {
             console.log('Received bad `add` event');
             return;
         }
-        this.drawSurface.off('object:added', this.push);
         fabric.util.enlivenObjects([object], (objects) => {
             objects.forEach((obj) => {
                 this.drawSurface.add(obj);
             });
-            this.drawSurface.on('object:added', this.push);
         }, 'fabric');
         this.pushItemToHistory(object);
     }

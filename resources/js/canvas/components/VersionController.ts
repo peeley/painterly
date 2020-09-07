@@ -109,13 +109,12 @@ export class VersionController {
     // TODO create type for serialized objects
     deserializeHistory = (history: Array<any>) => {
         console.log(`deserializing from backend: `, history);
-        fabric.util.enlivenObjects(history, (objects) => {
-            objects.forEach( (obj) => {
-                this.drawSurface.add(obj);
-            });
-            console.log(`deserialied history: `, this.drawSurface.getObjects());
+        this.drawSurface.loadFromJSON({ objects: history}, () => {
+            this.drawSurface.forEachObject( obj => {
+                obj.selectable = false;
+            })
             this.drawSurface.renderAll();
-        }, 'fabric');
+        });
     }
     setDrawSurface(canvas: fabric.Canvas): void {
         this.drawSurface = canvas;

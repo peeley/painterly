@@ -53,17 +53,15 @@ export class VersionController {
         this.pushItemToHistory(object);
     }
     handleModifyEvent = (object) => {
-        console.log(`received modify event: `, object);
         this.drawSurface.off('object:modified', this.modify);
-        let target = object.target;
-        if (!target) { return; }
         // TODO add type for objects w/ additional uuid field
         this.drawSurface.forEachObject((obj: any) => {
-            if (obj.uuid === target.uuid) {
-                obj.set(target);
+            if (obj.uuid === object.uuid) {
+                obj.set(object);
                 return;
             }
         });
+        this.drawSurface.renderAll();
         this.drawSurface.on('object:modified', this.modify);
     }
     pushItemToHistory = (_item: fabric.Object) => {

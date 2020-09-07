@@ -24,20 +24,10 @@ export class VersionController {
             .listen('PaintingUpdateEvent', (data: PaintingUpdateEvent) => {
                 switch (data.action) {
                     case 'add':
-                        console.log(`received 'add' event from other instance`, data);
-                        if (!data.objects) {
-                            console.log('Received bad `add` event');
-                            return;
-                        }
-                        this.drawSurface.off('object:added', this.push);
-                        fabric.util.enlivenObjects([data.objects], (objects) => {
-                            objects.forEach((obj) => {
-                                this.drawSurface.add(obj);
-                            });
-                            console.log(`added to canvas: `, this.drawSurface.getObjects());
-                            this.drawSurface.on('object:added', this.push);
-                        }, 'fabric');
-                        this.pushItemToHistory(data.objects);
+                        this.handleAddEvent(data.objects);
+                        break;
+                    case 'modify':
+                        this.handleModifyEvent(data.objects);
                         break;
                     case 'undo':
                         this.currentVersion -= 1;
@@ -47,6 +37,34 @@ export class VersionController {
                         break;
                 }
             });
+    }
+    handleAddEvent = (object) => {
+        if (!object) {
+            console.log('Received bad `add` event');
+            return;
+        }
+        this.drawSurface.off('object:added', this.push);
+        fabric.util.enlivenObjects([object], (objects) => {
+            objects.forEach((obj) => {
+                this.drawSurface.add(obj);
+            });
+            this.drawSurface.on('object:added', this.push);
+        }, 'fabric');
+        this.pushItemToHistory(object);
+    }
+    handleModifyEvent = (object) => {
+        console.log(`received modify event: `, object);
+        this.drawSurface.off('object:modified', this.modify);
+        let target = object.target;
+        if (!target) { return; }
+        // TODO add type for objects w/ additional uuid field
+        this.drawSurface.forEachObject( (obj: any) => {
+            if(obj.uuid === target.uuid){
+                obj.set(target);
+                return;
+            }
+        });
+        this.drawSurface.on('object:modified', this.modify);
     }
     pushItemToHistory = (_item: fabric.Object) => {
         if (this.currentVersion !== this.versionHistory.length) {
@@ -68,6 +86,19 @@ export class VersionController {
             // TODO undo on bad response?
         });
         this.pushItemToHistory(item);
+    }
+    modify = (event: any ) => {
+        console.log('sending modification to backend: ', event);
+        let item = event.target;
+        if(!item){
+            return;
+        }
+        this.sendEvent({
+            objects: JSON.stringify(item.toJSON['uuid']),
+            aciton: 'modify',
+        }, () => {
+            // TODO do something on modify?
+        });
     }
     undo = () => {
         if (this.currentVersion > 0) {

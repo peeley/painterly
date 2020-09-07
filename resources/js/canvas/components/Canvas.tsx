@@ -79,11 +79,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             'mouse:up': (o) => this.handleInput('mouse:up', o),
             'mouse:wheel': this.handleZoom,
             'object:added': this.versionController.push,
-            'object:modified': (o) => {
-                let target = o.target;
-                if (!target) { return; }
-                // this.testSquare.set(target);
-            }
+            'object:modified': this.versionController.modify,
         });
         this.drawSurface.selection = false;
     }

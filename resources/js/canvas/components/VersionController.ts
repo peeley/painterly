@@ -3,7 +3,7 @@ import { fabric } from 'fabric';
 import { v4 } from 'uuid'
 import Echo from 'laravel-echo';
 
-interface UUIDObject extends fabric.Object{
+interface UUIDObject extends fabric.Object {
     uuid: string
 }
 
@@ -40,14 +40,17 @@ export class VersionController {
         });
         echo.channel(`painting.${this.paintingId}`)
             .listen('PaintingUpdateEvent', (data: PaintingUpdateEvent) => {
-                if(!data.objects){
-                    throw Error('Missing object on painting update event.');
-                }
                 switch (data.action) {
                     case 'add':
+                        if (!data.objects) {
+                            throw Error('Missing object on `add` event.');
+                        }
                         this.handleAddEvent(data.objects);
                         break;
                     case 'modify':
+                        if (!data.objects) {
+                            throw Error('Missing object on `modify` event.');
+                        }
                         this.handleModifyEvent(data.objects);
                         break;
                     case 'undo':
@@ -56,6 +59,8 @@ export class VersionController {
                     case 'clear':
                         this.drawSurface.clear();
                         break;
+                    default:
+                        throw Error(`Unsupported update type: ${data.action}`);
                 }
             });
     }
@@ -141,7 +146,7 @@ export class VersionController {
     // TODO define outgoing event type
     sendEvent = (event: OutgoingEvent, callback: Function) => {
         axios.put(`${process.env.MIX_APP_URL}/api/p/${this.paintingId}`,
-            { action: event.action, objects: JSON.stringify(event.objects)},
+            { action: event.action, objects: JSON.stringify(event.objects) },
             { headers: { 'Content-Type': 'application/json' } })
             .then(response => {
                 if (response.status === 200) {

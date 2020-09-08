@@ -14,8 +14,8 @@ export class RectTool extends Tool {
         this.mouseDown = false;
         this.stroke = new fabric.Rect();
     }
-    select = (_: fabric.Canvas) => {}
-    deselect = (_: fabric.Canvas) => {}
+    select = (_: fabric.Canvas) => { }
+    deselect = (_: fabric.Canvas) => { }
     handleEvent(type: string, event: any, context: fabric.Canvas): fabric.Rect | void {
         const pointer = context.getPointer(event.e);
         const xCoord = pointer.x;
@@ -42,7 +42,7 @@ export class RectTool extends Tool {
             // maybe just send single `object:added` event here?
         }
         else if (type === 'mouse:up') {
-            context.fire('push:added', {target: this.stroke});
+            context.fire('push:added', { target: this.stroke });
             this.stroke = new fabric.Rect();
             this.mouseDown = false;
         }

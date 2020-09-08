@@ -3,6 +3,24 @@ import { fabric } from 'fabric';
 import { v4 } from 'uuid'
 import Echo from 'laravel-echo';
 
+interface UUIDObject extends fabric.Object{
+    uuid: string
+}
+
+type UpdateAction = "modify" | "add" | "remove" | "clear" | "undo" | "redo";
+
+interface OutgoingEvent {
+    action: UpdateAction,
+    objects?: UUIDObject
+}
+
+interface PaintingUpdateEvent {
+    paintingId: number,
+    action: UpdateAction | null,
+    objects: UUIDObject | null
+    title: string | null
+}
+
 export class VersionController {
     private paintingId: number;
     private versionHistory: Array<fabric.Object> = [];
@@ -22,6 +40,9 @@ export class VersionController {
         });
         echo.channel(`painting.${this.paintingId}`)
             .listen('PaintingUpdateEvent', (data: PaintingUpdateEvent) => {
+                if(!data.objects){
+                    throw Error('Missing object on painting update event.');
+                }
                 switch (data.action) {
                     case 'add':
                         this.handleAddEvent(data.objects);
@@ -38,22 +59,22 @@ export class VersionController {
                 }
             });
     }
-    handleAddEvent = (object) => {
+    handleAddEvent = (object: UUIDObject) => {
         if (!object) {
             console.log('Received bad `add` event');
             return;
         }
-        fabric.util.enlivenObjects([object], (objects) => {
-            objects.forEach((obj) => {
+        fabric.util.enlivenObjects([object], (objects: Array<UUIDObject>) => {
+            objects.forEach((obj: UUIDObject) => {
                 this.drawSurface.add(obj);
             });
         }, 'fabric');
         this.pushItemToHistory(object);
     }
-    handleModifyEvent = (object) => {
+    handleModifyEvent = (object: UUIDObject) => {
         this.drawSurface.off('object:modified', this.modify);
-        // TODO add type for objects w/ additional uuid field
         this.drawSurface.forEachObject((obj: any) => {
+            // TODO convert obj to type UUIDObject
             if (obj.uuid === object.uuid) {
                 obj.set(object);
                 return;
@@ -68,7 +89,7 @@ export class VersionController {
                 0, this.currentVersion);
         }
     }
-    push = (event: any /* fabric.Object */) => {
+    push = (event: any /* event w/ UUIDObject as target */) => {
         //console.log('pushing event to backend: ', event);
         let item = event.target;
         if (!item) {
@@ -77,7 +98,7 @@ export class VersionController {
         item.selectable = false;
         item.uuid = v4();
         this.sendEvent({
-            objects: JSON.stringify(item.toJSON(['uuid'])),
+            objects: item.toObject(['uuid']),
             action: 'add'
         }, () => {
             // TODO undo on bad response?
@@ -91,7 +112,7 @@ export class VersionController {
         }
         //console.log('sending modification to backend: ', item.toJSON(['uuid']));
         this.sendEvent({
-            objects: JSON.stringify(item.toJSON(['uuid'])),
+            objects: item.toObject(['uuid']),
             action: 'modify',
         }, () => {
             // TODO do something on modify?
@@ -118,9 +139,9 @@ export class VersionController {
         this.currentVersion = 0;
     }
     // TODO define outgoing event type
-    sendEvent = (event: any, callback: Function) => {
+    sendEvent = (event: OutgoingEvent, callback: Function) => {
         axios.put(`${process.env.MIX_APP_URL}/api/p/${this.paintingId}`,
-            event,
+            { action: event.action, objects: JSON.stringify(event.objects)},
             { headers: { 'Content-Type': 'application/json' } })
             .then(response => {
                 if (response.status === 200) {
@@ -135,7 +156,7 @@ export class VersionController {
             });
     }
     // TODO create type for serialized objects
-    deserializeHistory = (history: Array<any>) => {
+    deserializeHistory = (history: Array<UUIDObject>) => {
         //console.log(`deserializing from backend: `, history);
         this.drawSurface.loadFromJSON({ objects: history }, () => {
             this.drawSurface.forEachObject(obj => {
@@ -147,11 +168,4 @@ export class VersionController {
     setDrawSurface(canvas: fabric.Canvas): void {
         this.drawSurface = canvas;
     }
-}
-
-interface PaintingUpdateEvent {
-    paintingId: number,
-    action: "modify" | "add" | "remove" | "clear" | "undo" | "redo" | null,
-    objects: fabric.Object | null
-    title: string | null
 }

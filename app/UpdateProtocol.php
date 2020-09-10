@@ -25,7 +25,7 @@ class UpdateProtocol
             $objects = $painting->objects;
             foreach ($objects as &$object) {
                 if ($object['uuid'] == $modified_object['uuid']) {
-                    $object = $modified_object;
+                    $object = array_merge($object, $modified_object);
                     break;
                 }
             }

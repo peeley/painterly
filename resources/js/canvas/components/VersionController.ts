@@ -115,7 +115,17 @@ export class VersionController {
         if (!item) {
             return;
         }
-        //console.log('sending modification to backend: ', item.toJSON(['uuid']));
+        let activeObject: any = this.drawSurface.getActiveObject();
+        if (activeObject.type === 'activeSelection'){
+            // TODO fix modification via group selection
+            console.log('handling modify events: ', event);
+            for(let object of activeObject.getObjects()) {
+                console.log(object);
+                //this.modify({ target: object });
+            }
+            return;
+        }
+        console.log('sending modification to backend: ', item.toJSON(['uuid']));
         this.sendEvent({
             objects: item.toObject(['uuid']),
             action: 'modify',

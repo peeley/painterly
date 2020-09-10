@@ -14,6 +14,15 @@
    Using HTML Canvas, all that was needed was an array of serialized Stroke objects. Now with FabricJS, something more robust
    may be necessary inside VersionController. Also need to assess backend solutions.
 
+** TODO Fix modifying objects via group select
+   Should take place here in VersionController - looks like modified fields such as `top`, `left`, `scaleX`,
+   `scaleY`, etc. are actually stored in the `object:modified` target field, and then in the `objects` field
+   contained has relative offsets, e.g. the `top` of a modified object will be the `top` field of the target
+   field added to the `top` field of the specific object.
+   Helpful docs:
+   - FabricJS docs for [[http://fabricjs.com/docs/fabric.ActiveSelection.html][ActiveSelection]]
+   - More docs on breaking changes regarding [[http://fabricjs.com/v2-breaking-changes-2][selection handling]]
+
 ** IN-PROGRESS UI/UX overhaul *ongoing*
 *** TODO Landing page
 *** theming

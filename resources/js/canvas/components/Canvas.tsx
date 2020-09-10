@@ -63,6 +63,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     handleInput = (type: string, event: fabric.IEvent) => {
         if (event.button === 2 || this.panHandler.isPanning()) {
             this.panHandler.pan(type, event, this.drawSurface);
+            this.drawSurface.forEachObject( obj => obj.setCoords());
         }
         else {
             this.state.tool.handleEvent(type, event, this.drawSurface);
@@ -122,9 +123,10 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     resetZoom = () => {
         this.setState({
             scaleFactor: 1.0
-        }, () =>
-            this.drawSurface.setViewportTransform([1, 0, 0, 1, 0, 0])
-        );
+        }, () => {
+            this.drawSurface.setViewportTransform([1, 0, 0, 1, 0, 0]);
+            this.drawSurface.forEachObject( obj => obj.setCoords());
+        });
     }
     handleZoom = (event: any) => {
         let wheelEvent: MouseWheelEvent = event.e;

@@ -1,4 +1,4 @@
-import { Tool } from './Tool';
+import { Tool, MouseEventType } from './Tool';
 import { fabric } from 'fabric';
 
 export class RectTool extends Tool {
@@ -16,7 +16,7 @@ export class RectTool extends Tool {
     }
     select = (_: fabric.Canvas) => { }
     deselect = (_: fabric.Canvas) => { }
-    handleEvent(type: string, event: any, context: fabric.Canvas): fabric.Rect | void {
+    handleEvent(type: MouseEventType, event: any, context: fabric.Canvas): fabric.Rect | void {
         const pointer = context.getPointer(event.e);
         const xCoord = pointer.x;
         const yCoord = pointer.y;

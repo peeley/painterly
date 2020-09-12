@@ -3,8 +3,8 @@ import axios from 'axios';
 import { fabric } from 'fabric';
 import './Canvas.css';
 import { ToolController } from './ToolController';
-import { Tool } from './Tool';
-import { PenTool } from './PenTool';
+import { Tool, MouseEventType } from './Tools/Tool';
+import { PenTool } from './Tools/PenTool';
 import { PanHandler } from './PanHandler';
 import { VersionController } from './VersionController';
 import { MenuBar } from './MenuBar';
@@ -60,7 +60,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             tool: tool
         }, () => this.state.tool.select(this.drawSurface));
     }
-    handleInput = (type: string, event: fabric.IEvent) => {
+    handleInput = (type: MouseEventType, event: fabric.IEvent) => {
         if (event.button === 2 || this.panHandler.isPanning()) {
             this.panHandler.pan(type, event, this.drawSurface);
             this.drawSurface.forEachObject( obj => obj.setCoords());

@@ -1,5 +1,7 @@
 import { fabric } from 'fabric';
 
+export type MouseEventType = 'mouse:down' | 'mouse:move' | 'mouse:up';
+
 export abstract class Tool {
     protected strokeType: string;
     protected mouseDown: boolean;
@@ -7,7 +9,7 @@ export abstract class Tool {
     public toolName: string;
     protected displayName: string;
     protected strokeWidth: number;
-    constructor(strokeType: string){
+    constructor(strokeType: string) {
         this.strokeType = strokeType;
         this.mouseDown = false;
         this.color = "rgba(17, 17, 17, 1)";
@@ -26,8 +28,8 @@ export abstract class Tool {
     getStrokeWidth(): number {
         return this.strokeWidth;
     }
-    setStrokeWidth(width: number){
+    setStrokeWidth(width: number) {
         this.strokeWidth = width;
     }
-    abstract handleEvent(_: string, __: any, ___: fabric.Canvas): fabric.Object |void;
+    abstract handleEvent(_type: MouseEventType, _event: any, ___: fabric.Canvas): fabric.Object | void;
 }

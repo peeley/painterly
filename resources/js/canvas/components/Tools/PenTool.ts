@@ -1,8 +1,8 @@
-import { Tool } from './Tool';
+import { Tool, MouseEventType } from './Tool';
 import { fabric } from 'fabric';
 
 export class PenTool extends Tool {
-    constructor(){
+    constructor() {
         super('pen');
         this.toolName = 'pen';
         this.displayName = 'Pen';
@@ -14,7 +14,7 @@ export class PenTool extends Tool {
     deselect = (canvas: fabric.Canvas) => {
         canvas.isDrawingMode = false;
     }
-    handleEvent(_: string, __: any, context: fabric.Canvas): fabric.Path | void {
+    handleEvent(_type: MouseEventType, _event: any, context: fabric.Canvas): fabric.Path | void {
         context.freeDrawingBrush.width = this.strokeWidth;
         context.freeDrawingBrush.color = this.color;
     }

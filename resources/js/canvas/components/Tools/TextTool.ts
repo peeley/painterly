@@ -6,7 +6,7 @@ export class TextTool extends Tool {
     constructor() {
         super('text');
         this.toolName = 'text';
-        this.displayName = 'text';
+        this.displayName = 'Text';
         this.stroke = new fabric.IText('');
     }
     select = (_canvas: fabric.Canvas) => { }

@@ -30,9 +30,18 @@
 ** IN-PROGRESS Add new tool types
 *** Shapes
 *** Image insertion
-*** Text
+    Always need to be wary of user-uploaded content, but if this is being self-hosted then
+    perhaps that worry is misplaced - self-hosted users are ultimately accountable for
+    their own data, for better and for worse.
+
+*** DONE Text
+    CLOSED: [2020-09-12 Sat 02:29]
+    Creating text box and editing existing text works, need to set up [[tool options]]
+    menu to set font/text color/bold/underline/etc.
+
 *** Charts/tables
 *** TODO Create tool options menu specific to each kind of tool
+    <<tool options>>
     - Pen tool has stroke width, stroke style, etc.
     - Shapes have filled vs outline
     - Text has font, font size, etc.

@@ -2,12 +2,12 @@ import { Tool, MouseEventType } from './Tool';
 import { fabric } from 'fabric';
 
 export class TextTool extends Tool {
-    private stroke: fabric.Text;
+    private stroke: fabric.IText;
     constructor() {
         super('text');
         this.toolName = 'text';
         this.displayName = 'text';
-        this.stroke = new fabric.Text('');
+        this.stroke = new fabric.IText('');
     }
     select = (_canvas: fabric.Canvas) => { }
     deselect = (_canvas: fabric.Canvas) => { }
@@ -16,12 +16,12 @@ export class TextTool extends Tool {
         let xCoord = pointer.x;
         let yCoord = pointer.y;
         if (type === 'mouse:down') {
-            this.stroke = new fabric.Text('text!', { left: xCoord, top: yCoord });
+            this.stroke = new fabric.IText('text', { left: xCoord, top: yCoord });
             context.add(this.stroke);
         }
         if (type === 'mouse:up') {
             context.fire('push:added', { target: this.stroke });
-            this.stroke = new fabric.Text('');
+            this.stroke = new fabric.IText('');
         }
     }
 }

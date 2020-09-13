@@ -26,12 +26,12 @@ export class ShareModal extends React.Component<{}, ShareModalState> {
     render(){
         return (
             <>
-                <button className="btn btn-outline-primary btn-sm" type="button" data-toggle="modal" 
+                <button className="btn btn-outline-primary btn-sm" type="button" data-toggle="modal"
                     data-target="#shareModal">
                     Share Link
                 </button>
                 <div id="shareModal" className="modal fade">
-                    <div className="modal-dialog" 
+                    <div className="modal-dialog modal-dialog-centered"
                         role="document">
                         <div className="modal-content">
                             <div className="modal-header">

@@ -2,6 +2,7 @@ import * as React from 'react';
 import axios from 'axios';
 import { fabric } from 'fabric';
 import { ShareModal } from './ShareModal';
+import { SaveModal } from './SaveModal';
 
 type MenuBarProps = {
     title: string,
@@ -13,7 +14,6 @@ type MenuBarState = {
     title: string,
     savedTitle: string,
     titleSelected: boolean,
-    imgLink: string
 };
 
 export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
@@ -23,7 +23,6 @@ export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
             title: props.title,
             savedTitle: props.title,
             titleSelected: false,
-            imgLink: ""
         }
     }
     componentDidUpdate(prevProps: MenuBarProps){
@@ -33,12 +32,6 @@ export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
                 title: this.props.title
             });
         }
-    }
-    updateImgLink = () => {
-        let imgUrl = this.props.surface.toDataURL();
-        this.setState({
-            imgLink: imgUrl
-        });
     }
     handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
@@ -98,12 +91,9 @@ export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
                     </div>
                 </div>
                 <div className="row">
-                    <a className="btn btn-outline-primary btn-sm"
-                        onMouseEnter={this.updateImgLink}
-                        href={this.state.imgLink}
-                        download={this.state.savedTitle}>
-                        Save
-                    </a>
+                    <SaveModal canvas={this.props.surface}
+                        title={this.state.title}
+                    />
                     <ShareModal />
                 </div>
             </>

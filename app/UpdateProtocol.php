@@ -4,6 +4,7 @@ namespace App;
 
 use App\Painting;
 use App\Events\PaintingUpdateEvent as Event;
+use Illuminate\Support\Arr;
 
 class UpdateProtocol
 {
@@ -30,6 +31,15 @@ class UpdateProtocol
                 }
             }
             $painting->objects = $objects;
+        } else if ($action === 'remove') {
+            $objects = $painting->objects;
+            $removed_uuid = json_decode($update['objects'])->uuid;
+            $remaining = array_values(
+                Arr::where($objects, function ($value, $key) use ($removed_uuid) {
+                    return $value['uuid'] !== $removed_uuid;
+                })
+            );
+            $painting->objects = $remaining;
         }
 
         if (isset($update['title'])) {

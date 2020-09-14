@@ -59,6 +59,12 @@ export class VersionController {
                     case 'clear':
                         this.drawSurface.clear();
                         break;
+                    case 'remove':
+                        if (!data.objects) {
+                            throw Error('Missing object on `remove` event.');
+                        }
+                        this.handleRemoveEvent(data.objects);
+                        break;
                     default:
                         throw Error(`Unsupported update type: ${data.action}`);
                 }
@@ -88,6 +94,14 @@ export class VersionController {
         this.drawSurface.renderAll();
         this.drawSurface.on('object:modified', this.modify);
     }
+    handleRemoveEvent = (object: UUIDObject) => {
+        this.drawSurface.forEachObject((obj: any) => {
+            if (obj.uuid === object.uuid) {
+                this.drawSurface.remove(obj);
+                return;
+            }
+        })
+    }
     pushItemToHistory = (_item: fabric.Object) => {
         if (this.currentVersion !== this.versionHistory.length) {
             this.versionHistory = this.versionHistory.slice(
@@ -116,10 +130,10 @@ export class VersionController {
             return;
         }
         let activeObject: any = this.drawSurface.getActiveObject();
-        if (activeObject.type === 'activeSelection'){
+        if (activeObject.type === 'activeSelection') {
             // TODO fix modification via group selection
             console.log('handling modify events: ', event);
-            for(let object of activeObject.getObjects()) {
+            for (let object of activeObject.getObjects()) {
                 console.log(object);
                 //this.modify({ target: object });
             }
@@ -132,6 +146,17 @@ export class VersionController {
         }, () => {
             // TODO do something on modify?
         });
+    }
+    remove = (event: any) => {
+        const removed = event.target;
+        if (!removed) {
+            return;
+        }
+        console.log('sending deleted object to backend: ', removed.toJSON(['uuid']));
+        this.sendEvent({
+            objects: removed.toObject(['uuid']),
+            action: 'remove',
+        }, () => { });
     }
     undo = () => {
         if (this.currentVersion > 0) {
@@ -172,7 +197,7 @@ export class VersionController {
     }
     // TODO create type for serialized objects
     deserializeHistory = (history: Array<UUIDObject>) => {
-        //console.log(`deserializing from backend: `, history);
+        console.log(`deserializing from backend: `, history);
         this.drawSurface.loadFromJSON({ objects: history }, () => {
             this.drawSurface.forEachObject(obj => {
                 obj.selectable = false;

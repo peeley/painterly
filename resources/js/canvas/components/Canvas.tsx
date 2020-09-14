@@ -72,7 +72,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             },
             'push:added': this.versionController.push,
             'object:modified': this.versionController.modify,
-            'object:removed': (o) => console.log('object removed', o),
+            'push:removed': this.versionController.remove,
             'dragenter': (o) => console.log('dragenter', o),
             'dragover': (o: any) => {
                 console.log('dragover', o);
@@ -104,7 +104,9 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 }
             }
             else if (event.key === 'Delete' || event.key === 'Backspace') {
-                this.drawSurface.remove(this.drawSurface.getActiveObject());
+                const removedObject = this.drawSurface.getActiveObject();
+                this.drawSurface.remove(removedObject);
+                this.drawSurface.fire('push:removed', { target: removedObject });
             }
         });
     }

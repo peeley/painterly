@@ -23,6 +23,14 @@
    - FabricJS docs for [[http://fabricjs.com/docs/fabric.ActiveSelection.html][ActiveSelection]]
    - More docs on breaking changes regarding [[http://fabricjs.com/v2-breaking-changes-2][selection handling]]
 
+** TODO create logout websocket so user is automatically logged out
+   In painting, page expiration gives no indicator so when user draws/updates title, there
+   is no change or indication.
+
+** IN-PROGRESS Delete canvas objects
+   Perhaps add hotkey on canvas vi event listeners
+   Related: [[delete-backend]]
+
 ** IN-PROGRESS UI/UX overhaul *ongoing*
 *** TODO Landing page
 *** theming
@@ -33,6 +41,11 @@
     Always need to be wary of user-uploaded content, but if this is being self-hosted then
     perhaps that worry is misplaced - self-hosted users are ultimately accountable for
     their own data, for better and for worse.
+    Trying to get drag-and-drop working by simply grabbing the URL of the dragged object
+    and using `fabric.Image.fromURL` to create the Image object, however the drag-and-drop
+    API documentation is pretty thin for fabric. Links found so far:
+      - https://stackoverflow.com/questions/35218368/how-to-add-image-to-fabric-canvas
+      - https://jsfiddle.net/durga598/w8kkc/414/ - seems to actually work
 
 *** DONE Text
     CLOSED: [2020-09-12 Sat 02:29]
@@ -131,6 +144,10 @@
 ** TODO Work on performance of broadcast events
    Waiting for 200 OK before showing changes locally feels really slow, bad UX.
    Could solve by using local Redis for pub/sub, but that involves more dependencies, possibly more brittle.
+
+** IN-PROGRESS Delete fabric object from painting in backend
+   <<delete-backend>>
+   Will require changes to UpdateProtocol
 
 ** IN-PROGRESS *!!TESTING!!*
 *** DONE Painting tests

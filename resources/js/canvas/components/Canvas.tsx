@@ -20,6 +20,7 @@ interface CanvasState {
     scaleFactor: number,
 };
 
+const CanvasId = 'drawSurface'
 class Canvas extends React.Component<CanvasProps, CanvasState> {
     private versionController: VersionController;
     private panHandler: PanHandler;
@@ -32,26 +33,13 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     };
     constructor(props: CanvasProps) {
         super(props);
-        this.drawSurface = new fabric.Canvas('drawSurface', {
+        this.drawSurface = new fabric.Canvas(CanvasId, {
             fireMiddleClick: true,
         });
         this.versionController = new VersionController(this.props.paintingId, this.drawSurface);
         this.panHandler = new PanHandler();
     }
     componentDidMount() {
-        document.addEventListener('keydown', (event) => {
-            if (event.ctrlKey) {
-                switch (event.key) {
-                    case 'z':
-                        this.versionController.undo();
-                        break;
-                    case 'y':
-                        this.versionController.redo();
-                        break;
-                    default:
-                }
-            }
-        });
         this.getCanvas();
     }
     handleToolSelect = (tool: Tool): void => {
@@ -63,7 +51,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     handleInput = (type: MouseEventType, event: fabric.IEvent) => {
         if (event.button === 2 || this.panHandler.isPanning()) {
             this.panHandler.pan(type, event, this.drawSurface);
-            this.drawSurface.forEachObject( obj => obj.setCoords());
+            this.drawSurface.forEachObject(obj => obj.setCoords());
         }
         else {
             this.state.tool.handleEvent(type, event, this.drawSurface);
@@ -84,8 +72,41 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             },
             'push:added': this.versionController.push,
             'object:modified': this.versionController.modify,
+            'object:removed': (o) => console.log('object removed', o),
+            'dragenter': (o) => console.log('dragenter', o),
+            'dragover': (o: any) => {
+                console.log('dragover', o);
+                o.e.dataTransfer.dropEffect = 'link';
+            },
+            'dragleave': (o) => console.log('dragleave', o),
+            'drop': (o) => {
+                o.e.preventDefault();
+                console.log(o);
+            }
         });
         this.drawSurface.selection = false;
+        const canvasElement = document.getElementById('canvasWrapper');
+        if (!canvasElement) {
+            throw Error("Unable to find canvas element.");
+        }
+        canvasElement.tabIndex = 1000;
+        canvasElement.addEventListener('keydown', (event) => {
+            console.log(event);
+            if (event.ctrlKey) {
+                switch (event.key) {
+                    case 'z':
+                        this.versionController.undo();
+                        break;
+                    case 'y':
+                        this.versionController.redo();
+                        break;
+                    default:
+                }
+            }
+            else if (event.key === 'Delete' || event.key === 'Backspace') {
+                this.drawSurface.remove(this.drawSurface.getActiveObject());
+            }
+        });
     }
     getCanvas() {
         axios.get(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`)
@@ -125,7 +146,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             scaleFactor: 1.0
         }, () => {
             this.drawSurface.setViewportTransform([1, 0, 0, 1, 0, 0]);
-            this.drawSurface.forEachObject( obj => obj.setCoords());
+            this.drawSurface.forEachObject(obj => obj.setCoords());
         });
     }
     handleZoom = (event: any) => {
@@ -186,10 +207,12 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                     </div>
                     : null
                 }
-                <canvas className="row" id="drawSurface"
-                    style={canvasStyle}
-                    height={window.innerHeight * .85}
-                    width={window.innerWidth * .95} />
+                <div id="canvasWrapper">
+                    <canvas className="row" id="drawSurface"
+                        style={canvasStyle}
+                        height={window.innerHeight * .85}
+                        width={window.innerWidth * .95} />
+                </div>
             </div>
         )
     }

@@ -14,8 +14,6 @@ type SaveModalState = {
     filename: string,
 }
 
-const JpegBackgroundColor = '#FFFFF8';
-
 export class SaveModal extends React.Component<SaveModalProps, SaveModalState> {
     public state: SaveModalState;
     constructor(props: SaveModalProps){
@@ -40,10 +38,14 @@ export class SaveModal extends React.Component<SaveModalProps, SaveModalState> {
                 imgUrl = this.props.canvas.toDataURL({ format: 'png'});
                 break;
             case '.jpeg':
-                let currentBackgroundColor = this.props.canvas.backgroundColor;
-                this.props.canvas.backgroundColor = JpegBackgroundColor;
+                let bgColor = this.props.canvas.backgroundColor;
+                if(!bgColor || bgColor instanceof fabric.Pattern){
+                    bgColor = 'rgba(255, 255, 248, 0)';
+                }
+                let currentBackgroundColor = new fabric.Color(bgColor);
+                this.props.canvas.backgroundColor = currentBackgroundColor.toRgb();
                 imgUrl = this.props.canvas.toDataURL({ format: 'jpeg'});
-                this.props.canvas.backgroundColor = currentBackgroundColor;
+                this.props.canvas.backgroundColor = currentBackgroundColor.toRgba();
                 break;
             case '.svg':
                 const svg = this.props.canvas.toSVG();

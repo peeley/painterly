@@ -129,6 +129,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                     this.versionController.deserializeHistory(response.data.objects);
                     this.versionController.mountChannelListener();
                     this.handleToolSelect(this.state.tool);
+                    this.drawSurface.backgroundColor = 'rgba(255, 255, 248, 0)';
                     this.mountFabric();
                 });
             });

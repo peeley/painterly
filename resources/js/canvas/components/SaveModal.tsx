@@ -14,6 +14,8 @@ type SaveModalState = {
     filename: string,
 }
 
+const JpegBackgroundColor = '#FFFFF8';
+
 export class SaveModal extends React.Component<SaveModalProps, SaveModalState> {
     public state: SaveModalState;
     constructor(props: SaveModalProps){
@@ -38,10 +40,15 @@ export class SaveModal extends React.Component<SaveModalProps, SaveModalState> {
                 imgUrl = this.props.canvas.toDataURL({ format: 'png'});
                 break;
             case '.jpeg':
+                let currentBackgroundColor = this.props.canvas.backgroundColor;
+                this.props.canvas.backgroundColor = JpegBackgroundColor;
                 imgUrl = this.props.canvas.toDataURL({ format: 'jpeg'});
+                this.props.canvas.backgroundColor = currentBackgroundColor;
                 break;
             case '.svg':
                 const svg = this.props.canvas.toSVG();
+                // converting svg to base64 might save space, but will mess up
+                // non UTF-16 in any text boxes
                 imgUrl = 'data:image/svg+xml,' + svg;
                 break;
         }
@@ -63,7 +70,7 @@ export class SaveModal extends React.Component<SaveModalProps, SaveModalState> {
     render(){
         return (
             <>
-                <button className="btn btn-outline-primary btn-sm" type="button" data-toggle="modal" 
+                <button className="btn btn-outline-primary btn-sm" type="button" data-toggle="modal"
                     data-target="#saveModal">
                     Save
                 </button>

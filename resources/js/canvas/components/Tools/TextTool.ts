@@ -15,9 +15,10 @@ export class TextTool extends Tool {
         const pointer = context.getPointer(event.e);
         let xCoord = pointer.x;
         let yCoord = pointer.y;
-        if (type === 'mouse:down') {
+        if (type === 'mouse:down' && !context.getActiveObject()) {
             this.stroke = new fabric.IText('text', { left: xCoord, top: yCoord });
             context.add(this.stroke);
+            context.setActiveObject(this.stroke);
         }
         if (type === 'mouse:up') {
             context.fire('push:added', { target: this.stroke });

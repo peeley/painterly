@@ -3,8 +3,7 @@ import { fabric } from 'fabric';
 
 export class PenTool extends Tool {
     constructor() {
-        super('pen');
-        this.toolName = 'pen';
+        super();
         this.displayName = 'Pen';
         this.strokeWidth = 3;
     }

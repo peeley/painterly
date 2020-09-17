@@ -1,4 +1,4 @@
-import { Tool } from './Tool';
+import { Tool, MouseEventType } from './Tool';
 import { fabric } from 'fabric';
 
 type RGBA = Uint8ClampedArray;
@@ -101,27 +101,20 @@ function floodFill(context: CanvasRenderingContext2D,
 export class FillTool extends Tool {
     //private stroke: FillStroke;
     constructor() {
-        super('fill');
-        this.toolName = 'fill';
+        super();
         this.displayName = 'Fill';
         // this.stroke = new FillStroke(this.color, new Uint8ClampedArray(4));
     }
     select = (_: fabric.Canvas) => {}
     deselect = (_: fabric.Canvas) => {}
-    handleEvent(type: string, event: any, context: fabric.Canvas) {
-        /*
-        const xCoord = Math.floor((event.clientX - event.leftOffset) / event.scaleFactor);
-        const yCoord = Math.floor((event.clientY - event.topOffset) / event.scaleFactor);
-        if (event.type === 'mousedown') {
-            const backgroundColor = context.getImageData(xCoord, yCoord, 1, 1).data;
-            this.stroke.setColor(this.color);
-            console.log(`filling ${backgroundColor} from ${xCoord},${yCoord} with ${this.stroke.getColor()}`);
-            this.stroke.pushCoords([xCoord, yCoord]);
-            this.stroke.backgroundColor = backgroundColor;
-            let finishedStroke = this.stroke;
-            this.stroke = new FillStroke(this.color, new Uint8ClampedArray(4));
-            return finishedStroke;
-        }*/
+    handleEvent(type: MouseEventType, event: any, context: fabric.Canvas) {
+        const pointer = context.getPointer(event.e);
+        const xCoord = pointer.x;
+        const yCoord = pointer.y;
+        if (type === 'mouse:down') {
+            const backgroundColor = context.backgroundColor;
+            console.log(`filling ${backgroundColor} from ${xCoord},${yCoord} with ${this.getColor()}`);
+        }
     }
 }
 

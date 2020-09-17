@@ -6,8 +6,7 @@ export class RectTool extends Tool {
     private startY: number;
     private stroke: fabric.Rect;
     constructor() {
-        super('rect');
-        this.toolName = 'rect';
+        super();
         this.displayName = 'Rectangle';
         this.startX = 0;
         this.startY = 0;

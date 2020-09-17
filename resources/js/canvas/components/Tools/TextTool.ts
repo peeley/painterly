@@ -4,8 +4,7 @@ import { fabric } from 'fabric';
 export class TextTool extends Tool {
     private stroke: fabric.IText;
     constructor() {
-        super('text');
-        this.toolName = 'text';
+        super();
         this.displayName = 'Text';
         this.stroke = new fabric.IText('');
     }

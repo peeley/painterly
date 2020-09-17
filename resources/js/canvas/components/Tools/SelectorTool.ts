@@ -3,8 +3,7 @@ import { fabric } from 'fabric';
 
 export class SelectorTool extends Tool {
     constructor() {
-        super('selector');
-        this.toolName = 'selector';
+        super();
         this.displayName = 'Selector';
     }
     select = (canvas: fabric.Canvas): void => {

@@ -72,16 +72,16 @@ export class ToolController extends React.Component<ToolControllerProps, ToolCon
     }
     render() {
         return (
-            <div className="row">
+            <>
                 <Palette
                     updateStrokeWidth={this.setStrokeWidth}
                     updateColor={this.setColor}
                 />
-                <div className="btn-group btn-group-toggle pt-2"
+                <div className="col-2 btn-group btn-group-toggle pb-2"
                     data-toggle="buttons">
                     {this.toolListJSX()}
                 </div>
-            </div>
+            </>
         );
     }
 }

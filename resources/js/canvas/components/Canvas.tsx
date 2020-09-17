@@ -180,7 +180,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 <div className="row pl-5" >
                     <ToolController
                         handleToolSelect={this.handleToolSelect} />
-                    <div className="btn-group pt-2 pl-5" >
+                    <div className="btn-group pb-2 pl-3" >
                         <button className="btn btn-outline-secondary"
                             onClick={() => {
                             this.versionController.undo()
@@ -204,7 +204,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                             onClick={() => this.zoom(0, 0, this.state.scaleFactor + 0.25)} >
                             <i className="fas fa-search-plus"></i>
                         </button>
-                        <span className="px-2"> Zoom Level: {this.state.scaleFactor} x </span>
+                        <span className="px-2 d-inline pt-2"> Zoom Level: {this.state.scaleFactor} x </span>
                         <button className="btn btn-outline-secondary"
                             disabled={this.state.scaleFactor <= 0.25}
                             onClick={() => this.zoom(0, 0, this.state.scaleFactor - 0.25)} >

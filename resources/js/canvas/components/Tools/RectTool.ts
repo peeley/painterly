@@ -8,6 +8,7 @@ export class RectTool extends Tool {
     constructor() {
         super();
         this.displayName = 'Rectangle';
+        this.displayIcon = 'fas fa-vector-square';
         this.startX = 0;
         this.startY = 0;
         this.mouseDown = false;

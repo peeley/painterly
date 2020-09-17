@@ -6,6 +6,7 @@ export class TextTool extends Tool {
     constructor() {
         super();
         this.displayName = 'Text';
+        this.displayIcon = 'fas fa-font';
         this.stroke = new fabric.IText('');
     }
     select = (_canvas: fabric.Canvas) => { }
@@ -15,7 +16,8 @@ export class TextTool extends Tool {
         let xCoord = pointer.x;
         let yCoord = pointer.y;
         if (type === 'mouse:down' && !context.getActiveObject()) {
-            this.stroke = new fabric.IText('text', { left: xCoord, top: yCoord });
+            this.stroke = new fabric.IText('text',
+                { left: xCoord, top: yCoord, fill: this.color });
             context.add(this.stroke);
             context.setActiveObject(this.stroke);
         }

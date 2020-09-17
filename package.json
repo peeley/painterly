@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/compat-data": "^7.11.0",
+    "@fortawesome/fontawesome-free": "^5.14.0",
     "@simonwep/pickr": "^1.7.2",
     "@types/bootstrap": "^4.5.0",
     "@types/fabric": "^3.6.8",

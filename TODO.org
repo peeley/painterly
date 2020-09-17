@@ -29,6 +29,9 @@
 
 ** IN-PROGRESS UI/UX overhaul *ongoing*
 *** TODO Landing page
+*** IN-PROGRESS Tool select bar
+    Could make a grid of icons - would need to find open source icons for each tool type
+
 *** theming
 *** keybinds/ergonomics
 ** IN-PROGRESS Add new tool types

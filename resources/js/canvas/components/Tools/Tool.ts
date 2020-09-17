@@ -7,11 +7,13 @@ export abstract class Tool {
     protected color: string;
     protected displayName: string;
     protected strokeWidth: number;
+    protected displayIcon: string;
     constructor() {
         this.mouseDown = false;
         this.color = "rgba(17, 17, 17, 1)";
         this.strokeWidth = 1;
         this.displayName = 'tool';
+        this.displayIcon = '';
     }
     abstract select(canvas: fabric.Canvas): void;
     abstract deselect(canvas: fabric.Canvas): void;
@@ -27,5 +29,8 @@ export abstract class Tool {
     setStrokeWidth(width: number) {
         this.strokeWidth = width;
     }
-    abstract handleEvent(_type: MouseEventType, _event: any, ___: fabric.Canvas): fabric.Object | void;
+    getIcon(){
+        return this.displayIcon;
+    }
+    abstract handleEvent(_type: MouseEventType, _event: any, _canvas: fabric.Canvas): fabric.Object | void;
 }

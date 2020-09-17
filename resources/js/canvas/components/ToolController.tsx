@@ -11,35 +11,37 @@ interface ToolControllerProps {
     handleToolSelect(tool: Tool): void,
 };
 
+type ToolName = "pen" | "rect" | "fill" | "text" | "selector" | "text";
+
 interface ToolControllerState {
-    selectedName: string,
+    selectedName: ToolName,
 };
 
 export class ToolController extends React.Component<ToolControllerProps, ToolControllerState>{
     private toolSet: object;
     private selectedTool: Tool;
     public state = {
-        selectedName: "pen"
+        selectedName: "pen" as "pen"
     };
-    constructor(props: ToolControllerProps){
+    constructor(props: ToolControllerProps) {
         super(props);
         this.toolSet = {
             'pen': new PenTool(),
             'rect': new RectTool(),
-            'fill' : new FillTool(),
-            'text' : new TextTool(),
+            'fill': new FillTool(),
+            'text': new TextTool(),
             'selector': new SelectorTool(),
         }
         this.selectedTool = this.toolSet['pen'];
         this.props.handleToolSelect(this.selectedTool);
     }
-    handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    handleChange = (event: any /*React.MouseEvent<HTMLInputElement>*/) => {
         let toolName = event.target.value;
         this.setState({
             selectedName: toolName
         }, () => this.selectNewTool(toolName));
     }
-    selectNewTool = (toolName: string) => {
+    selectNewTool = (toolName: ToolName) => {
         this.selectedTool = this.toolSet[toolName];
         this.props.handleToolSelect(this.selectedTool);
     }
@@ -47,33 +49,36 @@ export class ToolController extends React.Component<ToolControllerProps, ToolCon
         this.selectedTool.setStrokeWidth(width);
     }
     setColor = (color: string) => {
-        for(let toolName in this.toolSet){
+        for (let toolName in this.toolSet) {
             this.toolSet[toolName].setColor(color);
         }
     }
     toolListJSX(): Array<JSX.Element> {
         let toolList: Array<JSX.Element> = [];
-        for(let name in this.toolSet){
+        for (let name in this.toolSet) {
             let displayName = this.toolSet[name].displayName;
+            let icon = this.toolSet[name].getIcon();
             toolList.push(
-                <div className="pr-3" key={name}>
+                <label className="btn btn-outline-secondary" key={name}>
                     <input type="radio" value={name} id={name}
                         checked={this.state.selectedName === name}
-                        onChange={this.handleChange} />
-                    <label htmlFor={name}> {displayName} </label>
-                </div>
+                        onClick={this.handleChange}
+                        onChange={() => { }} />
+                <span><i className={icon}></i></span>
+                </label>
             );
         }
         return toolList;
     }
-    render(){
-        return(
-            <div className="row controlBar">
+    render() {
+        return (
+            <div className="row">
                 <Palette
                     updateStrokeWidth={this.setStrokeWidth}
                     updateColor={this.setColor}
                 />
-                <div className="row toolList pt-2">
+                <div className="btn-group btn-group-toggle pt-2"
+                    data-toggle="buttons">
                     {this.toolListJSX()}
                 </div>
             </div>

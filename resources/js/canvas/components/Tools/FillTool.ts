@@ -103,6 +103,7 @@ export class FillTool extends Tool {
     constructor() {
         super();
         this.displayName = 'Fill';
+        this.displayIcon = 'fas fa-fill-drip';
         // this.stroke = new FillStroke(this.color, new Uint8ClampedArray(4));
     }
     select = (_: fabric.Canvas) => {}

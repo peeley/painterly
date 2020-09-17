@@ -180,32 +180,38 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 <div className="row pl-5" >
                     <ToolController
                         handleToolSelect={this.handleToolSelect} />
-                    <div className="versionButtons pt-2 pl-5" >
-                        <button onClick={() => {
+                    <div className="btn-group pt-2 pl-5" >
+                        <button className="btn btn-outline-secondary"
+                            onClick={() => {
                             this.versionController.undo()
                         }}>
-                            Undo
+                            <i className="fas fa-undo"></i>
                         </button>
-                        <button onClick={() => {
+                        <button className="btn btn-outline-secondary"
+                            onClick={() => {
                             this.versionController.redo()
                         }}>
-                            Redo
+                            <i className="fas fa-redo"></i>
                         </button>
-                        <button onClick={() => {
+                        <button className="btn btn-outline-secondary"
+                            onClick={() => {
                             this.clearCanvas();
                             this.versionController.wipeHistory();
                         }}>
                             Clear
                         </button>
-                        <button onClick={() => this.zoom(0, 0, this.state.scaleFactor + 0.25)} >
-                            Zoom In
+                        <button className="btn btn-outline-secondary"
+                            onClick={() => this.zoom(0, 0, this.state.scaleFactor + 0.25)} >
+                            <i className="fas fa-search-plus"></i>
                         </button>
-                        <span> Zoom Level: {this.state.scaleFactor} x </span>
-                        <button disabled={this.state.scaleFactor <= 0.25}
+                        <span className="px-2"> Zoom Level: {this.state.scaleFactor} x </span>
+                        <button className="btn btn-outline-secondary"
+                            disabled={this.state.scaleFactor <= 0.25}
                             onClick={() => this.zoom(0, 0, this.state.scaleFactor - 0.25)} >
-                            Zoom Out
+                            <i className="fas fa-search-minus"></i>
                         </button>
-                        <button onClick={this.resetZoom} >
+                        <button className="btn btn-outline-secondary"
+                            onClick={this.resetZoom} >
                             Reset Zoom
                         </button>
                     </div>

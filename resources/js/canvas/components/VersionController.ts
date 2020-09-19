@@ -26,10 +26,12 @@ export class VersionController {
     private versionHistory: Array<fabric.Object> = [];
     private drawSurface: fabric.Canvas;
     private currentVersion: number = 0;
+    private syncingCallback: (_: boolean) => void;
 
-    constructor(id: number, drawSurface: fabric.Canvas) {
+    constructor(id: number, drawSurface: fabric.Canvas, syncingCallback: (_: boolean) => void) {
         this.paintingId = id;
         this.drawSurface = drawSurface;
+        this.syncingCallback = syncingCallback;
     }
     mountChannelListener = () => {
         let echo = new Echo({
@@ -180,6 +182,7 @@ export class VersionController {
     }
     // TODO define outgoing event type
     sendEvent = (event: OutgoingEvent, callback: Function) => {
+        this.syncingCallback(true);
         axios.put(`${process.env.MIX_APP_URL}/api/p/${this.paintingId}`,
             { action: event.action, objects: JSON.stringify(event.objects) },
             { headers: { 'Content-Type': 'application/json' } })
@@ -193,6 +196,7 @@ export class VersionController {
                 else if (response.status === 403) { // not authorized
                     alert('You do not have permissions to edit this item.');
                 }
+                this.syncingCallback(false);
             });
     }
     // TODO create type for serialized objects

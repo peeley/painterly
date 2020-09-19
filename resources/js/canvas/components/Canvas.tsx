@@ -18,6 +18,7 @@ interface CanvasState {
     title: string,
     loading: boolean,
     scaleFactor: number,
+    syncing: boolean,
 };
 
 const CanvasId = 'drawSurface'
@@ -33,13 +34,14 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         title: '',
         loading: true,
         scaleFactor: 1.0,
+        syncing: false,
     };
     constructor(props: CanvasProps) {
         super(props);
         this.drawSurface = new fabric.Canvas(CanvasId, {
             fireMiddleClick: true,
         });
-        this.versionController = new VersionController(this.props.paintingId, this.drawSurface);
+        this.versionController = new VersionController(this.props.paintingId, this.drawSurface, this.setSyncing);
         this.panHandler = new PanHandler();
     }
     componentDidMount() {
@@ -113,7 +115,13 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             }
         });
     }
+    setSyncing = (isSyncing: boolean) => {
+        this.setState({
+            syncing: isSyncing
+        });
+    }
     getCanvas() {
+        this.setState({ syncing: true });
         axios.get(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`)
             .then(response => {
                 this.setState({
@@ -137,6 +145,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                         this.drawSurface.renderAll();
                         console.log(this.drawSurface.backgroundColor);
                     });
+                    this.setState({ syncing: false});
                 });
             });
     }
@@ -176,8 +185,9 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 <MenuBar
                     title={this.state.title}
                     surface={this.drawSurface}
-                    paintingId={this.props.paintingId} />
-                <div className="row pl-5" >
+                    paintingId={this.props.paintingId}
+                    syncing={this.state.syncing} />
+                <div className="row px-5 d-flex justify-content-around" >
                     <ToolController
                         handleToolSelect={this.handleToolSelect} />
                     <div className="btn-group pb-2 pl-3" >
@@ -204,7 +214,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                             onClick={() => this.zoom(0, 0, this.state.scaleFactor + 0.25)} >
                             <i className="fas fa-search-plus" title="Zoom In"></i>
                         </button>
-                        <span className="px-2 d-inline pt-2"> Zoom Level: {this.state.scaleFactor} x </span>
+                        <span className="px-2 pt-2"> Zoom Level: {this.state.scaleFactor} x </span>
                         <button className="btn btn-outline-secondary"
                             disabled={this.state.scaleFactor <= 0.25}
                             onClick={() => this.zoom(0, 0, this.state.scaleFactor - 0.25)} >

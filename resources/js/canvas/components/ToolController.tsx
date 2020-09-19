@@ -64,7 +64,7 @@ export class ToolController extends React.Component<ToolControllerProps, ToolCon
                         checked={this.state.selectedName === name}
                         onClick={this.handleChange}
                         onChange={() => { }} />
-                <i className={icon}></i>
+                <i className={icon} title={displayName}></i>
                 </label>
             );
         }

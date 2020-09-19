@@ -185,13 +185,13 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                             onClick={() => {
                             this.versionController.undo()
                         }}>
-                            <i className="fas fa-undo"></i>
+                            <i className="fas fa-undo" title="Undo"></i>
                         </button>
                         <button className="btn btn-outline-secondary"
                             onClick={() => {
                             this.versionController.redo()
                         }}>
-                            <i className="fas fa-redo"></i>
+                            <i className="fas fa-redo" title="Redo"></i>
                         </button>
                         <button className="btn btn-outline-secondary"
                             onClick={() => {
@@ -202,13 +202,13 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                         </button>
                         <button className="btn btn-outline-secondary"
                             onClick={() => this.zoom(0, 0, this.state.scaleFactor + 0.25)} >
-                            <i className="fas fa-search-plus"></i>
+                            <i className="fas fa-search-plus" title="Zoom In"></i>
                         </button>
                         <span className="px-2 d-inline pt-2"> Zoom Level: {this.state.scaleFactor} x </span>
                         <button className="btn btn-outline-secondary"
                             disabled={this.state.scaleFactor <= 0.25}
                             onClick={() => this.zoom(0, 0, this.state.scaleFactor - 0.25)} >
-                            <i className="fas fa-search-minus"></i>
+                            <i className="fas fa-search-minus" title="Zoom Out"></i>
                         </button>
                         <button className="btn btn-outline-secondary"
                             onClick={this.resetZoom} >

@@ -8,6 +8,7 @@ type MenuBarProps = {
     title: string,
     paintingId: number,
     surface: fabric.Canvas,
+    syncing: boolean,
 };
 
 type MenuBarState = {
@@ -89,6 +90,9 @@ export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
                             </h3> )
                         }
                     </div>
+                    <p id="syncing-indicator" className="pl-5">
+                        {this.props.syncing ? 'Syncing...' : 'Saved.'}
+                    </p>
                 </div>
                 <div className="row">
                     <SaveModal canvas={this.props.surface}

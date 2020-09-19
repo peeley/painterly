@@ -64,7 +64,7 @@ export class ToolController extends React.Component<ToolControllerProps, ToolCon
                         checked={this.state.selectedName === name}
                         onClick={this.handleChange}
                         onChange={() => { }} />
-                <i className={icon} title={displayName}></i>
+                    <i className={icon} title={displayName}></i>
                 </label>
             );
         }
@@ -73,14 +73,14 @@ export class ToolController extends React.Component<ToolControllerProps, ToolCon
     render() {
         return (
             <>
-                <Palette
-                    updateStrokeWidth={this.setStrokeWidth}
-                    updateColor={this.setColor}
-                />
                 <div className="col-2 btn-group btn-group-toggle pb-2"
                     data-toggle="buttons">
                     {this.toolListJSX()}
                 </div>
+                <Palette
+                    updateStrokeWidth={this.setStrokeWidth}
+                    updateColor={this.setColor}
+                />
             </>
         );
     }

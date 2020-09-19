@@ -27,9 +27,11 @@
    In painting, page expiration gives no indicator so when user draws/updates title, there
    is no change or indication.
 
+** TODO make different mouse cursors for different tools and states
 ** IN-PROGRESS UI/UX overhaul *ongoing*
 *** TODO Landing page
-*** IN-PROGRESS Tool select bar
+*** DONE Tool select bar
+    CLOSED: [2020-09-19 Sat 01:10]
     Could make a grid of icons - would need to find open source icons for each tool type
 
 *** theming

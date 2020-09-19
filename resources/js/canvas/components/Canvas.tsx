@@ -1,7 +1,6 @@
 import * as React from 'react';
 import axios from 'axios';
 import { fabric } from 'fabric';
-import './Canvas.css';
 import { ToolController } from './ToolController';
 import { Tool, MouseEventType } from './Tools/Tool';
 import { PenTool } from './Tools/PenTool';
@@ -145,7 +144,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                         this.drawSurface.renderAll();
                         console.log(this.drawSurface.backgroundColor);
                     });
-                    this.setState({ syncing: false});
+                    this.setState({ syncing: false });
                 });
             });
     }
@@ -193,21 +192,21 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                     <div className="btn-group pb-2 pl-3" >
                         <button className="btn btn-outline-secondary"
                             onClick={() => {
-                            this.versionController.undo()
-                        }}>
+                                this.versionController.undo()
+                            }}>
                             <i className="fas fa-undo" title="Undo"></i>
                         </button>
                         <button className="btn btn-outline-secondary"
                             onClick={() => {
-                            this.versionController.redo()
-                        }}>
+                                this.versionController.redo()
+                            }}>
                             <i className="fas fa-redo" title="Redo"></i>
                         </button>
                         <button className="btn btn-outline-secondary"
                             onClick={() => {
-                            this.clearCanvas();
-                            this.versionController.wipeHistory();
-                        }}>
+                                this.clearCanvas();
+                                this.versionController.wipeHistory();
+                            }}>
                             Clear
                         </button>
                         <button className="btn btn-outline-secondary"

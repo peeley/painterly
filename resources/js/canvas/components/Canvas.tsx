@@ -175,6 +175,14 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             this.zoom(wheelEvent.offsetX, wheelEvent.offsetY, this.state.scaleFactor - 0.25);
         }
     }
+    formatScaleFactor(){
+        const scale = this.state.scaleFactor;
+        return scale.toLocaleString('US-us', {
+            style: "decimal",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
     render(): JSX.Element {
         let canvasStyle = {
             visibility: this.state.loading ? "hidden" as "hidden" : "visible" as "visible"
@@ -213,7 +221,8 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                             onClick={() => this.zoom(0, 0, this.state.scaleFactor + 0.25)} >
                             <i className="fas fa-search-plus" title="Zoom In"></i>
                         </button>
-                        <span className="px-2 pt-2"> Zoom Level: {this.state.scaleFactor} x </span>
+                        <span className="px-2 pt-2 zoomIndicator">
+                            Zoom: {this.formatScaleFactor()}x </span>
                         <button className="btn btn-outline-secondary"
                             disabled={this.state.scaleFactor <= 0.25}
                             onClick={() => this.zoom(0, 0, this.state.scaleFactor - 0.25)} >

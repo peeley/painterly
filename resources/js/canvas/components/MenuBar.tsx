@@ -13,21 +13,23 @@ type MenuBarProps = {
 
 type MenuBarState = {
     title: string,
+    titleSyncing: boolean,
     savedTitle: string,
     titleSelected: boolean,
 };
 
 export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
-    constructor(props: MenuBarProps){
+    constructor(props: MenuBarProps) {
         super(props);
         this.state = {
             title: props.title,
+            titleSyncing: false,
             savedTitle: props.title,
             titleSelected: false,
         }
     }
-    componentDidUpdate(prevProps: MenuBarProps){
-        if(prevProps.title !== this.props.title){
+    componentDidUpdate(prevProps: MenuBarProps) {
+        if (prevProps.title !== this.props.title) {
             this.setState({
                 savedTitle: this.props.title,
                 title: this.props.title
@@ -41,66 +43,70 @@ export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
     }
     postTitle = (event: React.FormEvent<HTMLFormElement>) => {
         this.setState({
-            titleSelected: false
+            titleSelected: false,
+            titleSyncing: true,
         });
         axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`,
             { title: this.state.title },
-            { headers: { 'Content-Type' : 'application/json'}})
-        .then( () => {
-            this.setState({
-                savedTitle: this.state.title
-            });
-        })
-        .catch( error => {
-            if(error.response.status === 422){ // invalid title
-                alert(error.response.data.message);
+            { headers: { 'Content-Type': 'application/json' } })
+            .then(() => {
                 this.setState({
-                    title: this.state.savedTitle
-                })
-            }
-            else if(error.response.status === 401){ // not logged in
-                window.location.replace(`${process.env.MIX_APP_URL}/login`);
-            }
-            else if(error.response.status === 403){ // do not have edit permissions
-                alert("You do not have permissions to edit this painting's title. ");
-            }
-        });
+                    savedTitle: this.state.title,
+                    titleSyncing: false,
+                });
+            })
+            .catch(error => {
+                if (error.response.status === 422) { // invalid title
+                    alert(error.response.data.message);
+                    this.setState({
+                        title: this.state.savedTitle
+                    })
+                }
+                else if (error.response.status === 401) { // not logged in
+                    window.location.replace(`${process.env.MIX_APP_URL}/login`);
+                }
+                else if (error.response.status === 403) { // do not have edit permissions
+                    alert("You do not have permissions to edit this painting's title. ");
+                }
+            });
         event.preventDefault();
     }
-    render(){
-        // TODO loading indicator while changed title is POSTing to backend
+    render() {
+        let titleStyle = { color: this.state.titleSyncing ? 'gray' : 'black'};
         return (
-            <>
-                <div className="row pt-3">
-                    <div className="pr-3">
-                    <a href={`${process.env.MIX_APP_URL}/home`}
-                        className="btn btn-outline-primary">Home</a>
-                    </div>
-                    <div>
-                        { this.state.titleSelected ?
-                            ( <form onSubmit={this.postTitle}>
+            <div className="row pt-3 pb-1">
+                <div className="col-auto pt-2">
+                    <a href={`${process.env.MIX_APP_URL}/home`}>
+                        <i className="fas fa-arrow-left fa-3x"></i>
+                    </a>
+                </div>
+                <div className="col-9">
+                    <div className="row">
+                        {this.state.titleSelected
+                            ? (<form onSubmit={this.postTitle}>
                                 <input type="text"
                                     value={this.state.title}
                                     onChange={this.handleTitleChange}
                                     placeholder="Edit Title" />
                                 <button type="submit">Save Title </button>
-                            </form> ) :
-                            ( <h3 onDoubleClick={() => this.setState({ titleSelected: true })}>
-                                { this.state.savedTitle }
-                            </h3> )
+                            </form>)
+                            : (<h1 style={titleStyle}
+                                onDoubleClick={() => this.setState({ titleSelected: true })}>
+                                {this.state.title}
+                            </h1>)
                         }
+                        <p id="syncing-indicator" className="pl-5">
+                            {this.props.syncing ? 'Syncing...' : 'Saved.'}
+                        </p>
                     </div>
-                    <p id="syncing-indicator" className="pl-5">
-                        {this.props.syncing ? 'Syncing...' : 'Saved.'}
-                    </p>
+                    <div className="row">
+                        <SaveModal canvas={this.props.surface}
+                            title={this.state.title}
+                        />
+                        <ShareModal />
+                    </div>
                 </div>
-                <div className="row">
-                    <SaveModal canvas={this.props.surface}
-                        title={this.state.title}
-                    />
-                    <ShareModal />
-                </div>
-            </>
+            </div>
         );
     }
 }

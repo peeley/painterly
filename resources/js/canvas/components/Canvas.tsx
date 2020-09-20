@@ -186,7 +186,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                     surface={this.drawSurface}
                     paintingId={this.props.paintingId}
                     syncing={this.state.syncing} />
-                <div className="row px-5 d-flex justify-content-around" >
+                <div className="row d-flex justify-content-around">
                     <ToolController
                         handleToolSelect={this.handleToolSelect} />
                     <div className="btn-group pb-2 pl-3" >

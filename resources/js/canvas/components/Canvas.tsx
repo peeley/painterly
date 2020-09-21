@@ -17,7 +17,7 @@ interface CanvasState {
     title: string,
     loading: boolean,
     scaleFactor: number,
-    syncing: boolean,
+    isSyncing: boolean,
 };
 
 const CanvasId = 'drawSurface'
@@ -33,7 +33,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         title: '',
         loading: true,
         scaleFactor: 1.0,
-        syncing: false,
+        isSyncing: false,
     };
     constructor(props: CanvasProps) {
         super(props);
@@ -116,11 +116,11 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     }
     setSyncing = (isSyncing: boolean) => {
         this.setState({
-            syncing: isSyncing
+            isSyncing: isSyncing
         });
     }
     getCanvas() {
-        this.setState({ syncing: true });
+        this.setState({ isSyncing: true });
         axios.get(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`)
             .then(response => {
                 this.setState({
@@ -144,7 +144,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                         this.drawSurface.renderAll();
                         console.log(this.drawSurface.backgroundColor);
                     });
-                    this.setState({ syncing: false });
+                    this.setState({ isSyncing: false });
                 });
             });
     }
@@ -193,7 +193,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                     title={this.state.title}
                     surface={this.drawSurface}
                     paintingId={this.props.paintingId}
-                    syncing={this.state.syncing} />
+                    isCanvasSyncing={this.state.isSyncing} />
                 <div className="row d-flex justify-content-around">
                     <ToolController
                         handleToolSelect={this.handleToolSelect} />

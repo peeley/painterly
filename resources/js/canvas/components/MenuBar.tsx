@@ -8,12 +8,12 @@ type MenuBarProps = {
     title: string,
     paintingId: number,
     surface: fabric.Canvas,
-    syncing: boolean,
+    isCanvasSyncing: boolean,
 };
 
 type MenuBarState = {
     title: string,
-    titleSyncing: boolean,
+    isTitleSyncing: boolean,
     savedTitle: string,
     titleSelected: boolean,
 };
@@ -23,7 +23,7 @@ export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
         super(props);
         this.state = {
             title: props.title,
-            titleSyncing: false,
+            isTitleSyncing: false,
             savedTitle: props.title,
             titleSelected: false,
         }
@@ -44,7 +44,7 @@ export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
     postTitle = (event: React.FormEvent<HTMLFormElement>) => {
         this.setState({
             titleSelected: false,
-            titleSyncing: true,
+            isTitleSyncing: true,
         });
         axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`,
             { title: this.state.title },
@@ -52,8 +52,9 @@ export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
             .then(() => {
                 this.setState({
                     savedTitle: this.state.title,
-                    titleSyncing: false,
+                    isTitleSyncing: false,
                 });
+                document.title = this.state.title;
             })
             .catch(error => {
                 if (error.response.status === 422) { // invalid title
@@ -72,7 +73,7 @@ export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
         event.preventDefault();
     }
     render() {
-        let titleStyle = { color: this.state.titleSyncing ? 'gray' : 'black'};
+        let titleStyle = { color: this.state.isTitleSyncing ? 'gray' : 'black'};
         return (
             <div className="row pt-3 pb-1">
                 <div className="col-auto pt-2">
@@ -83,20 +84,20 @@ export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
                 <div className="col-9">
                     <div className="row">
                         {this.state.titleSelected
-                            ? (<form onSubmit={this.postTitle}>
+                            ? (<form onSubmit={this.postTitle}
+                                    onBlur={this.postTitle}>
                                 <input type="text"
                                     value={this.state.title}
                                     onChange={this.handleTitleChange}
                                     placeholder="Edit Title" />
-                                <button type="submit">Save Title </button>
                             </form>)
                             : (<h1 style={titleStyle}
-                                onDoubleClick={() => this.setState({ titleSelected: true })}>
+                                onClick={() => this.setState({ titleSelected: true })}>
                                 {this.state.title}
                             </h1>)
                         }
                         <p id="syncing-indicator" className="pl-5">
-                            {this.props.syncing ? 'Syncing...' : 'Saved.'}
+                            {this.props.isCanvasSyncing ? 'Syncing...' : 'Saved.'}
                         </p>
                     </div>
                     <div className="row">

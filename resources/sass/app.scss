@@ -13,3 +13,8 @@ $fa-font-path: "../webfonts";
 @import "~@fortawesome/fontawesome-free/scss/solid.scss";
 
 @import "canvas.scss";
+
+@font-face {
+    font-family: "Akzidenz-Grotesk";
+    src: url("Akzidenz-grotesk-roman.ttf") format('truetype');
+}

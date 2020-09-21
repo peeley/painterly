@@ -16,8 +16,12 @@ export class TextTool extends Tool {
         let xCoord = pointer.x;
         let yCoord = pointer.y;
         if (type === 'mouse:down' && !context.getActiveObject()) {
-            this.stroke = new fabric.IText('text',
-                { left: xCoord, top: yCoord, fill: this.color });
+            this.stroke = new fabric.IText('text', {
+                left: xCoord,
+                top: yCoord,
+                fill: this.color,
+                fontFamily: "Akzidenz-Grotesk",
+            });
             context.add(this.stroke);
             context.setActiveObject(this.stroke);
         }

@@ -1,13 +1,17 @@
+@use '_variables';
+
 body {
-    font-family: "Akzidenz-Grotesk";
+    font-family: $font-family-sans-serif;
+    background-color: $body-bg;
 }
 
 #drawSurface {
     outline: 1px solid black;
+    background-color: white;
 }
 
 #syncing-indicator {
-    color: gray;
+    color: $color-primary-4;
 }
 
 h1 {
@@ -15,9 +19,14 @@ h1 {
 }
 
 .fa-arrow-left {
-    color: gray;
+    color: $color-primary-4;
 }
 
 .fas {
     vertical-align: sub;
+}
+
+.btn-tool {
+    color: $color-primary-1;
+    outline-color: $color-primary-1;
 }

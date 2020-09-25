@@ -14,6 +14,8 @@ type SaveModalState = {
     filename: string,
 }
 
+const DefaultBackgroundColor = 'white';
+
 export class SaveModal extends React.Component<SaveModalProps, SaveModalState> {
     public state: SaveModalState;
     constructor(props: SaveModalProps){
@@ -40,7 +42,7 @@ export class SaveModal extends React.Component<SaveModalProps, SaveModalState> {
             case '.jpeg':
                 let bgColor = this.props.canvas.backgroundColor;
                 if(!bgColor || bgColor instanceof fabric.Pattern){
-                    bgColor = 'rgba(255, 255, 248, 0)';
+                    bgColor = DefaultBackgroundColor;
                 }
                 let currentBackgroundColor = new fabric.Color(bgColor);
                 this.props.canvas.backgroundColor = currentBackgroundColor.toRgb();

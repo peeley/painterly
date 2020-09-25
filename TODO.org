@@ -28,6 +28,9 @@
    is no change or indication.
 
 ** TODO make different mouse cursors for different tools and states
+
+** TODO add event listener for other users joining, see who else is drawing/watching
+
 ** IN-PROGRESS UI/UX overhaul *ongoing*
 *** TODO Landing page
 *** DONE Tool select bar

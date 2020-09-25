@@ -22,8 +22,6 @@ interface CanvasState {
 
 const CanvasId = 'drawSurface'
 
-const DefaultBackgroundColor = 'rgba(255, 255, 248, 1)';
-
 class Canvas extends React.Component<CanvasProps, CanvasState> {
     private versionController: VersionController;
     private panHandler: PanHandler;
@@ -140,10 +138,6 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                     this.versionController.mountChannelListener();
                     this.handleToolSelect(this.state.tool);
                     this.mountFabric();
-                    this.drawSurface.setBackgroundColor(DefaultBackgroundColor, () => {
-                        this.drawSurface.renderAll();
-                        console.log(this.drawSurface.backgroundColor);
-                    });
                     this.setState({ isSyncing: false });
                 });
             });

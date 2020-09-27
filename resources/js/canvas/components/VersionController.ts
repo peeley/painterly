@@ -125,6 +125,14 @@ export class VersionController {
             // TODO undo on bad response?
         });
         this.pushItemToHistory(item);
+        this.pushPreview();
+    }
+    pushPreview = () => {
+        const preview = this.drawSurface.toDataURL();
+        axios.put(`${process.env.MIX_APP_URL}/api/p/${this.paintingId}/preview`,
+                  { data: preview }).then( response => {
+                console.log(response);
+            });
     }
     modify = (event: any) => {
         let item = event.target;
@@ -148,6 +156,7 @@ export class VersionController {
         }, () => {
             // TODO do something on modify?
         });
+        this.pushPreview();
     }
     remove = (event: any) => {
         const removed = event.target;

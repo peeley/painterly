@@ -1,10 +1,6 @@
 #+TODO: TODO IN-PROGRESS IDEA | DONE CANCELLED
 
 * Front End
-** TODO Add painting preview in home screen
-   FabricJS allows for [[http://fabricjs.com/fabric-intro-part-3#serialization][serialization to SVG]], perhaps periodically serialize and store SVG in DB, then fetch on
-   mouseover?
-
 ** TODO Fix centering of toggles in PrivacyEditor
    CLOSED: [2020-09-07 Mon 16:06]
    This is really long overdue. Feels like giving up on large part of project, but tbh it's nice to find
@@ -30,6 +26,11 @@
 ** TODO make different mouse cursors for different tools and states
 
 ** TODO add event listener for other users joining, see who else is drawing/watching
+
+** IN-PROGRESS Add painting preview in home screen
+   FabricJS allows for [[http://fabricjs.com/fabric-intro-part-3#serialization][serialization to SVG]], perhaps periodically serialize and store SVG in DB, then fetch on
+   mouseover?
+   Also convert home screen to grid of paintings for ease of navigation
 
 ** IN-PROGRESS UI/UX overhaul *ongoing*
 *** TODO Landing page

@@ -21,7 +21,7 @@ class Painting extends Model
         'title' => 'Blank painting',
         'objects' => '[]',
         'view_public' => false,
-        'edit_public' => false
+        'edit_public' => false,
     ];
 
     public function user(){

@@ -22,6 +22,7 @@ class CreatePaintingsTable extends Migration
             $table->json('objects')->default(new Expression('(json_array())'));
             $table->boolean('view_public')->default(false);
             $table->boolean('edit_public')->default(false);
+            $table->string('preview')->default("");
         });
     }
 

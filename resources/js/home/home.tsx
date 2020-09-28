@@ -61,6 +61,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                                 edit_public={painting.edit_public}
                                 view_public={painting.view_public}
                                 key={painting.id}
+                                preview={painting.preview}
                                 deletePaintingCallback={this.deletePainting} />
                         );
                     })}

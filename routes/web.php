@@ -26,7 +26,7 @@ Route::get('/painting/{painting}', 'PaintingController@show')->middleware('auth'
 Route::post('/api/p', 'PaintingController@createPainting')->middleware('auth');
 Route::get('/api/p/{painting}', 'PaintingController@getPainting');
 Route::put('/api/p/{painting}', 'PaintingController@putPainting')->middleware('auth');
-Route::put('/api/p/{painting}/preview', 'PaintingController@postPreview')->middleware('auth');
+Route::post('/api/p/{painting}/preview', 'PaintingController@postPreview')->middleware('auth');
 Route::delete('/api/p/{painting}', 'PaintingController@deletePainting')->middleware('auth');
 
 Route::get('/api/p/{painting}/perms', 'PermissionController@getPermissions')->middleware('auth');

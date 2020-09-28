@@ -91,9 +91,9 @@ class UserPermissionList extends React.Component<PermissionListProps, Permission
     render(){
         return (
             <div className="container">
-                <h5 className="pl-3 pt-5">User Permissions</h5>
+                <h5 className="pl-3 pt-5">Allowed Users</h5>
                 <div className="justify-content-center input-group mb-3">
-                    <input type="text" value={this.state.searchText}
+                    <input type="text" placeholder="Add user by email..." value={this.state.searchText}
                         onChange={this.handleSearchChange} className="form-control"/>
                     <div className="input-group-append">
                         <select value={this.state.value} className="custom-select" onChange={this.handlePermSelect}>
@@ -110,7 +110,7 @@ class UserPermissionList extends React.Component<PermissionListProps, Permission
                     <thead>
                         <tr>
                             <th scope="col">User</th>
-                            <th scope="col">Access</th>
+                            <th scope="col">Permissions</th>
                             <th scope="col">Remove</th>
                         </tr>
                     </thead>

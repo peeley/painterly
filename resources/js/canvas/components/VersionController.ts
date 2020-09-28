@@ -122,16 +122,16 @@ export class VersionController {
             objects: item.toObject(['uuid']),
             action: 'add'
         }, () => {
-            // TODO undo on bad response?
+            this.pushPreview();
         });
         this.pushItemToHistory(item);
-        this.pushPreview();
     }
     pushPreview = () => {
-        const preview = this.drawSurface.toDataURL();
-        axios.put(`${process.env.MIX_APP_URL}/api/p/${this.paintingId}/preview`,
-                  { data: preview }).then( response => {
-                console.log(response);
+        let preview = this.drawSurface.toDataURL({ format: 'png' });
+        console.log('sending data url ', preview);
+        axios.post(`${process.env.MIX_APP_URL}/api/p/${this.paintingId}/preview`,
+            { data: preview }).catch(error => {
+                console.log(error) // TODO handle error
             });
     }
     modify = (event: any) => {
@@ -154,9 +154,8 @@ export class VersionController {
             objects: item.toObject(['uuid']),
             action: 'modify',
         }, () => {
-            // TODO do something on modify?
+            this.pushPreview();
         });
-        this.pushPreview();
     }
     remove = (event: any) => {
         const removed = event.target;

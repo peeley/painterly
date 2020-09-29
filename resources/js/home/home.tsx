@@ -53,7 +53,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                         Create New Painting
                     </button>
                 </div>
-                <ul className="list-group list-group-flush">
+                <div className="row pb-5 pl-4">
                     {this.state.paintings.map((painting: PaintingProps) => {
                         return (
                             <Painting title={painting.title}
@@ -65,7 +65,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                                 deletePaintingCallback={this.deletePainting} />
                         );
                     })}
-                </ul>
+                </div>
             </>
         );
     }

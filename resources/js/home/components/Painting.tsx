@@ -29,9 +29,9 @@ export class Painting extends React.Component<PaintingProps, PaintingState> {
     }
     render() {
         return (
-            <li className="list-group-item col-3">
-                <img className="row painting-preview" height="180"
-                    width="288" src={this.props.preview} />
+            <div className="col-4">
+                <img className="row painting-preview" height="100%"
+                    width="100%" src={this.props.preview} />
                 <div className="row">
                     <a
                         href={`${process.env.MIX_APP_URL}/painting/${this.props.id}`}>
@@ -44,7 +44,7 @@ export class Painting extends React.Component<PaintingProps, PaintingState> {
                         titleChangeCallback={this.setTitle}
                         deletePaintingCallback={this.props.deletePaintingCallback} />
                 </div>
-            </li>
+            </div>
         );
     }
 }

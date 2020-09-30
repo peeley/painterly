@@ -35,9 +35,8 @@ class Home extends React.Component<HomeProps, HomeState> {
     createPainting = () => {
         axios.post(`${process.env.MIX_APP_URL}/api/p`)
             .then(response => {
-                this.setState({
-                    paintings: this.state.paintings.concat([response.data])
-                });
+                const paintingId = response.data.id;
+                window.location.replace(`${process.env.MIX_APP_URL}/painting/${paintingId}`);
             })
             .catch(error => {
                 console.log(error);

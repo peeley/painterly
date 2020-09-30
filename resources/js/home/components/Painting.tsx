@@ -29,7 +29,7 @@ export class Painting extends React.Component<PaintingProps, PaintingState> {
     }
     render() {
         return (
-            <div className="col-4">
+            <div className="col-3 py-4">
                 <img className="row painting-preview" height="100%"
                     width="100%" src={this.props.preview} />
                 <div className="row">

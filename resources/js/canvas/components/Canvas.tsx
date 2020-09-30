@@ -135,6 +135,10 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                     // need to set draw surface again after loading finishes
                     this.versionController.setDrawSurface(this.drawSurface);
                     this.versionController.deserializeHistory(response.data.objects);
+                    if(response.data.objects.length === 0){
+                        this.versionController.pushPreview(); // make preview blank
+                    }
+                    this.versionController.pushPreview();
                     this.versionController.mountChannelListener();
                     this.handleToolSelect(this.state.tool);
                     this.mountFabric();

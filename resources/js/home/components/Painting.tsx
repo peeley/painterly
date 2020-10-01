@@ -29,12 +29,13 @@ export class Painting extends React.Component<PaintingProps, PaintingState> {
     }
     render() {
         return (
-            <div className="col-3 py-4">
-                <img className="row painting-preview" height="100%"
-                    width="100%" src={this.props.preview} />
+            <div className="mx-2 col-3 pt-4">
+                <div className="row justify-content-center">
+                    <img className="row painting-preview" height="100%"
+                        width="100%" src={this.props.preview} />
+                </div>
                 <div className="row">
-                    <a
-                        href={`${process.env.MIX_APP_URL}/painting/${this.props.id}`}>
+                    <a href={`${process.env.MIX_APP_URL}/painting/${this.props.id}`}>
                         {this.state.title}
                     </a>
                     <PaintingOptions paintingId={this.props.id}

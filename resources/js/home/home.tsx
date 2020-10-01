@@ -47,23 +47,21 @@ class Home extends React.Component<HomeProps, HomeState> {
         return (
             <>
                 <div className="row py-3" >
-                    <h3 className="col-6">My Paintings</h3>
+                    <h3 className="col-2">My Paintings</h3>
                     <button className="btn btn-sm btn-success" onClick={this.createPainting}>
                         Create New Painting
                     </button>
                 </div>
-                <div className="row pb-5 pl-4">
-                    {this.state.paintings.map((painting: PaintingProps) => {
-                        return (
-                            <Painting title={painting.title}
-                                id={painting.id}
-                                edit_public={painting.edit_public}
-                                view_public={painting.view_public}
-                                key={painting.id}
-                                preview={painting.preview}
-                                deletePaintingCallback={this.deletePainting} />
-                        );
-                    })}
+                <div className="row pb-5 pl-3 justify-content-start">
+                    {this.state.paintings.map((painting: PaintingProps) =>
+                        <Painting title={painting.title}
+                            id={painting.id}
+                            edit_public={painting.edit_public}
+                            view_public={painting.view_public}
+                            key={painting.id}
+                            preview={painting.preview}
+                            deletePaintingCallback={this.deletePainting} />
+                    )}
                 </div>
             </>
         );

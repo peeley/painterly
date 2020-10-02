@@ -35,3 +35,4 @@ Route::put('/api/p/{painting}/perms', 'PermissionController@editPublicPermission
 Route::delete('/api/p/{painting}/perms/{user}', 'PermissionController@removeUser')->middleware('auth');
 
 Route::get('/api/u/{user}/paintings', 'UserController@getPaintings')->middleware('auth');
+Route::get('/api/u/{user}/shared', 'UserController@getShared')->middleware('auth');

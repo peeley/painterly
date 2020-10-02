@@ -8,7 +8,8 @@ type HomeProps = {
 }
 
 type HomeState = {
-    paintings: Array<any> // TODO define type for painting JSON
+    paintings: Array<any>, // TODO define type for painting JSON
+    shared: Array<any>,
 }
 
 class Home extends React.Component<HomeProps, HomeState> {
@@ -16,7 +17,8 @@ class Home extends React.Component<HomeProps, HomeState> {
     constructor(props: HomeProps) {
         super(props);
         this.state = {
-            paintings: []
+            paintings: [],
+            shared: [],
         }
     }
     componentDidMount() {
@@ -25,7 +27,13 @@ class Home extends React.Component<HomeProps, HomeState> {
                 this.setState({
                     paintings: response.data
                 });
-            })
+            });
+        axios.get(`${process.env.MIX_APP_URL}/api/u/${this.props.userId}/shared`)
+             .then(response => {
+                 this.setState({
+                     shared: response.data
+                 });
+             });
     }
     deletePainting = (paintingId: number) => {
         this.setState({
@@ -70,4 +78,4 @@ class Home extends React.Component<HomeProps, HomeState> {
 
 const idTag = $('#root').attr('userId');
 const userId: number = idTag ? +idTag : -1;
-ReactDOM.render(React.createElement(Home, {'userId': userId}), document.getElementById('root'));
+ReactDOM.render(React.createElement(Home, { 'userId': userId }), document.getElementById('root'));

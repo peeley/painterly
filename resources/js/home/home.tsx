@@ -54,13 +54,13 @@ class Home extends React.Component<HomeProps, HomeState> {
     render() {
         return (
             <>
-                <div className="row py-3" >
+                <div className="row py-3 pl-5">
                     <h3 className="col-2">My Paintings</h3>
                     <button className="btn btn-sm btn-success" onClick={this.createPainting}>
                         Create New Painting
                     </button>
                 </div>
-                <div className="row pb-5 pl-3 justify-content-start">
+                <div className="row pb-5 pl-5 justify-content-start">
                     {this.state.paintings.map((painting: PaintingProps) =>
                         <Painting title={painting.title}
                             id={painting.id}

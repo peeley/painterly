@@ -45,7 +45,7 @@ class PaintingOptions extends React.Component<OptionsProps, OptionsState> {
                             Edit Privacy Settings
                         </button>
                         <div className="dropdown-divider"></div>
-                        <button className="dropdown-item" onClick={this.handleDelete}>
+                        <button className="dropdown-item list-group-item-danger" onClick={this.handleDelete}>
                             Delete
                         </button>
                     </div>

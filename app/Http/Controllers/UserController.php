@@ -21,7 +21,7 @@ class UserController extends Controller
     {
         if (Auth::id() === $user->id) {
             $shared_ids = Permission::where('user_id', $user->id)->get()->pluck('painting_id')->toArray();
-            $shared_paintings = Painting::whereIn('id', $shared_ids);
+            $shared_paintings = Painting::whereIn('id', $shared_ids)->get();
             return response()->json($shared_paintings);
         }
         return response("Not authorized to view user's posts", 401);

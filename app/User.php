@@ -40,4 +40,8 @@ class User extends Authenticatable
     public function paintings(){
         return $this->hasMany('App\Painting');
     }
+
+    public function shared(){
+        return $this->hasManyThrough('App\Permission', 'App\Painting');
+    }
 }

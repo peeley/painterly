@@ -68,8 +68,8 @@ class Home extends React.Component<HomeProps, HomeState> {
                         </a>
                     </li>
                 </ul>
-                <div className="tab-content">
-                    <div className="card-body">
+                <div className="card-body">
+                    <div className="tab-content">
                         <div className="tab-pane fade show active container" id="my-paintings">
                             <div className="row py-3 pl-5">
                                 <h3 className="col-2">My Paintings</h3>

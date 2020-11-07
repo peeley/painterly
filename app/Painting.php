@@ -31,4 +31,10 @@ class Painting extends Model
     public function permissions(){
         return $this->hasMany('App\Permission');
     }
+
+    public function share(User $user, string $perms): string {
+        return $this->permissions()->updateOrCreate(
+            ['user_id' => $user->id, 'user_email' => $user->email],
+            ['permissions' => $perms]);
+    }
 }

@@ -21,10 +21,7 @@ class PermissionController extends Controller
         $perms = $validated['perms'];
         $email = $validated['email'];
         $user = User::where('email', $email)->first();
-        $newPerm = $painting->permissions()->updateOrCreate(
-            ['user_id' => $user->id, 'user_email' => $email],
-            ['permissions' => $perms]
-        );
+        $newPerm = $painting->share($user, $perms);
         return response()->json($newPerm);
 
         // TODO notify user when added to painting

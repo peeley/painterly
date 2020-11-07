@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\User;
+use App\Permission;
 
 class PermissionTest extends TestCase
 {
@@ -39,7 +40,7 @@ class PermissionTest extends TestCase
 
         $this->actingAs($this->testUser)
             ->postJson("/api/p/$painting->id/perms", [
-                'perms' => 'read_write',
+                'perms' => Permission::PERMISSION_READ_AND_WRITE,
                 'email' => $this->otherUser->email,
             ])
             ->assertStatus(200);
@@ -50,7 +51,7 @@ class PermissionTest extends TestCase
             ->assertJsonFragment([
                 'user_id' => $this->otherUser->id,
                 'user_email' => $this->otherUser->email,
-                'permissions' => 'read_write',
+                'permissions' => Permission::PERMISSION_READ_AND_WRITE,
             ]);
     }
 
@@ -60,14 +61,14 @@ class PermissionTest extends TestCase
 
         $this->actingAs($this->testUser)
             ->postJson("/api/p/$painting->id/perms", [
-                'perms' => 'read_write',
+                'perms' => Permission::PERMISSION_READ_AND_WRITE,
                 'email' => $this->otherUser->email,
             ])
             ->assertStatus(200);
 
         $this->actingAs($this->testUser)
             ->postJson("/api/p/$painting->id/perms", [
-                'perms' => 'read',
+                'perms' => Permission::PERMISSION_READ_ONLY,
                 'email' => $this->otherUser->email,
             ])
             ->assertStatus(200);
@@ -78,7 +79,7 @@ class PermissionTest extends TestCase
             ->assertJsonFragment([
                 'user_id' => $this->otherUser->id,
                 'user_email' => $this->otherUser->email,
-                'permissions' => 'read',
+                'permissions' => Permission::PERMISSION_READ_ONLY,
             ]);
     }
 
@@ -88,7 +89,7 @@ class PermissionTest extends TestCase
 
         $this->actingAs($this->testUser)
             ->postJson("/api/p/$painting->id/perms", [
-                'perms' => 'read_write',
+                'perms' => Permission::PERMISSION_READ_AND_WRITE,
                 'email' => $this->otherUser->email,
             ]);
 

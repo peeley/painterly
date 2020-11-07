@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Permission extends Model
 {
+    const PERMISSION_READ_ONLY = 'read';
+    const PERMISSION_READ_AND_WRITE = 'read_write';
+
     protected $casts = [
         'user_id' => 'integer',
         'user_email' => 'string',

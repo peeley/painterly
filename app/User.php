@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Painting;
+use App\Permission;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -42,6 +44,7 @@ class User extends Authenticatable
     }
 
     public function shared(){
-        return $this->hasManyThrough('App\Permission', 'App\Painting');
+        $permittedIds = Permission::where(['user_id' => $this->id])->pluck('painting_id')->toArray();
+        return Painting::whereIn('id', $permittedIds);
     }
 }

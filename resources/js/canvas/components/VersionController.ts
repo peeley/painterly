@@ -128,7 +128,6 @@ export class VersionController {
     }
     pushPreview = () => {
         let preview = this.drawSurface.toDataURL({ format: 'png' });
-        console.log('sending data url ', preview);
         axios.post(`${process.env.MIX_APP_URL}/api/p/${this.paintingId}/preview`,
             { data: preview }).catch(error => {
                 console.log(error) // TODO handle error
@@ -140,16 +139,23 @@ export class VersionController {
             return;
         }
         let activeObject: any = this.drawSurface.getActiveObject();
-        if (activeObject.type === 'activeSelection') {
-            // TODO fix modification via group selection
-            console.log('handling modify events: ', event);
-            for (let object of activeObject.getObjects()) {
-                console.log(object);
-                //this.modify({ target: object });
-            }
-            return;
+        if(activeObject.type === 'activeSelection'){
+            this.modifyGroup(activeObject);
         }
-        console.log('sending modification to backend: ', item.toJSON(['uuid']));
+        else{
+            this.modifySingle(item);
+        }
+    }
+    modifyGroup = (group: any) => {
+        console.log('handling group events: ', event);
+        for (let object of group.getObjects()) {
+            console.log('object in group modify:', object);
+            this.modifySingle(object);
+        }
+        return;
+    }
+    modifySingle = (item: any) => {
+        console.log('sending single modification to backend: ', item);
         this.sendEvent({
             objects: item.toObject(['uuid']),
             action: 'modify',

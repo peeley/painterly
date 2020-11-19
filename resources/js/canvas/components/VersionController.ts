@@ -147,9 +147,25 @@ export class VersionController {
         }
     }
     modifyGroup = (group: any) => {
-        console.log('handling group events: ', event);
-        for (let object of group.getObjects()) {
+        console.log('handling group modify event: ', group);
+        const groupChanges = {
+            angle: group.angle,
+            height: group.height,
+            left: group.left,
+            top: group.top,
+            width: group.width,
+        }
+        const groupIds = group.getObjects().map( (item: any) => {
+            return item.uuid;
+        });
+        console.log('group ids:', groupIds);
+        const modified = this.drawSurface.getObjects().filter( (item: any) => {
+            return groupIds.includes(item.uuid);
+        });
+        console.log('modified:', modified);
+        for (let object of modified) {
             console.log('object in group modify:', object);
+            //object.set(groupChanges);
             this.modifySingle(object);
         }
         return;

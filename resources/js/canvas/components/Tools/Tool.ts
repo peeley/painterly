@@ -10,7 +10,7 @@ export abstract class Tool {
     protected displayIcon: string;
     constructor() {
         this.mouseDown = false;
-        this.color = "rgba(17, 17, 17, 1)";
+        this.color = "rgba(255, 255, 255, 1)";
         this.strokeWidth = 1;
         this.displayName = 'tool';
         this.displayIcon = '';

@@ -14,7 +14,7 @@ type SaveModalState = {
     filename: string,
 }
 
-const DefaultBackgroundColor = 'white';
+const DefaultBackgroundColor = '#1B1D1E';
 
 export class SaveModal extends React.Component<SaveModalProps, SaveModalState> {
     public state: SaveModalState;

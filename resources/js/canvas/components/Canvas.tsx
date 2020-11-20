@@ -111,6 +111,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 this.drawSurface.fire('push:removed', { target: removedObject });
             }
         });
+        this.drawSurface.setBackgroundColor("#1B1D1E", () => {});
     }
     setSyncing = (isSyncing: boolean) => {
         this.setState({

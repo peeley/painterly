@@ -18,6 +18,9 @@ type MenuBarState = {
     titleSelected: boolean,
 };
 
+const TextColorSyncing = '#889096';
+const TextColorNormal = '#D3D7DA';
+
 export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
     constructor(props: MenuBarProps) {
         super(props);
@@ -73,7 +76,7 @@ export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
         event.preventDefault();
     }
     render() {
-        let titleStyle = { color: this.state.isTitleSyncing ? 'gray' : 'black'};
+        let titleStyle = { color: this.state.isTitleSyncing ? TextColorSyncing : TextColorNormal};
         return (
             <div className="row pt-3 pb-1">
                 <div className="col-auto pt-2">

@@ -53,8 +53,8 @@ class Home extends React.Component<HomeProps, HomeState> {
     }
     render() {
         return (
-            <div className="card">
-                <ul className="nav nav-tabs">
+            <div className="card bg-dark text-white">
+                <ul className="nav nav-dark nav-tabs">
                     <li className="nav-item">
                         <a className="nav-link active" id="my-paintings-tab"
                             data-toggle="tab" href="#my-paintings">

@@ -14,6 +14,6 @@ const mix = require('laravel-mix');
 mix.ts('resources/js/canvas/app.ts', 'public/js')
    .sass('resources/sass/app.scss', 'public/css');
 
-mix.ts('resources/js/home/home.tsx', 'public/js');
+mix.ts('resources/js/home/Home.tsx', 'public/js');
 
 mix.js('resources/js/bootstrap.js', 'public/js');

@@ -29,7 +29,7 @@ export class Painting extends React.Component<PaintingProps, PaintingState> {
     }
     render() {
         return (
-            <div className="painting-cards card mx-2 my-2 col-3 pt-2">
+            <div className="painting-card text-white mx-2 my-2 col-3 pt-2">
                 <img className="card-img-top" height="auto"
                     width="100%" src={this.props.preview} />
                 <div className="card-body">

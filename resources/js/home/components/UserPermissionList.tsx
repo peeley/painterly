@@ -106,7 +106,7 @@ class UserPermissionList extends React.Component<PermissionListProps, Permission
                         </button>
                     </div>
                 </div>
-                <table className="table">
+                <table className="table bg-dark text-white">
                     <thead>
                         <tr>
                             <th scope="col">User</th>

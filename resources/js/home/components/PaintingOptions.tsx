@@ -35,17 +35,17 @@ class PaintingOptions extends React.Component<OptionsProps, OptionsState> {
                         data-toggle="dropdown">
                         ...
                     </span>
-                    <div className="dropdown-menu" role="menu" >
-                        <span className="dropdown-item" data-toggle="modal"
+                    <div className="dropdown-menu bg-dark text-white" role="menu" >
+                        <button className="dropdown-item bg-dark text-white" data-toggle="modal"
                             data-target={'#titleModal' + this.props.paintingId}>
                             Edit Title
-                        </span>
-                        <button className="dropdown-item" data-toggle="modal"
+                        </button>
+                        <button className="dropdown-item bg-dark text-white" data-toggle="modal"
                             data-target={ "#privacyModal" + this.props.paintingId } >
                             Edit Privacy Settings
                         </button>
                         <div className="dropdown-divider"></div>
-                        <button className="dropdown-item list-group-item-danger" onClick={this.handleDelete}>
+                        <button className="dropdown-item bg-dark text-danger" onClick={this.handleDelete}>
                             Delete
                         </button>
                     </div>

@@ -54,10 +54,10 @@ class TitleEditor extends React.Component<TitleEditorProps, TitleEditorState> {
         return (
             <div className="modal fade" id={"titleModal" + this.props.paintingId} >
                 <div className="modal-dialog" >
-                    <div className="modal-content">
+                    <div className="modal-content bg-dark text-white">
                         <div className="modal-header">
                             <h5 className="modal-title">Edit Title</h5>
-                            <button className="close" data-dismiss="modal" aria-label="Close">
+                            <button className="close text-white" data-dismiss="modal" aria-label="Close">
                                 <span>&times;</span>
                             </button>
                         </div>

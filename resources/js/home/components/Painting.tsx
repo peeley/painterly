@@ -34,7 +34,7 @@ export class Painting extends React.Component<PaintingProps, PaintingState> {
                     width="100%" src={this.props.preview} />
                 <div className="card-body">
                     <div className="card-title row">
-                        <a href={`${process.env.MIX_APP_URL}/painting/${this.props.id}`}>
+                        <a className="text-white" href={`${process.env.MIX_APP_URL}/painting/${this.props.id}`}>
                             <h5>{this.state.title}</h5>
                         </a>
                         <PaintingOptions paintingId={this.props.id}

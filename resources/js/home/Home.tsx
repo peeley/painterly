@@ -54,15 +54,15 @@ class Home extends React.Component<HomeProps, HomeState> {
     render() {
         return (
             <div className="card bg-dark text-white">
-                <ul className="nav nav-dark nav-tabs">
+                <ul className="nav nav-tabs bg-dark text-white">
                     <li className="nav-item">
-                        <a className="nav-link active" id="my-paintings-tab"
+                        <a className="nav-link active text-white" id="my-paintings-tab"
                             data-toggle="tab" href="#my-paintings">
                             My Paintings
                         </a>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" id="shared-tab"
+                        <a className="nav-link text-white" id="shared-tab"
                             data-toggle="tab" href="#shared">
                             Shared
                         </a>

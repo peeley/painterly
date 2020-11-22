@@ -67,10 +67,10 @@ class PrivacyEditor extends React.Component<PrivacyEditorProps, PrivacyEditorSta
             <div className="modal fade" role="dialog"
                 id={ "privacyModal" + this.props.paintingId }>
                 <div className="modal-dialog" role="document" >
-                    <div className="modal-content" >
+                    <div className="modal-content bg-dark text-white">
                         <div className="modal-header" >
                             <h3 className="modal-title" >Edit Privacy Settings</h3>
-                            <button className="close" data-dismiss="modal" aria-label="Close">
+                            <button className="close text-white" data-dismiss="modal" aria-label="Close">
                                 <span>&times;</span>
                             </button>
                         </div>

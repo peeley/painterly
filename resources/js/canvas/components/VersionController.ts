@@ -143,7 +143,7 @@ export class VersionController {
             this.modifyGroup(activeObject);
         }
         else{
-            this.modifySingle(item);
+            this.modifySingle(item.toObject(['uuid']));
         }
     }
     modifyGroup = (group: any) => {
@@ -158,13 +158,13 @@ export class VersionController {
         const groupIds = group.getObjects().map( (item: any) => {
             return item.uuid;
         });
-        console.log('group ids:', groupIds);
         const modified = this.drawSurface.getObjects().filter( (item: any) => {
             return groupIds.includes(item.uuid);
-        });
-        console.log('modified:', modified);
+        }).map( (item: any) => item.toObject(['uuid']));
         for (let object of modified) {
-            console.log('object in group modify:', object);
+            for(let key in groupChanges){
+                object[key] = groupChanges[key] - object[key];
+            }
             //object.set(groupChanges);
             this.modifySingle(object);
         }
@@ -173,7 +173,7 @@ export class VersionController {
     modifySingle = (item: any) => {
         console.log('sending single modification to backend: ', item);
         this.sendEvent({
-            objects: item.toObject(['uuid']),
+            objects: item,
             action: 'modify',
         }, () => {
             this.pushPreview();

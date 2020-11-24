@@ -146,29 +146,39 @@ export class VersionController {
             this.modifySingle(item.toObject(['uuid']));
         }
     }
+    // getting the properties of single objects once modified via group
+    // is really difficult in fabric, as all the coords are relative to
+    // the group center. the best way to get absolute coords matrix
+    // transform a la:
+    // https://github.com/fabricjs/fabric.js/issues/4206
     modifyGroup = (group: any) => {
         console.log('handling group modify event: ', group);
-        const groupChanges = {
-            angle: group.angle,
-            height: group.height,
-            left: group.left,
-            top: group.top,
-            width: group.width,
-        }
-        const groupIds = group.getObjects().map( (item: any) => {
-            return item.uuid;
-        });
-        const modified = this.drawSurface.getObjects().filter( (item: any) => {
-            return groupIds.includes(item.uuid);
-        }).map( (item: any) => item.toObject(['uuid']));
-        for (let object of modified) {
-            for(let key in groupChanges){
-                object[key] = groupChanges[key] - object[key];
-            }
-            //object.set(groupChanges);
-            this.modifySingle(object);
+        const groupObjects = group.getObjects()
+        for (let item of groupObjects) {
+            const itemObject = this.scaleItem(item, group);
+            this.modifySingle(itemObject);
         }
         return;
+    }
+
+    scaleItem = (item: fabric.Object, group: fabric.Group) => {
+        const groupMatrix = group.calcTransformMatrix();
+        let newPoint = fabric.util.transformPoint(
+            new fabric.Point(item.left as number, item.top as number),
+            groupMatrix);
+        let itemObject = item.toObject(['uuid']);
+        itemObject['top'] = newPoint.y;
+        itemObject['left'] = newPoint.x;
+        if(group.angle){
+            itemObject['angle'] = itemObject.angle + group.angle;
+        }
+        if(group.scaleX){
+            itemObject['scaleX'] = itemObject.scaleX * group.scaleX;
+        }
+        if(group.scaleY){
+            itemObject['scaleY'] = itemObject.scaleX * group.scaleY;
+        }
+        return itemObject;
     }
     modifySingle = (item: any) => {
         console.log('sending single modification to backend: ', item);

@@ -24,7 +24,7 @@ class UpdateProtocol
         } else if ($action === 'modify') {
             $modified_objects = json_decode($update['objects'], true);
             $saved_objects = $painting->objects;
-            foreach( $modified_objects as $modified){
+            foreach ($modified_objects as $modified) {
                 foreach ($saved_objects as &$saved) {
                     if ($saved['uuid'] == $modified['uuid']) {
                         $saved = array_merge($saved, $modified);
@@ -35,12 +35,15 @@ class UpdateProtocol
             $painting->objects = $saved_objects;
         } else if ($action === 'remove') {
             $objects = $painting->objects;
-            $removed_uuid = json_decode($update['objects'])->uuid;
-            $remaining = array_values(
-                Arr::where($objects, function ($value, $key) use ($removed_uuid) {
-                    return $value['uuid'] !== $removed_uuid;
+            $removed_uuids = array_map( function($object){
+                return $object->uuid;
+            }, json_decode($update['objects']));
+            $remaining = Arr::whereNot($objects,
+                function($value, $key) use ($removed_uuids) {
+                    $object_uuid = $value->uuid;
+                    return in_array($object_uuid, $removed_uuids);
                 })
-            );
+                ->get();
             $painting->objects = $remaining;
         }
 

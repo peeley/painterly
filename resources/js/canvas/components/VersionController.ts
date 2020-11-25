@@ -138,9 +138,9 @@ export class VersionController {
         if (!item) {
             return;
         }
-        let activeObject: any = this.drawSurface.getActiveObject();
-        let modified;
-        if(activeObject.type === 'activeSelection'){
+        let activeObject: fabric.Object | fabric.Group = this.drawSurface.getActiveObject();
+        let modified: object;
+        if(activeObject instanceof fabric.Group){
             modified = this.applyGroupProperties(activeObject);
         }
         else{
@@ -154,7 +154,6 @@ export class VersionController {
     // transform a la:
     // https://github.com/fabricjs/fabric.js/issues/4206
     applyGroupProperties = (group: fabric.Group) => {
-        console.log('handling group modify event: ', group);
         let groupObjects = group.getObjects()
         return groupObjects.map( (item: any) => {
             return this.scaleItem(item, group);
@@ -179,10 +178,7 @@ export class VersionController {
         }
         return itemObject;
     }
-    // TODO make modify of multiple objects just send array of modified objects
-    // TODO allow group delete
     pushModification = (item: any) => {
-        console.log('sending single modification to backend: ', item);
         this.sendEvent({
             objects: item,
             action: 'modify',

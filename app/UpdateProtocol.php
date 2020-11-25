@@ -38,12 +38,11 @@ class UpdateProtocol
             $removed_uuids = array_map( function($object){
                 return $object->uuid;
             }, json_decode($update['objects']));
-            $remaining = Arr::whereNot($objects,
+            $remaining = array_values(Arr::where($objects,
                 function($value, $key) use ($removed_uuids) {
-                    $object_uuid = $value->uuid;
-                    return in_array($object_uuid, $removed_uuids);
-                })
-                ->get();
+                    $object_uuid = $value['uuid'];
+                    return !in_array($object_uuid, $removed_uuids);
+                }));
             $painting->objects = $remaining;
         }
 

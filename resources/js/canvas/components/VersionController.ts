@@ -11,7 +11,7 @@ type UpdateAction = "modify" | "add" | "remove" | "clear" | "undo" | "redo";
 
 interface OutgoingEvent {
     action: UpdateAction,
-    objects?: UUIDObject
+    objects?: UUIDObject | UUIDObject[]
 }
 
 interface PaintingUpdateEvent {
@@ -133,13 +133,13 @@ export class VersionController {
                 console.log(error) // TODO handle error
             });
     }
-    modify = (event: any) => {
+    modify = (event: fabric.IEvent) => {
         let item = event.target;
         if (!item) {
             return;
         }
         let activeObject: fabric.Object | fabric.Group = this.drawSurface.getActiveObject();
-        let modified: object;
+        let modified: UUIDObject[];
         if(activeObject instanceof fabric.Group){
             modified = this.applyGroupProperties(activeObject);
         }
@@ -178,7 +178,7 @@ export class VersionController {
         }
         return itemObject;
     }
-    pushModification = (item: any) => {
+    pushModification = (item: UUIDObject[]) => {
         this.sendEvent({
             objects: item,
             action: 'modify',
@@ -186,14 +186,26 @@ export class VersionController {
             this.pushPreview();
         });
     }
-    remove = (event: any) => {
-        const removed = event.target;
-        if (!removed) {
+    // TODO seems like this shares most code w/ modify function
+    remove = (event: fabric.IEvent) => {
+        let active = event.target;
+        if(!active){
             return;
         }
-        console.log('sending deleted object to backend: ', removed.toJSON(['uuid']));
+        let removed: UUIDObject[];
+        if(active instanceof fabric.Group){
+            removed = active.getObjects().map( (item: fabric.Object) => {
+                return item.toObject(['uuid']);
+            });
+            let allSelected = this.drawSurface.getActiveObjects();
+            this.drawSurface.remove(...allSelected);
+            this.drawSurface.discardActiveObject().renderAll();
+        }
+        else{
+            removed = [active.toObject(['uuid'])];
+        }
         this.sendEvent({
-            objects: removed.toObject(['uuid']),
+            objects: removed,
             action: 'remove',
         }, () => { });
     }

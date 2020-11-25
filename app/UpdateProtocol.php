@@ -22,15 +22,17 @@ class UpdateProtocol
             array_push($objects, $new_stroke);
             $painting->objects = $objects;
         } else if ($action === 'modify') {
-            $modified_object = json_decode($update['objects'], true);
-            $objects = $painting->objects;
-            foreach ($objects as &$object) {
-                if ($object['uuid'] == $modified_object['uuid']) {
-                    $object = array_merge($object, $modified_object);
-                    break;
+            $modified_objects = json_decode($update['objects'], true);
+            $saved_objects = $painting->objects;
+            foreach( $modified_objects as $modified){
+                foreach ($saved_objects as &$saved) {
+                    if ($saved['uuid'] == $modified['uuid']) {
+                        $saved = array_merge($saved, $modified);
+                        break;
+                    }
                 }
             }
-            $painting->objects = $objects;
+            $painting->objects = $saved_objects;
         } else if ($action === 'remove') {
             $objects = $painting->objects;
             $removed_uuid = json_decode($update['objects'])->uuid;

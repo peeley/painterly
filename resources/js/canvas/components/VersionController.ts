@@ -139,28 +139,27 @@ export class VersionController {
             return;
         }
         let activeObject: any = this.drawSurface.getActiveObject();
+        let modified;
         if(activeObject.type === 'activeSelection'){
-            this.modifyGroup(activeObject);
+            modified = this.applyGroupProperties(activeObject);
         }
         else{
-            this.modifySingle(item.toObject(['uuid']));
+            modified = [item.toObject(['uuid'])];
         }
+        this.pushModification(modified)
     }
     // getting the properties of single objects once modified via group
     // is really difficult in fabric, as all the coords are relative to
     // the group center. the best way to get absolute coords matrix
     // transform a la:
     // https://github.com/fabricjs/fabric.js/issues/4206
-    modifyGroup = (group: any) => {
+    applyGroupProperties = (group: fabric.Group) => {
         console.log('handling group modify event: ', group);
-        const groupObjects = group.getObjects()
-        for (let item of groupObjects) {
-            const itemObject = this.scaleItem(item, group);
-            this.modifySingle(itemObject);
-        }
-        return;
+        let groupObjects = group.getObjects()
+        return groupObjects.map( (item: any) => {
+            return this.scaleItem(item, group);
+        });
     }
-
     scaleItem = (item: fabric.Object, group: fabric.Group) => {
         const groupMatrix = group.calcTransformMatrix();
         let newPoint = fabric.util.transformPoint(
@@ -176,11 +175,13 @@ export class VersionController {
             itemObject['scaleX'] = itemObject.scaleX * group.scaleX;
         }
         if(group.scaleY){
-            itemObject['scaleY'] = itemObject.scaleX * group.scaleY;
+            itemObject['scaleY'] = itemObject.scaleY * group.scaleY;
         }
         return itemObject;
     }
-    modifySingle = (item: any) => {
+    // TODO make modify of multiple objects just send array of modified objects
+    // TODO allow group delete
+    pushModification = (item: any) => {
         console.log('sending single modification to backend: ', item);
         this.sendEvent({
             objects: item,

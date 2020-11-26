@@ -246,6 +246,11 @@ export class VersionController {
                     alert('You do not have permissions to edit this item.');
                 }
                 this.syncingCallback(false);
+            })
+            .catch( error => {
+                if(error.response && error.response.status === 419){ // login expired
+                    window.location.replace(`${process.env.MIX_APP_URL}/login`);
+                }
             });
     }
     // TODO create type for serialized objects

@@ -21,14 +21,9 @@
    - FabricJS docs for [[http://fabricjs.com/docs/fabric.ActiveSelection.html][ActiveSelection]]
    - More docs on breaking changes regarding [[http://fabricjs.com/v2-breaking-changes-2][selection handling]]
 
-** TODO create logout websocket so user is automatically logged out
-   In painting, page expiration gives no indicator so when user draws/updates
-   title, there is no change or indication.
-
 ** TODO make different mouse cursors for different tools and states
 
 ** TODO add event listener for other users joining, see who else is drawing/watching
-
 ** TODO make UI appear different when user does not have write permission
    need to make it clear when a user is able to modify a painting versus just
    view the painting. perhaps just removing the tool bar and undo/redo but
@@ -82,6 +77,12 @@
     Putting back to TODO, 09-07-2020 Now that we're using FabricJS, might need
     to rethink strategy from basic flood fill since FabricJS isn't really meant
     for directly manipulating pixels on the canvas.
+
+** DONE create logout websocket so user is automatically logged out
+   Did not even have to create websocket, just check for 419 response on any
+   send event CLOSED: [2020-11-25 Wed 23:37] In painting, page expiration gives
+   no indicator so when user draws/updates title, there is no change or
+   indication.
 
 ** DONE Delete canvas objects
    CLOSED: [2020-09-13 Sun 22:57] <<delete-frontend>> Perhaps add hotkey on

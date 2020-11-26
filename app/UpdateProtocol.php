@@ -24,6 +24,8 @@ class UpdateProtocol
         } else if ($action === 'modify') {
             $modified_objects = json_decode($update['objects'], true);
             $saved_objects = $painting->objects;
+            // TODO reduce n^2 complexity, will NOT scale well with big modifications
+            // perhaps make objects field of painting a hash table?
             foreach ($modified_objects as $modified) {
                 foreach ($saved_objects as &$saved) {
                     if ($saved['uuid'] == $modified['uuid']) {

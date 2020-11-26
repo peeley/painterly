@@ -17,7 +17,7 @@ interface OutgoingEvent {
 interface PaintingUpdateEvent {
     paintingId: number,
     action: UpdateAction | null,
-    objects: UUIDObject | null
+    objects: [UUIDObject] | null
     title: string | null
 }
 
@@ -72,37 +72,44 @@ export class VersionController {
                 }
             });
     }
-    handleAddEvent = (object: UUIDObject) => {
-        if (!object) {
+    handleAddEvent = (objects: [UUIDObject]) => {
+        if (!objects) {
             console.log('Received bad `add` event');
             return;
         }
-        fabric.util.enlivenObjects([object], (objects: Array<UUIDObject>) => {
+        fabric.util.enlivenObjects(objects, (objects: Array<UUIDObject>) => {
             objects.forEach((obj: UUIDObject) => {
                 this.drawSurface.add(obj);
             });
         }, 'fabric');
-        this.pushItemToHistory(object);
+        for(let object of objects){
+            this.pushItemToHistory(object);
+        }
     }
-    handleModifyEvent = (object: UUIDObject) => {
+    handleModifyEvent = (objects: [UUIDObject]) => {
         this.drawSurface.off('object:modified', this.modify);
-        this.drawSurface.forEachObject((obj: any) => {
-            // TODO convert obj to type UUIDObject
-            if (obj.uuid === object.uuid) {
-                obj.set(object);
-                return;
-            }
-        });
+        // TODO reduce n^2 complexity
+        for(let modified of objects){
+            this.drawSurface.forEachObject((obj: any) => {
+                // TODO convert obj to type UUIDObject
+                if (obj.uuid === modified.uuid) {
+                    obj.set(modified);
+                    return;
+                }
+            });
+        }
         this.drawSurface.renderAll();
         this.drawSurface.on('object:modified', this.modify);
     }
-    handleRemoveEvent = (object: UUIDObject) => {
-        this.drawSurface.forEachObject((obj: any) => {
-            if (obj.uuid === object.uuid) {
-                this.drawSurface.remove(obj);
-                return;
-            }
-        })
+    handleRemoveEvent = (objects: [UUIDObject]) => {
+        for(let object of objects){
+            this.drawSurface.forEachObject((obj: any) => {
+                if (obj.uuid === object.uuid) {
+                    this.drawSurface.remove(obj);
+                    return;
+                }
+            });
+        }
     }
     pushItemToHistory = (_item: fabric.Object) => {
         if (this.currentVersion !== this.versionHistory.length) {

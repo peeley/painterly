@@ -11,16 +11,6 @@
    objects. Now with FabricJS, something more robust may be necessary inside
    VersionController. Also need to assess backend solutions.
 
-** TODO Fix modifying objects via group select
-   Should take place here in VersionController - looks like modified fields such
-   as `top`, `left`, `scaleX`, `scaleY`, etc. are actually stored in the
-   `object:modified` target field, and then in the `objects` field contained has
-   relative offsets, e.g. the `top` of a modified object will be the `top` field
-   of the target field added to the `top` field of the specific object. Helpful
-   docs:
-   - FabricJS docs for [[http://fabricjs.com/docs/fabric.ActiveSelection.html][ActiveSelection]]
-   - More docs on breaking changes regarding [[http://fabricjs.com/v2-breaking-changes-2][selection handling]]
-
 ** TODO make different mouse cursors for different tools and states
 
 ** TODO add event listener for other users joining, see who else is drawing/watching
@@ -83,6 +73,17 @@
    send event CLOSED: [2020-11-25 Wed 23:37] In painting, page expiration gives
    no indicator so when user draws/updates title, there is no change or
    indication.
+
+** DONE Fix modifying objects via group select
+   CLOSED: [2020-11-27 Fri 20:29]
+   Should take place here in VersionController - looks like modified fields such
+   as `top`, `left`, `scaleX`, `scaleY`, etc. are actually stored in the
+   `object:modified` target field, and then in the `objects` field contained has
+   relative offsets, e.g. the `top` of a modified object will be the `top` field
+   of the target field added to the `top` field of the specific object. Helpful
+   docs:
+   - FabricJS docs for [[http://fabricjs.com/docs/fabric.ActiveSelection.html][ActiveSelection]]
+   - More docs on breaking changes regarding [[http://fabricjs.com/v2-breaking-changes-2][selection handling]]
 
 ** DONE Delete canvas objects
    CLOSED: [2020-09-13 Sun 22:57] <<delete-frontend>> Perhaps add hotkey on

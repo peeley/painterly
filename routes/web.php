@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Auth\Middleware\Authenticate;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +15,12 @@ use Illuminate\Auth\Middleware\Authenticate;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    if(Auth::check()){
+        return redirect('/home');
+    }
+    else{
+        return redirect('/login');
+    }
 });
 
 Auth::routes();

@@ -2,10 +2,7 @@ import axios from 'axios';
 import { fabric } from 'fabric';
 import { v4 } from 'uuid'
 import Echo from 'laravel-echo';
-
-interface UUIDObject extends fabric.Object {
-    uuid: string
-}
+import { RevisionTracker, UUIDObject } from './RevisionTracker';
 
 type UpdateAction = "modify" | "add" | "remove" | "clear" | "undo" | "redo";
 
@@ -228,6 +225,10 @@ export class VersionController {
         if (this.currentVersion < this.versionHistory.length) {
             this.currentVersion += 1;
         }
+    }
+    checksumMatches = (checksum: string): boolean => {
+        let currentCanvasChecksum = btoa(this.drawSurface.getObjects().toString());
+        return currentCanvasChecksum === checksum;
     }
     wipeHistory = () => {
         this.sendEvent({ action: 'clear' }, () => {

@@ -12,6 +12,7 @@
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
     "@types/uuid": "^8.3.0",
+    "automerge": "^0.14.1",
     "axios": "^0.19",
     "bootstrap": "^4.5.2",
     "cross-env": "^7.0",

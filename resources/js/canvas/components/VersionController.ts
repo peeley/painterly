@@ -3,6 +3,7 @@ import { fabric } from 'fabric';
 import { v4 } from 'uuid'
 import Echo from 'laravel-echo';
 import { RevisionTracker, UUIDObject } from './RevisionTracker';
+import Automerge from 'automerge';
 
 type UpdateAction = "modify" | "add" | "remove" | "clear" | "undo" | "redo";
 
@@ -20,14 +21,14 @@ interface PaintingUpdateEvent {
 
 export class VersionController {
     private paintingId: number;
-    private versionHistory: Array<fabric.Object> = [];
-    private drawSurface: fabric.Canvas;
-    private currentVersion: number = 0;
+    private canvas: fabric.Canvas;
+    private versionTracker: Automerge.FreezeObject<{objects: any}>;
     private syncingCallback: (_: boolean) => void;
 
-    constructor(id: number, drawSurface: fabric.Canvas, syncingCallback: (_: boolean) => void) {
+    constructor(id: number, canvas: fabric.Canvas, syncingCallback: (_: boolean) => void) {
         this.paintingId = id;
-        this.drawSurface = drawSurface;
+        this.canvas = canvas;
+        this.versionTracker = Automerge.from({ objects: [] });
         this.syncingCallback = syncingCallback;
     }
     mountChannelListener = () => {
@@ -38,83 +39,11 @@ export class VersionController {
             forceTLS: true
         });
         echo.channel(`painting.${this.paintingId}`)
-            .listen('PaintingUpdateEvent', (data: PaintingUpdateEvent) => {
-                switch (data.action) {
-                    case 'add':
-                        if (!data.objects) {
-                            throw Error('Missing object on `add` event.');
-                        }
-                        this.handleAddEvent(data.objects);
-                        break;
-                    case 'modify':
-                        if (!data.objects) {
-                            throw Error('Missing object on `modify` event.');
-                        }
-                        this.handleModifyEvent(data.objects);
-                        break;
-                    case 'undo':
-                        this.currentVersion -= 1;
-                        break;
-                    case 'clear':
-                        this.drawSurface.clear();
-                        break;
-                    case 'remove':
-                        if (!data.objects) {
-                            throw Error('Missing object on `remove` event.');
-                        }
-                        this.handleRemoveEvent(data.objects);
-                        break;
-                    default:
-                        throw Error(`Unsupported update type: ${data.action}`);
-                }
+            .listen('PaintingUpdateEvent', (data: Automerge.Change[]) => {
+                Automerge.applyChanges(this.versionTracker, data);
             });
     }
-    handleAddEvent = (objects: [UUIDObject]) => {
-        if (!objects) {
-            console.log('Received bad `add` event');
-            return;
-        }
-        fabric.util.enlivenObjects(objects, (objects: Array<UUIDObject>) => {
-            objects.forEach((obj: UUIDObject) => {
-                this.drawSurface.add(obj);
-            });
-        }, 'fabric');
-        for(let object of objects){
-            this.pushItemToHistory(object);
-        }
-    }
-    handleModifyEvent = (objects: [UUIDObject]) => {
-        this.drawSurface.off('object:modified', this.modify);
-        // TODO reduce n^2 complexity
-        for(let modified of objects){
-            this.drawSurface.forEachObject((obj: any) => {
-                // TODO convert obj to type UUIDObject
-                if (obj.uuid === modified.uuid) {
-                    obj.set(modified);
-                    return;
-                }
-            });
-        }
-        this.drawSurface.renderAll();
-        this.drawSurface.on('object:modified', this.modify);
-    }
-    handleRemoveEvent = (objects: [UUIDObject]) => {
-        for(let object of objects){
-            this.drawSurface.forEachObject((obj: any) => {
-                if (obj.uuid === object.uuid) {
-                    this.drawSurface.remove(obj);
-                    return;
-                }
-            });
-        }
-    }
-    pushItemToHistory = (_item: fabric.Object) => {
-        if (this.currentVersion !== this.versionHistory.length) {
-            this.versionHistory = this.versionHistory.slice(
-                0, this.currentVersion);
-        }
-    }
-    push = (event: any /* event w/ UUIDObject as target */) => {
+    push = (event: any /* event w/ UUIDObject as target */, change: Automerge.Change) => {
         //console.log('pushing event to backend: ', event);
         let item = event.target;
         if (!item) {
@@ -128,10 +57,9 @@ export class VersionController {
         }, () => {
             this.pushPreview();
         });
-        this.pushItemToHistory(item);
     }
     pushPreview = () => {
-        let preview = this.drawSurface.toDataURL({ format: 'png' });
+        let preview = this.canvas.toDataURL({ format: 'png' });
         axios.post(`${process.env.MIX_APP_URL}/api/p/${this.paintingId}/preview`,
             { data: preview }).catch(error => {
                 console.log(error) // TODO handle error
@@ -142,7 +70,7 @@ export class VersionController {
         if (!item) {
             return;
         }
-        let activeObject: fabric.Object | fabric.Group = this.drawSurface.getActiveObject();
+        let activeObject: fabric.Object | fabric.Group = this.canvas.getActiveObject();
         let modified: UUIDObject[];
         if(activeObject instanceof fabric.Group){
             modified = this.applyGroupProperties(activeObject);
@@ -201,9 +129,9 @@ export class VersionController {
             removed = active.getObjects().map( (item: fabric.Object) => {
                 return item.toObject(['uuid']);
             });
-            let allSelected = this.drawSurface.getActiveObjects();
-            this.drawSurface.remove(...allSelected);
-            this.drawSurface.discardActiveObject().renderAll();
+            let allSelected = this.canvas.getActiveObjects();
+            this.canvas.remove(...allSelected);
+            this.canvas.discardActiveObject().renderAll();
         }
         else{
             removed = [active.toObject(['uuid'])];
@@ -214,28 +142,15 @@ export class VersionController {
         }, () => { });
     }
     undo = () => {
-        if (this.currentVersion > 0) {
-            this.sendEvent({ action: 'undo' }, () => {
-                this.currentVersion -= 1;
-            });
-        }
+        // TODO
     }
     redo = () => {
         // TODO call PUT endpoint, figure out how to implement redo
-        if (this.currentVersion < this.versionHistory.length) {
-            this.currentVersion += 1;
-        }
-    }
-    checksumMatches = (checksum: string): boolean => {
-        let currentCanvasChecksum = btoa(this.drawSurface.getObjects().toString());
-        return currentCanvasChecksum === checksum;
     }
     wipeHistory = () => {
         this.sendEvent({ action: 'clear' }, () => {
             // TODO handle bad response?
         });
-        this.versionHistory = [];
-        this.currentVersion = 0;
     }
     // TODO define outgoing event type
     sendEvent = (event: OutgoingEvent, callback: Function) => {
@@ -264,14 +179,15 @@ export class VersionController {
     // TODO create type for serialized objects
     deserializeHistory = (history: Array<UUIDObject>) => {
         console.log(`deserializing from backend: `, history);
-        this.drawSurface.loadFromJSON({ objects: history }, () => {
-            this.drawSurface.forEachObject(obj => {
+        this.canvas.loadFromJSON({ objects: history }, () => {
+            this.canvas.forEachObject(obj => {
                 obj.selectable = false;
             })
-            this.drawSurface.renderAll();
+            this.canvas.renderAll();
         });
     }
     setDrawSurface(canvas: fabric.Canvas): void {
-        this.drawSurface = canvas;
+        this.canvas = canvas;
+        this.versionTracker = Automerge.from({ objects: canvas._objects });
     }
 }

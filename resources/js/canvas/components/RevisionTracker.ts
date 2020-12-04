@@ -1,30 +1,29 @@
 import { fabric } from 'fabric';
-interface Change = {
+interface Change {
     uuid: string,
     hash: string,
     action: CreationOrDeletion | Modification
-}
+};
 
-interface CreationOrDeletion = {
+interface CreationOrDeletion {
     item: UUIDObject,
     type: 'creation' | 'deletion'
-}
+};
 
-interface Modification = {
+interface Modification {
     before: UUIDObject,
     after: UUIDObject
-}
+};
 
 export interface UUIDObject extends fabric.Object {
     uuid: string
-}
+};
 
 const CHANGE_STORAGE_MEMORY = 100;
 
 export class RevisionTracker {
 
     private hash: number;
-    private changes: Change[];
     private canvas: fabric.Canvas;
 
     constructor(canvas: fabric.Canvas){

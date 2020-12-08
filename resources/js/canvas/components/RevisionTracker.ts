@@ -1,12 +1,16 @@
 import { fabric } from 'fabric';
+
 interface Change {
     hash: string,
-    action: CreationOrDeletion | Modification
+    action: Creation | Deletion | Modification
 }
 
-interface CreationOrDeletion {
-    item: UUIDObject,
-    type: 'creation' | 'deletion'
+interface Creation {
+    item: UUIDObject
+}
+
+interface Deletion {
+    item: UUIDObject
 }
 
 interface Modification {
@@ -24,11 +28,13 @@ export class RevisionTracker {
 
     private hash: string;
     private changes: Change[];
+    private redoStack: Change[];
     private canvas: fabric.Canvas;
 
     constructor(canvas: fabric.Canvas){
         this.canvas = canvas;
         this.changes = [];
+        this.redoStack = [];
         this.hash = '';
         this.setHash();
     }
@@ -38,10 +44,12 @@ export class RevisionTracker {
             hash: this.hash,
             action: {
                 item: created,
-                type: 'creation',
-            }
+            } as Creation
         });
-        this.hash = btoa(this.changes.toString());
+        if(this.changes.length > CHANGE_STORAGE_MEMORY){
+            this.changes.shift();
+        }
+        this.setHash();
     }
 
     registerModification = (before: UUIDObject, after: UUIDObject) => {
@@ -52,6 +60,10 @@ export class RevisionTracker {
                 after
             }
         });
+        if(this.changes.length > CHANGE_STORAGE_MEMORY){
+            this.changes.shift();
+        }
+        this.setHash();
     }
 
     setHash = () => {
@@ -62,7 +74,40 @@ export class RevisionTracker {
         this.canvas = canvas;
     }
 
-    redo = (change: Change) => {} // TODO
+    undo = () => {
+        let change = this.changes.pop();
+        if(!change){
+            return; // nothing to undo
+        }
+        this.redoStack.push(change);
+        if(this.redoStack.length > CHANGE_STORAGE_MEMORY){
+            this.redoStack.shift();
+        }
+        this.performUndoAction(change.action);
+    }
 
-    undo = (change: Change) => {} // TODO
+    performUndoAction = (action: any /* Action */) => {
+        // dispatch on action type
+    }
+
+    redo = () => {
+        let change = this.redoStack.pop();
+        if(!change){
+            return; // nothing to undo
+        }
+        this.changes.push(change);
+        if(this.changes.length > CHANGE_STORAGE_MEMORY){
+            this.changes.shift();
+        }
+        this.performRedoAction(change.action);
+    }
+
+    performRedoAction = (action: any /* Action */) => {
+        // dispatch on action type
+    }
+
+    applyRevision = (change: Change) => {
+        // TODO
+    }
+
 }

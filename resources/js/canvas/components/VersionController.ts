@@ -184,13 +184,14 @@ export class VersionController {
     }
     // TODO seems like this shares most code w/ modify function
     remove = (event: fabric.IEvent) => {
-        let active = event.target;
+        let active: any /* UUIDObject */ = event.target;
         if(!active){
             return;
         }
         let removed: UUIDObject[];
         if(active instanceof fabric.Group){
-            removed = active.getObjects().map( (item: fabric.Object) => {
+            removed = active.getObjects().map( (item: any) => {
+                this.revisionTracker.registerDeletion(item);
                 return item.toObject(['uuid']);
             });
             let allSelected = this.drawSurface.getActiveObjects();
@@ -198,6 +199,7 @@ export class VersionController {
             this.drawSurface.discardActiveObject().renderAll();
         }
         else{
+            this.revisionTracker.registerDeletion(active);
             removed = [active.toObject(['uuid'])];
         }
         this.sendEvent({

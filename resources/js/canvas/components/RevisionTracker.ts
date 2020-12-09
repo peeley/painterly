@@ -29,9 +29,11 @@ class Deletion implements Change {
         this.item = item;
     }
     performUndo(canvas: fabric.Canvas){
+        console.log('undoing delete of: ', this.item);
         canvas.add(this.item);
     }
     performRedo(canvas: fabric.Canvas){
+        console.log('redoing delete of: ', this.item);
         canvas.remove(this.item);
     }
 }
@@ -80,6 +82,7 @@ export class RevisionTracker {
             this.changes.shift();
         }
         this.setHash();
+        console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
     }
 
     registerDeletion = (deleted: UUIDObject) => {
@@ -88,6 +91,7 @@ export class RevisionTracker {
             this.changes.shift();
         }
         this.setHash();
+        console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
     }
 
     registerModification = (before: UUIDObject, after: UUIDObject) => {
@@ -96,6 +100,7 @@ export class RevisionTracker {
             this.changes.shift();
         }
         this.setHash();
+        console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
     }
 
     setHash = () => {
@@ -116,6 +121,7 @@ export class RevisionTracker {
             this.redoStack.shift();
         }
         change.performUndo(this.canvas);
+        console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
     }
 
     redo = () => {
@@ -128,6 +134,7 @@ export class RevisionTracker {
             this.changes.shift();
         }
         change.performRedo(this.canvas);
+        console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
     }
 
     applyRevision = (change: Change) => {

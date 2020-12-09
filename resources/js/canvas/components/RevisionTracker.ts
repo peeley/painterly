@@ -2,20 +2,55 @@ import { fabric } from 'fabric';
 
 interface Change {
     hash: string,
-    action: Creation | Deletion | Modification
+    performUndo(canvas: fabric.Canvas): void,
+    performRedo(canvas: fabric.Canvas): void,
 }
 
-interface Creation {
-    item: UUIDObject
+class Creation implements Change {
+    public hash: string;
+    private item: UUIDObject;
+    constructor(hash: string, item: UUIDObject){
+        this.hash = hash;
+        this.item = item;
+    }
+    performUndo(canvas: fabric.Canvas){
+        canvas.remove(this.item);
+    }
+    performRedo(canvas: fabric.Canvas){
+        canvas.add(this.item);
+    }
 }
 
-interface Deletion {
-    item: UUIDObject
+class Deletion implements Change {
+    public hash: string;
+    private item: UUIDObject;
+    constructor(hash: string, item: UUIDObject){
+        this.hash = hash;
+        this.item = item;
+    }
+    performUndo(canvas: fabric.Canvas){
+        canvas.add(this.item);
+    }
+    performRedo(canvas: fabric.Canvas){
+        canvas.remove(this.item);
+    }
 }
 
-interface Modification {
-    before: UUIDObject,
-    after: UUIDObject
+class Modification implements Change {
+    public hash: string;
+    private before: UUIDObject;
+    private after: UUIDObject;
+    constructor(hash: string, before: UUIDObject, after: UUIDObject){
+        this.hash = hash;
+        this.before = before;
+        this.after = after;
+    }
+    performUndo(canvas: fabric.Canvas){
+
+    }
+    performRedo(canvas: fabric.Canvas){
+
+    }
 }
 
 export interface UUIDObject extends fabric.Object {
@@ -40,12 +75,15 @@ export class RevisionTracker {
     }
 
     registerCreation = (created: UUIDObject) => {
-        this.changes.push({
-            hash: this.hash,
-            action: {
-                item: created,
-            } as Creation
-        });
+        this.changes.push(new Creation(this.hash, created));
+        if(this.changes.length > CHANGE_STORAGE_MEMORY){
+            this.changes.shift();
+        }
+        this.setHash();
+    }
+
+    registerDeletion = (deleted: UUIDObject) => {
+        this.changes.push(new Deletion(this.hash, deleted));
         if(this.changes.length > CHANGE_STORAGE_MEMORY){
             this.changes.shift();
         }
@@ -53,13 +91,7 @@ export class RevisionTracker {
     }
 
     registerModification = (before: UUIDObject, after: UUIDObject) => {
-        this.changes.push({
-            hash: this.hash,
-            action: {
-                before,
-                after
-            }
-        });
+        this.changes.push(new Modification(this.hash, before, after));
         if(this.changes.length > CHANGE_STORAGE_MEMORY){
             this.changes.shift();
         }
@@ -83,11 +115,7 @@ export class RevisionTracker {
         if(this.redoStack.length > CHANGE_STORAGE_MEMORY){
             this.redoStack.shift();
         }
-        this.performUndoAction(change.action);
-    }
-
-    performUndoAction = (action: any /* Action */) => {
-        // dispatch on action type
+        change.performUndo(this.canvas);
     }
 
     redo = () => {
@@ -99,11 +127,7 @@ export class RevisionTracker {
         if(this.changes.length > CHANGE_STORAGE_MEMORY){
             this.changes.shift();
         }
-        this.performRedoAction(change.action);
-    }
-
-    performRedoAction = (action: any /* Action */) => {
-        // dispatch on action type
+        change.performRedo(this.canvas);
     }
 
     applyRevision = (change: Change) => {

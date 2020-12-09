@@ -24,11 +24,12 @@ export class VersionController {
     private drawSurface: fabric.Canvas;
     private currentVersion: number = 0;
     private syncingCallback: (_: boolean) => void;
-
+    private revisionTracker: RevisionTracker;
     constructor(id: number, drawSurface: fabric.Canvas, syncingCallback: (_: boolean) => void) {
         this.paintingId = id;
         this.drawSurface = drawSurface;
         this.syncingCallback = syncingCallback;
+        this.revisionTracker = new RevisionTracker(this.drawSurface);
     }
     mountChannelListener = () => {
         let echo = new Echo({
@@ -79,9 +80,6 @@ export class VersionController {
                 this.drawSurface.add(obj);
             });
         }, 'fabric');
-        for(let object of objects){
-            this.pushItemToHistory(object);
-        }
     }
     handleModifyEvent = (objects: [UUIDObject]) => {
         this.drawSurface.off('object:modified', this.modify);
@@ -108,12 +106,6 @@ export class VersionController {
             });
         }
     }
-    pushItemToHistory = (_item: fabric.Object) => {
-        if (this.currentVersion !== this.versionHistory.length) {
-            this.versionHistory = this.versionHistory.slice(
-                0, this.currentVersion);
-        }
-    }
     push = (event: any /* event w/ UUIDObject as target */) => {
         //console.log('pushing event to backend: ', event);
         let item = event.target;
@@ -128,7 +120,7 @@ export class VersionController {
         }, () => {
             this.pushPreview();
         });
-        this.pushItemToHistory(item);
+        this.revisionTracker.registerCreation(item);
     }
     pushPreview = () => {
         let preview = this.drawSurface.toDataURL({ format: 'png' });
@@ -214,6 +206,7 @@ export class VersionController {
         }, () => { });
     }
     undo = () => {
+        this.revisionTracker.undo();
         if (this.currentVersion > 0) {
             this.sendEvent({ action: 'undo' }, () => {
                 this.currentVersion -= 1;
@@ -221,6 +214,7 @@ export class VersionController {
         }
     }
     redo = () => {
+        this.revisionTracker.redo();
         // TODO call PUT endpoint, figure out how to implement redo
         if (this.currentVersion < this.versionHistory.length) {
             this.currentVersion += 1;
@@ -270,8 +264,10 @@ export class VersionController {
             })
             this.drawSurface.renderAll();
         });
+        this.revisionTracker.setHash();
     }
     setDrawSurface(canvas: fabric.Canvas): void {
         this.drawSurface = canvas;
+        this.revisionTracker.setCanvas(canvas);
     }
 }

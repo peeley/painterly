@@ -2,13 +2,14 @@ import { fabric } from 'fabric';
 
 interface Change {
     hash: string,
+    item: UUIDObject,
     performUndo(canvas: fabric.Canvas): void,
     performRedo(canvas: fabric.Canvas): void,
 }
 
 class Creation implements Change {
     public hash: string;
-    private item: UUIDObject;
+    public item: UUIDObject;
     constructor(hash: string, item: UUIDObject){
         this.hash = hash;
         this.item = item;
@@ -23,7 +24,7 @@ class Creation implements Change {
 
 class Deletion implements Change {
     public hash: string;
-    private item: UUIDObject;
+    public item: UUIDObject;
     constructor(hash: string, item: UUIDObject){
         this.hash = hash;
         this.item = item;
@@ -38,20 +39,34 @@ class Deletion implements Change {
     }
 }
 
+export interface Transformation {
+    angle: number,
+    left: number,
+    top: number,
+    scaleX: number,
+    scaleY: number
+}
+
 class Modification implements Change {
     public hash: string;
-    private before: UUIDObject;
-    private after: UUIDObject;
-    constructor(hash: string, before: UUIDObject, after: UUIDObject){
+    public item: UUIDObject;
+    private before: Transformation;
+    private after: Transformation;
+    constructor(hash: string, item: UUIDObject, before: Transformation, after: Transformation){
         this.hash = hash;
+        this.item = item;
         this.before = before;
         this.after = after;
     }
     performUndo(canvas: fabric.Canvas){
-
+        this.item.set(this.before);
+        this.item.setCoords();
+        canvas.renderAll();
     }
     performRedo(canvas: fabric.Canvas){
-
+        this.item.set(this.after);
+        this.item.setCoords();
+        canvas.renderAll();
     }
 }
 
@@ -82,7 +97,7 @@ export class RevisionTracker {
             this.changes.shift();
         }
         this.setHash();
-        console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
+        //console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
     }
 
     registerDeletion = (deleted: UUIDObject) => {
@@ -91,16 +106,16 @@ export class RevisionTracker {
             this.changes.shift();
         }
         this.setHash();
-        console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
+        //console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
     }
 
-    registerModification = (before: UUIDObject, after: UUIDObject) => {
-        this.changes.push(new Modification(this.hash, before, after));
+    registerModification = (item: UUIDObject, before: Transformation, after: Transformation) => {
+        this.changes.push(new Modification(this.hash, item, before, after));
         if(this.changes.length > CHANGE_STORAGE_MEMORY){
             this.changes.shift();
         }
         this.setHash();
-        console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
+        console.log(`changes: ${JSON.stringify(this.changes)} redos ${JSON.stringify(this.redoStack)}`);
     }
 
     setHash = () => {

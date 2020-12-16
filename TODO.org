@@ -6,11 +6,6 @@
    up on large part of project, but tbh it's nice to find a library that's 100%
    solved all the annoying reccuring bugs I've had to solve over and over.
 
-** TODO Create data structure and functionality for undo/redo
-   Using HTML Canvas, all that was needed was an array of serialized Stroke
-   objects. Now with FabricJS, something more robust may be necessary inside
-   VersionController. Also need to assess backend solutions.
-
 ** TODO make different mouse cursors for different tools and states
 
 ** TODO add event listener for other users joining, see who else is drawing/watching
@@ -18,6 +13,11 @@
    need to make it clear when a user is able to modify a painting versus just
    view the painting. perhaps just removing the tool bar and undo/redo but
    keeping the zoom buttons will work.
+** IN-PROGRESS Create data structure and functionality for undo/redo
+   Using HTML Canvas, all that was needed was an array of serialized Stroke
+   objects. Now with FabricJS, something more robust may be necessary inside
+   VersionController. Also need to assess backend solutions.
+
 ** IN-PROGRESS Add painting preview in home screen
    FabricJS allows for
    [[http://fabricjs.com/fabric-intro-part-3#serialization][serialization to

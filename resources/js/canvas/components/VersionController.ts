@@ -2,7 +2,7 @@ import axios from 'axios';
 import { fabric } from 'fabric';
 import { v4 } from 'uuid'
 import Echo from 'laravel-echo';
-import { RevisionTracker, UUIDObject } from './RevisionTracker';
+import { RevisionTracker, UUIDObject, Transformation } from './RevisionTracker';
 
 type UpdateAction = "modify" | "add" | "remove" | "clear" | "undo" | "redo";
 
@@ -130,6 +130,7 @@ export class VersionController {
             });
     }
     modify = (event: fabric.IEvent) => {
+        console.log(event);
         let item = event.target;
         if (!item) {
             return;
@@ -140,6 +141,11 @@ export class VersionController {
             modified = this.applyGroupProperties(activeObject);
         }
         else{
+            this.revisionTracker.registerModification(
+                item as UUIDObject,
+                this.getTransformation(event.transform?.original),
+                this.getTransformation(event.target)
+            );
             modified = [item.toObject(['uuid'])];
         }
         this.pushModification(modified)
@@ -173,6 +179,15 @@ export class VersionController {
             itemObject['scaleY'] = itemObject.scaleY * group.scaleY;
         }
         return itemObject;
+    }
+    getTransformation = (item: any): Transformation => {
+        return {
+            angle: item.angle,
+            left: item.left,
+            top: item.top,
+            scaleX: item.scaleX,
+            scaleY: item.scaleY,
+        }
     }
     pushModification = (item: UUIDObject[]) => {
         this.sendEvent({

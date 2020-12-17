@@ -138,7 +138,16 @@ export class VersionController {
         let activeObject: fabric.Object | fabric.Group = this.drawSurface.getActiveObject();
         let modified: UUIDObject[];
         if(activeObject instanceof fabric.Group){
-            modified = this.applyGroupProperties(activeObject);
+            let originalGroupTransform = this.getTransformation(event.transform?.original);
+            let updatedGroupTransform = this.getTransformation(event.target);
+            if(!originalGroupTransform || !updatedGroupTransform){
+                return;
+            }
+            modified = this.applyGroupProperties(
+                activeObject,
+                originalGroupTransform as Transformation,
+                updatedGroupTransform as Transformation
+            );
         }
         else{
             this.revisionTracker.registerModification(
@@ -155,13 +164,25 @@ export class VersionController {
     // the group center. the best way to get absolute coords matrix
     // transform a la:
     // https://github.com/fabricjs/fabric.js/issues/4206
-    applyGroupProperties = (group: fabric.Group) => {
+    applyGroupProperties = (group: fabric.Group, original: Transformation, updated: Transformation) => {
         let groupObjects = group.getObjects()
-        return groupObjects.map( (item: any) => {
-            return this.scaleItem(item, group);
+        let updatedGroup = groupObjects.map( (item: any) => {
+            console.log(item);
+            // let originalItem = this.itemTransformFromGroup(original, group);
+            // let updatedItem = this.itemTransformFromGroup(updated, group);
+            // item.set(updated);
+            // this.revisionTracker.registerModification(
+            //     item,
+            //     originalItem,
+            //     updatedItem
+            // )
+            // item.setCoords();
+            return this.itemTransformFromGroup(item, group);
         });
+        this.drawSurface.renderAll();
+        return updatedGroup;
     }
-    scaleItem = (item: fabric.Object, group: fabric.Group) => {
+    itemTransformFromGroup = (item: fabric.Object, group: fabric.Group) => {
         const groupMatrix = group.calcTransformMatrix();
         let newPoint = fabric.util.transformPoint(
             new fabric.Point(item.left as number, item.top as number),

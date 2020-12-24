@@ -168,24 +168,25 @@ export class VersionController {
         let groupObjects = group.getObjects()
         let updatedGroup = groupObjects.map( (item: any) => {
             console.log(item);
-            // let originalItem = this.itemTransformFromGroup(original, group);
-            // let updatedItem = this.itemTransformFromGroup(updated, group);
+            let originalTransform = this.itemTransformFromGroup(item, original);
+            let updatedTransform = this.itemTransformFromGroup(item, updated);
             // item.set(updated);
-            // this.revisionTracker.registerModification(
-            //     item,
-            //     originalItem,
-            //     updatedItem
-            // )
             // item.setCoords();
-            return this.itemTransformFromGroup(item, group);
+            let updatedItem = this.itemCoordsFromGroup(item, group);
+            this.revisionTracker.registerModification(
+                item,
+                originalTransform,
+                updatedTransform
+            );
+            console.log('updated item', updatedItem);
+            return updatedItem;
         });
-        this.drawSurface.renderAll();
         return updatedGroup;
     }
-    itemTransformFromGroup = (item: fabric.Object, group: fabric.Group) => {
-        const groupMatrix = group.calcTransformMatrix();
+    itemCoordsFromGroup = (item: fabric.Object, group: fabric.Group): UUIDObject => {
+        const groupMatrix = item.calcTransformMatrix();
         let newPoint = fabric.util.transformPoint(
-            new fabric.Point(item.left as number, item.top as number),
+            new fabric.Point(-(item.width as number)/2, -(item.height as number)/2),
             groupMatrix);
         let itemObject = item.toObject(['uuid']);
         itemObject['top'] = newPoint.y;
@@ -200,6 +201,21 @@ export class VersionController {
             itemObject['scaleY'] = itemObject.scaleY * group.scaleY;
         }
         return itemObject;
+    }
+    itemTransformFromGroup = (item: fabric.Object, transform: any): Transformation => {
+        let itemTransform = this.getTransformation(item);
+        itemTransform['left'] = (item.left as number) + transform.left + transform.width/2;
+        itemTransform['top'] = (item.top as number) + transform.top + transform.height/2;
+        if(transform.angle){
+            itemTransform['angle'] = itemTransform.angle + transform.angle;
+        }
+        if(transform.scaleX){
+            itemTransform['scaleX'] = itemTransform.scaleX * transform.scaleX;
+        }
+        if(transform.scaleY){
+            itemTransform['scaleY'] = itemTransform.scaleY * transform.scaleY;
+        }
+        return itemTransform;
     }
     getTransformation = (item: any): Transformation => {
         return {

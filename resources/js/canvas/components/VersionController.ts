@@ -138,25 +138,16 @@ export class VersionController {
         let activeObject: fabric.Object | fabric.Group = this.drawSurface.getActiveObject();
         let modified: UUIDObject[];
         if(activeObject instanceof fabric.Group){
-            let originalGroupTransform = this.getTransformation(event.transform?.original);
-            let updatedGroupTransform = this.getTransformation(event.target);
-            if(!originalGroupTransform || !updatedGroupTransform){
-                return;
-            }
-            modified = this.applyGroupProperties(
-                activeObject,
-                originalGroupTransform as Transformation,
-                updatedGroupTransform as Transformation
-            );
+             modified = this.applyGroupProperties(activeObject);
         }
         else{
-            this.revisionTracker.registerModification(
-                item as UUIDObject,
-                this.getTransformation(event.transform?.original),
-                this.getTransformation(event.target)
-            );
             modified = [item.toObject(['uuid'])];
         }
+        this.revisionTracker.registerModification(
+            activeObject as UUIDObject,
+            this.getTransformation(event.transform?.original),
+            this.getTransformation(event.target)
+        );
         this.pushModification(modified)
     }
     // getting the properties of single objects once modified via group
@@ -164,21 +155,11 @@ export class VersionController {
     // the group center. the best way to get absolute coords matrix
     // transform a la:
     // https://github.com/fabricjs/fabric.js/issues/4206
-    applyGroupProperties = (group: fabric.Group, original: Transformation, updated: Transformation) => {
+    applyGroupProperties = (group: fabric.Group// , original: Transformation, updated: Transformation
+                           ) => {
         let groupObjects = group.getObjects()
         let updatedGroup = groupObjects.map( (item: any) => {
-            console.log(item);
-            let originalTransform = this.itemTransformFromGroup(item, original);
-            let updatedTransform = this.itemTransformFromGroup(item, updated);
-            // item.set(updated);
-            // item.setCoords();
             let updatedItem = this.itemCoordsFromGroup(item, group);
-            this.revisionTracker.registerModification(
-                item,
-                originalTransform,
-                updatedTransform
-            );
-            console.log('updated item', updatedItem);
             return updatedItem;
         });
         return updatedGroup;
@@ -201,21 +182,6 @@ export class VersionController {
             itemObject['scaleY'] = itemObject.scaleY * group.scaleY;
         }
         return itemObject;
-    }
-    itemTransformFromGroup = (item: fabric.Object, transform: any): Transformation => {
-        let itemTransform = this.getTransformation(item);
-        itemTransform['left'] = (item.left as number) + transform.left + transform.width/2;
-        itemTransform['top'] = (item.top as number) + transform.top + transform.height/2;
-        if(transform.angle){
-            itemTransform['angle'] = itemTransform.angle + transform.angle;
-        }
-        if(transform.scaleX){
-            itemTransform['scaleX'] = itemTransform.scaleX * transform.scaleX;
-        }
-        if(transform.scaleY){
-            itemTransform['scaleY'] = itemTransform.scaleY * transform.scaleY;
-        }
-        return itemTransform;
     }
     getTransformation = (item: any): Transformation => {
         return {

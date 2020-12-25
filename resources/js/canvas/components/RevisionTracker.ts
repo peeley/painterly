@@ -115,7 +115,7 @@ export class RevisionTracker {
             this.changes.shift();
         }
         this.setHash();
-        console.log(`changes: ${JSON.stringify(this.changes)} redos ${JSON.stringify(this.redoStack)}`);
+        //console.log(`changes: ${JSON.stringify(this.changes)} redos ${JSON.stringify(this.redoStack)}`);
     }
 
     setHash = () => {

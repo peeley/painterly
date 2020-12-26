@@ -136,7 +136,7 @@ export class RevisionTracker {
             this.redoStack.shift();
         }
         change.performUndo(this.canvas);
-        console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
+        //console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
     }
 
     redo = () => {
@@ -149,7 +149,7 @@ export class RevisionTracker {
             this.changes.shift();
         }
         change.performRedo(this.canvas);
-        console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
+        //console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
     }
 
     applyRevision = (change: Change) => {

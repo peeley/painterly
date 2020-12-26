@@ -5,7 +5,7 @@ import { ToolController } from './ToolController';
 import { Tool, MouseEventType } from './Tools/Tool';
 import { PenTool } from './Tools/PenTool';
 import { PanHandler } from './PanHandler';
-import { VersionController } from './VersionController';
+import { EventHandler } from './EventHandler';
 import { MenuBar } from './MenuBar';
 
 interface CanvasProps {
@@ -23,7 +23,7 @@ interface CanvasState {
 const CanvasId = 'drawSurface'
 
 class Canvas extends React.Component<CanvasProps, CanvasState> {
-    private versionController: VersionController;
+    private eventHandler: EventHandler;
     private panHandler: PanHandler;
     private drawSurface: fabric.Canvas;
     public state: CanvasState = {
@@ -38,7 +38,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         this.drawSurface = new fabric.Canvas(CanvasId, {
             fireMiddleClick: true,
         });
-        this.versionController = new VersionController(this.props.paintingId, this.drawSurface, this.setSyncing);
+        this.eventHandler = new EventHandler(this.props.paintingId, this.drawSurface, this.setSyncing);
         this.panHandler = new PanHandler();
     }
     componentDidMount() {
@@ -70,11 +70,11 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             'mouse:up': (o) => this.handleInput('mouse:up', o),
             'mouse:wheel': this.handleZoom,
             'path:created': (o: any) => {
-                this.versionController.push({ target: o.path });
+                this.eventHandler.push({ target: o.path });
             },
-            'push:added': this.versionController.push,
-            'object:modified': this.versionController.modify,
-            'push:removed': this.versionController.remove,
+            'push:added': this.eventHandler.push,
+            'object:modified': this.eventHandler.modify,
+            'push:removed': this.eventHandler.remove,
             'dragenter': (o) => console.log('dragenter', o),
             'dragover': (o: any) => {
                 console.log('dragover', o);
@@ -97,10 +97,10 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             if (event.ctrlKey) {
                 switch (event.key) {
                     case 'z':
-                        this.versionController.undo();
+                        this.eventHandler.undo();
                         break;
                     case 'y':
-                        this.versionController.redo();
+                        this.eventHandler.redo();
                         break;
                     default:
                 }
@@ -134,13 +134,13 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                         stopContextMenu: false,
                     });
                     // need to set draw surface again after loading finishes
-                    this.versionController.setDrawSurface(this.drawSurface);
-                    this.versionController.deserializeHistory(response.data.objects);
+                    this.eventHandler.setDrawSurface(this.drawSurface);
+                    this.eventHandler.deserializeHistory(response.data.objects);
                     if(response.data.objects.length === 0){
-                        this.versionController.pushPreview(); // make preview blank
+                        this.eventHandler.pushPreview(); // make preview blank
                     }
-                    this.versionController.pushPreview();
-                    this.versionController.mountChannelListener();
+                    this.eventHandler.pushPreview();
+                    this.eventHandler.mountChannelListener();
                     this.handleToolSelect(this.state.tool);
                     this.mountFabric();
                     this.setState({ isSyncing: false });
@@ -199,20 +199,20 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                     <div className="btn-group pb-2 pl-3" >
                         <button className="btn btn-outline-secondary"
                             onClick={() => {
-                                this.versionController.undo()
+                                this.eventHandler.undo()
                             }}>
                             <i className="fas fa-undo" title="Undo"></i>
                         </button>
                         <button className="btn btn-outline-secondary"
                             onClick={() => {
-                                this.versionController.redo()
+                                this.eventHandler.redo()
                             }}>
                             <i className="fas fa-redo" title="Redo"></i>
                         </button>
                         <button className="btn btn-outline-secondary"
                             onClick={() => {
                                 this.clearCanvas();
-                                this.versionController.wipeHistory();
+                                this.eventHandler.wipeHistory();
                             }}>
                             Clear
                         </button>

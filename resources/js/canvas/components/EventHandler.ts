@@ -18,7 +18,7 @@ interface PaintingUpdateEvent {
     title: string | null
 }
 
-export class VersionController {
+export class EventHandler {
     private paintingId: number;
     private versionHistory: Array<fabric.Object> = [];
     private drawSurface: fabric.Canvas;
@@ -130,7 +130,6 @@ export class VersionController {
             });
     }
     modify = (event: fabric.IEvent) => {
-        console.log(event);
         let item = event.target;
         if (!item) {
             return;
@@ -155,8 +154,7 @@ export class VersionController {
     // the group center. the best way to get absolute coords matrix
     // transform a la:
     // https://github.com/fabricjs/fabric.js/issues/4206
-    applyGroupProperties = (group: fabric.Group// , original: Transformation, updated: Transformation
-                           ) => {
+    applyGroupProperties = (group: fabric.Group): UUIDObject[] => {
         let groupObjects = group.getObjects()
         let updatedGroup = groupObjects.map( (item: any) => {
             let updatedItem = this.itemCoordsFromGroup(item, group);

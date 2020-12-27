@@ -1,17 +1,24 @@
 import { fabric } from 'fabric';
 
+export type UpdateAction = "modify" | "add" | "remove" | "clear";
+
+export interface OutgoingEvent {
+    action: UpdateAction,
+    objects?: UUIDObject | UUIDObject[]
+}
+
 interface Change {
-    hash: string,
     item: UUIDObject,
     performUndo(canvas: fabric.Canvas): void,
     performRedo(canvas: fabric.Canvas): void,
+    getEvent(revisionType: RevisionType): OutgoingEvent,
 }
 
+type RevisionType = "undo" | "redo";
+
 class Creation implements Change {
-    public hash: string;
     public item: UUIDObject;
-    constructor(hash: string, item: UUIDObject){
-        this.hash = hash;
+    constructor(item: UUIDObject){
         this.item = item;
     }
     performUndo(canvas: fabric.Canvas){
@@ -20,13 +27,17 @@ class Creation implements Change {
     performRedo(canvas: fabric.Canvas){
         canvas.add(this.item);
     }
+    getEvent(revisionType: RevisionType): OutgoingEvent{
+        return {
+            action: revisionType === 'undo' ? "remove" : "add",
+            objects: [this.item.toObject(['uuid'])]
+        }
+    }
 }
 
 class Deletion implements Change {
-    public hash: string;
     public item: UUIDObject;
-    constructor(hash: string, item: UUIDObject){
-        this.hash = hash;
+    constructor(item: UUIDObject){
         this.item = item;
     }
     performUndo(canvas: fabric.Canvas){
@@ -36,6 +47,12 @@ class Deletion implements Change {
     performRedo(canvas: fabric.Canvas){
         console.log('redoing delete of: ', this.item);
         canvas.remove(this.item);
+    }
+    getEvent(revisionType: RevisionType): OutgoingEvent{
+        return {
+            action: revisionType === 'undo' ? "add" : "remove",
+            objects: [this.item.toObject(['uuid'])]
+        }
     }
 }
 
@@ -48,12 +65,10 @@ export interface Transformation {
 }
 
 class Modification implements Change {
-    public hash: string;
     public item: UUIDObject;
     private before: Transformation;
     private after: Transformation;
-    constructor(hash: string, item: UUIDObject, before: Transformation, after: Transformation){
-        this.hash = hash;
+    constructor(item: UUIDObject, before: Transformation, after: Transformation){
         this.item = item;
         this.before = before;
         this.after = after;
@@ -68,6 +83,12 @@ class Modification implements Change {
         this.item.setCoords();
         canvas.renderAll();
     }
+    getEvent(revisionType: RevisionType): OutgoingEvent{
+        return {
+            action: "modify",
+            objects: [this.item.toObject(['uuid'])]
+        }
+    }
 }
 
 export interface UUIDObject extends fabric.Object {
@@ -77,8 +98,6 @@ export interface UUIDObject extends fabric.Object {
 const CHANGE_STORAGE_MEMORY = 100;
 
 export class RevisionTracker {
-
-    private hash: string;
     private changes: Change[];
     private redoStack: Change[];
     private canvas: fabric.Canvas;
@@ -87,73 +106,71 @@ export class RevisionTracker {
         this.canvas = canvas;
         this.changes = [];
         this.redoStack = [];
-        this.hash = '';
-        this.setHash();
     }
 
     registerCreation = (created: UUIDObject) => {
-        this.changes.push(new Creation(this.hash, created));
+        this.changes.push(new Creation(created));
         if(this.changes.length > CHANGE_STORAGE_MEMORY){
             this.changes.shift();
         }
-        this.setHash();
         //console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
     }
 
     registerDeletion = (deleted: UUIDObject) => {
-        this.changes.push(new Deletion(this.hash, deleted));
+        this.changes.push(new Deletion(deleted));
         if(this.changes.length > CHANGE_STORAGE_MEMORY){
             this.changes.shift();
         }
-        this.setHash();
         //console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
     }
 
     registerModification = (item: UUIDObject, before: Transformation, after: Transformation) => {
-        this.changes.push(new Modification(this.hash, item, before, after));
+        this.changes.push(new Modification(item, before, after));
         if(this.changes.length > CHANGE_STORAGE_MEMORY){
             this.changes.shift();
         }
-        this.setHash();
         //console.log(`changes: ${JSON.stringify(this.changes)} redos ${JSON.stringify(this.redoStack)}`);
-    }
-
-    setHash = () => {
-        this.hash = btoa(this.canvas.toJSON());
     }
 
     setCanvas = (canvas: fabric.Canvas) => {
         this.canvas = canvas;
     }
 
-    undo = () => {
+    undo = (): Change | null => {
         let change = this.changes.pop();
         if(!change){
-            return; // nothing to undo
+            return null; // nothing to undo
         }
         this.redoStack.push(change);
         if(this.redoStack.length > CHANGE_STORAGE_MEMORY){
             this.redoStack.shift();
         }
         change.performUndo(this.canvas);
+        return change;
         //console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
     }
 
-    redo = () => {
+    redo = (): Change | null => {
         let change = this.redoStack.pop();
         if(!change){
-            return; // nothing to undo
+            return null; // nothing to undo
         }
         this.changes.push(change);
         if(this.changes.length > CHANGE_STORAGE_MEMORY){
             this.changes.shift();
         }
         change.performRedo(this.canvas);
+        return change;
         //console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
     }
 
-    applyRevision = (change: Change) => {
-        // TODO
+    applyRevision = (revisionType: RevisionType): OutgoingEvent | null => {
+        let change = revisionType === "undo"
+            ? this.undo()
+            : this.redo();
+        if(!change){
+            return null;
+        }
+        return change.getEvent(revisionType);
     }
-
 }

@@ -20,6 +20,8 @@
    modification, group undo/redo does not work. I think this might have to do
    with the individual item being removed from the group, or the group itself
    being removed or invalidated.
+** TODO change backend storage of strokes to allow for O(1) modify/delete
+   Should probably be simple enough to keep a hash table of uuid -> stroke
 
 ** IN-PROGRESS Synchronise undo/redo across clients with new RevisionTracker
 ** IN-PROGRESS Add painting preview in home screen

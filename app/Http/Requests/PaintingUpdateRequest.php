@@ -26,7 +26,10 @@ class PaintingUpdateRequest extends FormRequest
     {
         return [
             'title' => 'max:255|min:1',
-            'action' => ['required_without:title', Rule::in(['add', 'undo', 'clear', 'modify', 'remove'])],
+            'action' => [
+                'required_without:title',
+                Rule::in(['add', 'undo', 'redo','clear', 'modify', 'remove'])
+            ],
             'objects' => 'required_if:action,add|json',
         ];
     }

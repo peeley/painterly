@@ -2,14 +2,7 @@ import axios from 'axios';
 import { fabric } from 'fabric';
 import { v4 } from 'uuid'
 import Echo from 'laravel-echo';
-import { RevisionTracker, UUIDObject, Transformation } from './RevisionTracker';
-
-type UpdateAction = "modify" | "add" | "remove" | "clear" | "undo" | "redo";
-
-interface OutgoingEvent {
-    action: UpdateAction,
-    objects?: UUIDObject | UUIDObject[]
-}
+import { RevisionTracker, UUIDObject, Transformation, OutgoingEvent, UpdateAction } from './RevisionTracker';
 
 interface PaintingUpdateEvent {
     paintingId: number,
@@ -20,9 +13,7 @@ interface PaintingUpdateEvent {
 
 export class EventHandler {
     private paintingId: number;
-    private versionHistory: Array<fabric.Object> = [];
     private drawSurface: fabric.Canvas;
-    private currentVersion: number = 0;
     private syncingCallback: (_: boolean) => void;
     private revisionTracker: RevisionTracker;
     constructor(id: number, drawSurface: fabric.Canvas, syncingCallback: (_: boolean) => void) {
@@ -52,12 +43,6 @@ export class EventHandler {
                             throw Error('Missing object on `modify` event.');
                         }
                         this.handleModifyEvent(data.objects);
-                        break;
-                    case 'undo':
-                        console.log('receive undo event!')
-                        break;
-                    case 'redo':
-                        console.log('receive redo event!')
                         break;
                     case 'clear':
                         this.drawSurface.clear();
@@ -135,6 +120,7 @@ export class EventHandler {
             });
     }
     modify = (event: fabric.IEvent) => {
+        console.log('canvas recieved modify event');
         let item = event.target;
         if (!item) {
             return;
@@ -212,7 +198,7 @@ export class EventHandler {
         let removed: UUIDObject[];
         if(active instanceof fabric.Group){
             removed = active.getObjects().map( (item: any) => {
-                this.revisionTracker.registerDeletion(item);
+                this.revisionTracker.registerDeletion(item as UUIDObject);
                 return item.toObject(['uuid']);
             });
             let allSelected = this.drawSurface.getActiveObjects();
@@ -220,7 +206,7 @@ export class EventHandler {
             this.drawSurface.discardActiveObject().renderAll();
         }
         else{
-            this.revisionTracker.registerDeletion(active);
+            this.revisionTracker.registerDeletion(active as UUIDObject);
             removed = [active.toObject(['uuid'])];
         }
         this.sendEvent({
@@ -229,12 +215,16 @@ export class EventHandler {
         }, () => { });
     }
     undo = () => {
-        this.revisionTracker.undo();
-        this.sendEvent({ action: 'undo' }, () => {});
+        let event = this.revisionTracker.applyRevision('undo');
+        if(event){
+            this.sendEvent(event, () => {});
+        }
     }
     redo = () => {
-        this.revisionTracker.redo();
-        this.sendEvent({ action: 'redo' }, () => {});
+        let event = this.revisionTracker.applyRevision('redo');
+        if(event){
+            this.sendEvent(event, () => {});
+        }
     }
     checksumMatches = (checksum: string): boolean => {
         let currentCanvasChecksum = btoa(this.drawSurface.getObjects().toString());
@@ -244,8 +234,6 @@ export class EventHandler {
         this.sendEvent({ action: 'clear' }, () => {
             // TODO handle bad response?
         });
-        this.versionHistory = [];
-        this.currentVersion = 0;
     }
     // TODO define outgoing event type
     sendEvent = (event: OutgoingEvent, callback: Function) => {
@@ -280,7 +268,6 @@ export class EventHandler {
             })
             this.drawSurface.renderAll();
         });
-        this.revisionTracker.setHash();
     }
     setDrawSurface(canvas: fabric.Canvas): void {
         this.drawSurface = canvas;

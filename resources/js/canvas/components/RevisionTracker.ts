@@ -86,7 +86,7 @@ class Modification implements Change {
     getEvent(revisionType: RevisionType): OutgoingEvent{
         return {
             action: "modify",
-            objects: [this.item.toObject(['uuid'])]
+            objects: this.item
         }
     }
 }

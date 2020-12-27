@@ -217,12 +217,20 @@ export class EventHandler {
     undo = () => {
         let event = this.revisionTracker.applyRevision('undo');
         if(event){
+            // group modify, as always, is a special case
+            if(event.action === "modify" && event.objects instanceof fabric.Group){
+                event.objects = this.applyGroupProperties(event.objects);
+            }
             this.sendEvent(event, () => {});
         }
     }
     redo = () => {
         let event = this.revisionTracker.applyRevision('redo');
         if(event){
+            // group modify, as always, is a special case
+            if(event.action === "modify" && event.objects instanceof fabric.Group){
+                event.objects = this.applyGroupProperties(event.objects);
+            }
             this.sendEvent(event, () => {});
         }
     }

@@ -13,11 +13,15 @@
    need to make it clear when a user is able to modify a painting versus just
    view the painting. perhaps just removing the tool bar and undo/redo but
    keeping the zoom buttons will work.
-** IN-PROGRESS Create data structure and functionality for undo/redo
-   Using HTML Canvas, all that was needed was an array of serialized Stroke
-   objects. Now with FabricJS, something more robust may be necessary inside
-   VersionController. Also need to assess backend solutions.
+** TODO fix bug with group undo/redo after modifying individual item
+   Related to [[Create data structure and functionality for undo/redo][this]], currently the bug is as follows: group select and then group
+   modify. Undo/redo works on the group as intended. Then, modify one of the
+   individual items of the group. Even after undoing the individual
+   modification, group undo/redo does not work. I think this might have to do
+   with the individual item being removed from the group, or the group itself
+   being removed or invalidated.
 
+** IN-PROGRESS Synchronise undo/redo across clients with new RevisionTracker
 ** IN-PROGRESS Add painting preview in home screen
    FabricJS allows for
    [[http://fabricjs.com/fabric-intro-part-3#serialization][serialization to
@@ -67,6 +71,12 @@
     Putting back to TODO, 09-07-2020 Now that we're using FabricJS, might need
     to rethink strategy from basic flood fill since FabricJS isn't really meant
     for directly manipulating pixels on the canvas.
+
+** DONE Create data structure and functionality for undo/redo
+   CLOSED: [2020-12-25 Fri 19:18]
+   Using HTML Canvas, all that was needed was an array of serialized Stroke
+   objects. Now with FabricJS, something more robust may be necessary inside
+   VersionController. Also need to assess backend solutions.
 
 ** DONE create logout websocket so user is automatically logged out
    Did not even have to create websocket, just check for 419 response on any

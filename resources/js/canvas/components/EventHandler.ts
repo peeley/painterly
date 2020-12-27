@@ -54,7 +54,10 @@ export class EventHandler {
                         this.handleModifyEvent(data.objects);
                         break;
                     case 'undo':
-                        this.currentVersion -= 1;
+                        console.log('receive undo event!')
+                        break;
+                    case 'redo':
+                        console.log('receive redo event!')
                         break;
                     case 'clear':
                         this.drawSurface.clear();
@@ -70,13 +73,15 @@ export class EventHandler {
                 }
             });
     }
-    handleAddEvent = (objects: [UUIDObject]) => {
+    handleAddEvent = (objects: UUIDObject[]) => {
         if (!objects) {
             console.log('Received bad `add` event');
             return;
         }
+        console.log('received add event: ', objects);
         fabric.util.enlivenObjects(objects, (objects: Array<UUIDObject>) => {
             objects.forEach((obj: UUIDObject) => {
+                console.log('enlivened: ', obj);
                 this.drawSurface.add(obj);
             });
         }, 'fabric');
@@ -115,7 +120,7 @@ export class EventHandler {
         item.selectable = false;
         item.uuid = v4();
         this.sendEvent({
-            objects: item.toObject(['uuid']),
+            objects: [item.toObject(['uuid'])],
             action: 'add'
         }, () => {
             this.pushPreview();
@@ -225,18 +230,11 @@ export class EventHandler {
     }
     undo = () => {
         this.revisionTracker.undo();
-        if (this.currentVersion > 0) {
-            this.sendEvent({ action: 'undo' }, () => {
-                this.currentVersion -= 1;
-            });
-        }
+        this.sendEvent({ action: 'undo' }, () => {});
     }
     redo = () => {
         this.revisionTracker.redo();
-        // TODO call PUT endpoint, figure out how to implement redo
-        if (this.currentVersion < this.versionHistory.length) {
-            this.currentVersion += 1;
-        }
+        this.sendEvent({ action: 'redo' }, () => {});
     }
     checksumMatches = (checksum: string): boolean => {
         let currentCanvasChecksum = btoa(this.drawSurface.getObjects().toString());

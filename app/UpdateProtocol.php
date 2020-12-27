@@ -17,9 +17,8 @@ class UpdateProtocol
         } else if ($action === 'undo') {
             $painting->objects = array_slice($painting->objects, 0, -1);
         } else if ($action === 'add') {
-            $new_stroke = json_decode($update['objects']);
-            $objects = $painting->objects;
-            array_push($objects, $new_stroke);
+            $new_strokes = json_decode($update['objects']);
+            $objects = array_merge($painting->objects, $new_strokes);
             $painting->objects = $objects;
         } else if ($action === 'modify') {
             $modified_objects = json_decode($update['objects'], true);

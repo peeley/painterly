@@ -2,12 +2,7 @@
 
 * Front End
 ** TODO Fix centering of toggles in PrivacyEditor
-   CLOSED: [2020-09-07 Mon 16:06] This is really long overdue. Feels like giving
-   up on large part of project, but tbh it's nice to find a library that's 100%
-   solved all the annoying reccuring bugs I've had to solve over and over.
-
 ** TODO make different mouse cursors for different tools and states
-
 ** TODO add event listener for other users joining, see who else is drawing/watching
 ** TODO make UI appear different when user does not have write permission
    need to make it clear when a user is able to modify a painting versus just
@@ -20,17 +15,6 @@
    modification, group undo/redo does not work. I think this might have to do
    with the individual item being removed from the group, or the group itself
    being removed or invalidated.
-** TODO change backend storage of strokes to allow for O(1) modify/delete
-   Should probably be simple enough to keep a hash table of uuid -> stroke
-
-** IN-PROGRESS Synchronise undo/redo across clients with new RevisionTracker
-** IN-PROGRESS Add painting preview in home screen
-   FabricJS allows for
-   [[http://fabricjs.com/fabric-intro-part-3#serialization][serialization to
-   SVG]], perhaps periodically serialize and store SVG in DB, then fetch on
-   mouseover? Also convert home screen to grid of paintings for ease of
-   navigation
-
 ** IN-PROGRESS UI/UX overhaul *ongoing*
 *** TODO Landing page
 *** DONE Tool select bar
@@ -74,7 +58,14 @@
     to rethink strategy from basic flood fill since FabricJS isn't really meant
     for directly manipulating pixels on the canvas.
 
-** DONE Create data structure and functionality for undo/redo
+** DONE Add painting preview in home screen
+   CLOSED: [2020-12-28 Mon 21:08]
+   FabricJS allows for [[http://fabricjs.com/fabric-intro-part-3#serialization][serialization to SVG]], perhaps periodically serialize and
+   store SVG in DB, then fetch on mouseover? Also convert home screen to grid of
+   paintings for ease of navigation
+
+** DONE Synchronise undo/redo across clients with new RevisionTracker
+   CLOSED: [2020-12-27 Sun 15:54] ** DONE Create data structure and functionality for undo/redo
    CLOSED: [2020-12-25 Fri 19:18]
    Using HTML Canvas, all that was needed was an array of serialized Stroke
    objects. Now with FabricJS, something more robust may be necessary inside
@@ -181,6 +172,12 @@
    Could solve by using local Redis for pub/sub, but that involves more
    dependencies, possibly more brittle.
 
+** TODO change backend storage of strokes to allow for O(1) modify/delete
+   Should probably be simple enough to keep a hash table of uuid -> stroke
+
+** TODO create emails for registration/password reset/etc
+   Probably just going to use mailgun according to [[https://laravel.com/docs/8.x/mail#introduction][laravel docs]]
+
 ** IN-PROGRESS *!!TESTING!!*
 *** DONE Painting tests
     CLOSED: [2020-08-20 Thu 14:57]
@@ -222,7 +219,14 @@
 
 
 * DevOps/Misc
-** TODO Figure out method for self-hosting
+** IN-PROGRESS write Dockerfile
+   Will need to figure out how to allow users to inject API keys for mail,
+   database, etc.
+
+** DONE Figure out method for self-hosting
+   Docker image seems easy enough, especially for self hosting since end users
+   can just pull an image and run it on a VPS
+   CLOSED: [2020-12-28 Mon 21:16]
    Docker image? Would also need to figure out how to manage dependencies for
    mail & pub/sub - would end users be responsible for providing their own API
    keys?

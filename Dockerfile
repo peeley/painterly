@@ -52,8 +52,6 @@ RUN docker-php-ext-install \
     intl \
     mbstring \
     pdo \
-    pdo_mysql \
-    pdo_pgsql \
     pdo_sqlite \
     pcntl \
     tokenizer \
@@ -66,11 +64,15 @@ ENV PATH ./vendor/bin:/composer/vendor/bin:$PATH
 ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
 
-# Install PHP_CodeSniffer
-RUN composer global require "squizlabs/php_codesniffer=*"
+WORKDIR /app
+COPY . /app
 
-# Cleanup dev dependencies
+RUN composer install
+RUN npm install
+
 RUN apk del -f .build-deps
 
-# Setup working directory
-WORKDIR /var/www
+EXPOSE 8000
+
+CMD php artisan migrate
+CMD php artisan serve --host=0.0.0.0 --port=8000

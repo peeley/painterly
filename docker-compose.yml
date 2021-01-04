@@ -1,0 +1,25 @@
+version: "3.7"
+
+services:
+  app:
+    image: painterly:latest
+    ports:
+      - 8000:8000
+    volumes:
+      - ./:/app
+    environment:
+      DB_HOST: postgres
+      DB_PASSWORD: secret
+      DB_USER: painterly
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    volumes:
+      - painterly-db:/var/lib/postgres
+    environment:
+      POSTGRES_USER: painterly
+      POSTGRES_PASSWORD: secret
+
+volumes:
+  painterly-db:

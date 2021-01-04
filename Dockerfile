@@ -6,7 +6,7 @@ RUN apk add --no-cache --virtual .build-deps \
     imagemagick-dev \
     libtool \
     libxml2-dev \
-    sqlite-dev
+    postgresql-dev
 
 RUN apk add --no-cache \
     bash \
@@ -26,10 +26,10 @@ RUN apk add --no-cache \
     nodejs \
     nodejs-npm \
     oniguruma-dev \
+    postgresql-libs \
     yarn \
     openssh-client \
     rsync \
-    sqlite \
     supervisor \
     zlib-dev
 
@@ -52,7 +52,7 @@ RUN docker-php-ext-install \
     intl \
     mbstring \
     pdo \
-    pdo_sqlite \
+    pdo_pgsql \
     pcntl \
     tokenizer \
     xml \
@@ -74,5 +74,4 @@ RUN apk del -f .build-deps
 
 EXPOSE 8000
 
-CMD php artisan migrate
 CMD php artisan serve --host=0.0.0.0 --port=8000

@@ -24,6 +24,7 @@
 *** theming
 *** keybinds/ergonomics
 ** IN-PROGRESS Add new tool types
+*** Arrow
 *** Shapes
 *** Image insertion
     Always need to be wary of user-uploaded content, but if this is being
@@ -48,7 +49,8 @@
     - Shapes have filled vs outline
     - Text has font, font size, etc.
 
-*** TODO Fill tool
+*** CANCELLED Fill tool
+    CLOSED: [2021-01-03 Sun 20:52]
     This [[https://ben.akrin.com/?p=7888][blog]] might have some ideas Need to
     increase performance, filling more than once or without limit to amount of
     pixels replaced gives huge slowdown. Also need to fix problem with alpha

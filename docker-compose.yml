@@ -2,15 +2,18 @@ version: "3.7"
 
 services:
   app:
-    image: painterly:latest
+    build: .
     ports:
       - 8000:8000
+    command: ["./docker-entrypoint.sh"]
     volumes:
       - ./:/app
     environment:
       DB_HOST: postgres
       DB_PASSWORD: secret
       DB_USER: painterly
+    depends_on:
+      - postgres
 
   postgres:
     image: postgres:latest

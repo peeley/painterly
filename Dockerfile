@@ -26,6 +26,7 @@ RUN apk add --no-cache \
     nodejs \
     nodejs-npm \
     oniguruma-dev \
+    postgresql-client \
     postgresql-libs \
     yarn \
     openssh-client \

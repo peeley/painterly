@@ -7,5 +7,8 @@ done
 
 # need to wait for PSQL to be ready for connections before migrations
 php artisan migrate
+php artisan db:seed
 php artisan key:generate
+
+laravel-echo-server start &
 php artisan serve --host=0.0.0.0 --port=8000

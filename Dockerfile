@@ -39,6 +39,9 @@ RUN pecl install \
     imagick \
     xdebug
 
+# enable redis php extension
+RUN docker-php-ext-enable redis
+
 # Configure php extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 
@@ -59,6 +62,8 @@ RUN docker-php-ext-install \
     xml \
     zip
 
+RUN npm install -g laravel-echo-server
+
 # Install composer
 ENV COMPOSER_HOME /composer
 ENV PATH ./vendor/bin:/composer/vendor/bin:$PATH
@@ -74,5 +79,6 @@ RUN npm install
 RUN apk del -f .build-deps
 
 EXPOSE 8000
+EXPOSE 6001
 
 CMD php artisan serve --host=0.0.0.0 --port=8000

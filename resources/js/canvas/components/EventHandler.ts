@@ -24,10 +24,8 @@ export class EventHandler {
     }
     mountChannelListener = () => {
         let echo = new Echo({
-            broadcaster: 'pusher',
-            key: process.env.MIX_PUSHER_APP_KEY,
-            cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-            forceTLS: true
+            broadcaster: 'socket.io',
+            host: window.location.hostname + ':6001'
         });
         echo.channel(`painting.${this.paintingId}`)
             .listen('PaintingUpdateEvent', (data: PaintingUpdateEvent) => {
@@ -108,7 +106,7 @@ export class EventHandler {
             objects: [item.toObject(['uuid'])],
             action: 'add'
         }, () => {
-            this.pushPreview();
+            //this.pushPreview();
         });
         this.revisionTracker.registerCreation(item);
     }
@@ -186,7 +184,7 @@ export class EventHandler {
             objects: item,
             action: 'modify',
         }, () => {
-            this.pushPreview();
+            //this.pushPreview();
         });
     }
     // TODO seems like this shares most code w/ modify function

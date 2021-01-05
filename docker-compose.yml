@@ -5,6 +5,7 @@ services:
     build: .
     ports:
       - 8000:8000
+      - 6001:6001
     command: ["./docker-entrypoint.sh"]
     volumes:
       - ./:/app
@@ -14,6 +15,7 @@ services:
       DB_USER: painterly
     depends_on:
       - postgres
+      - redis
 
   postgres:
     image: postgres:latest
@@ -23,6 +25,11 @@ services:
     environment:
       POSTGRES_USER: painterly
       POSTGRES_PASSWORD: secret
+
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
 
 volumes:
   painterly-db:

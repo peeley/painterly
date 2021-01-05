@@ -39,9 +39,6 @@ RUN pecl install \
     imagick \
     xdebug
 
-# enable redis php extension
-RUN docker-php-ext-enable redis
-
 # Configure php extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 
@@ -61,8 +58,6 @@ RUN docker-php-ext-install \
     tokenizer \
     xml \
     zip
-
-RUN npm install -g laravel-echo-server
 
 # Install composer
 ENV COMPOSER_HOME /composer

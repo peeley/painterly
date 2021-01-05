@@ -24,11 +24,16 @@ export class EventHandler {
     }
     mountChannelListener = () => {
         let echo = new Echo({
-            broadcaster: 'socket.io',
-            host: window.location.hostname + ':6001'
+            broadcaster: 'pusher',
+            key: process.env.MIX_PUSHER_APP_KEY,
+            wsHost: window.location.hostname,
+            wsPort: 6001,
+            forceTLS: false,
+            disableStats: false
         });
         echo.channel(`painting.${this.paintingId}`)
             .listen('PaintingUpdateEvent', (data: PaintingUpdateEvent) => {
+                console.log(data);
                 switch (data.action) {
                     case 'add':
                         if (!data.objects) {

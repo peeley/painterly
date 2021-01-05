@@ -32,4 +32,4 @@ window.axios.defaults.headers.common = {
  * allows your team to easily build robust real-time web applications.
  */
 
- window.io = require('socket.io-client');
+ window.io = require('pusher-js');

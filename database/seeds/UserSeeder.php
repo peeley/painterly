@@ -12,18 +12,18 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::create([
-            'name' => 'poop',
-            'email' => 'poop@gmail.com',
-            'password' => bcrypt('12341234')
-        ]);
+        $user = User::firstOrCreate(
+            ['email' => 'admin@email.com'],
+            ['name' => 'admin',
+            'password' => bcrypt('12341234')]
+        );
         $user->save();
 
-        $user = User::create([
-            'name' => 'other',
-            'email' => 'other@gmail.com',
-            'password' => bcrypt('12341234')
-        ]);
+        $user = User::firstOrCreate(
+            ['email' => 'other@email.com'],
+            ['name' => 'other',
+            'password' => bcrypt('12341234')]
+        );
         $user->save();
     }
 }

@@ -12,12 +12,12 @@ class PaintingSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::where(['email' => 'poop@gmail.com'])->first();
-        $p = $user->paintings()->create();
+        $user = User::where(['email' => 'admin@email.com'])->first();
+        $p = $user->paintings()->firstOrCreate([]);
         $p->save();
 
-        $other_user = User::where(['email' => 'other@gmail.com'])->first();
-        $p2 = $other_user->paintings()->create();
+        $other_user = User::where(['email' => 'other@email.com'])->first();
+        $p2 = $other_user->paintings()->firstOrCreate([]);
         $p2->share($user, 'read_write');
         $p2->save();
     }

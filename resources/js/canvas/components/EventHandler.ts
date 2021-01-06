@@ -122,6 +122,7 @@ export class EventHandler {
                 console.log(error) // TODO handle error
             });
     }
+    // TODO write/modify function for changing text items
     modify = (event: fabric.IEvent) => {
         console.log('canvas recieved modify event');
         let item = event.target;

@@ -79,6 +79,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             'dragover': (o: any) => {
                 console.log('dragover', o);
             },
+            'text:changed': (o) => console.log(o),
             'dragleave': (o) => console.log('dragleave', o),
             'drop': (o) => {
                 console.log("dropped file here!");

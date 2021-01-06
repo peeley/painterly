@@ -111,7 +111,7 @@ export class EventHandler {
             objects: [item.toObject(['uuid'])],
             action: 'add'
         }, () => {
-            //this.pushPreview();
+            this.pushPreview();
         });
         this.revisionTracker.registerCreation(item);
     }
@@ -189,7 +189,7 @@ export class EventHandler {
             objects: item,
             action: 'modify',
         }, () => {
-            //this.pushPreview();
+            this.pushPreview();
         });
     }
     // TODO seems like this shares most code w/ modify function

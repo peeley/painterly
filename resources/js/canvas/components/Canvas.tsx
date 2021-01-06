@@ -137,9 +137,8 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                     this.eventHandler.setDrawSurface(this.drawSurface);
                     this.eventHandler.deserializeHistory(response.data.objects);
                     if(response.data.objects.length === 0){
-                        //this.eventHandler.pushPreview(); // make preview blank
+                        this.eventHandler.pushPreview(); // make preview blank
                     }
-                    //this.eventHandler.pushPreview();
                     this.eventHandler.mountChannelListener();
                     this.handleToolSelect(this.state.tool);
                     this.mountFabric();

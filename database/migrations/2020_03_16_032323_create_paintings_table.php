@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\Schema;
 
 class CreatePaintingsTable extends Migration
@@ -22,7 +21,7 @@ class CreatePaintingsTable extends Migration
             $table->json('objects')->default('[]');
             $table->boolean('view_public')->default(false);
             $table->boolean('edit_public')->default(false);
-            $table->string('preview')->default("");
+            $table->text('preview')->default("");
         });
     }
 

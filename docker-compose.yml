@@ -7,8 +7,6 @@ services:
       - 8000:8000
       - 6001:6001
     command: ["bash", "docker-entrypoint.sh"]
-    volumes:
-      - ./:/app
     environment:
       DB_HOST: postgres
       DB_PASSWORD: secret

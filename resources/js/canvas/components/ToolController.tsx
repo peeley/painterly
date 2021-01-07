@@ -20,19 +20,19 @@ interface ToolControllerState {
 export class ToolController extends React.Component<ToolControllerProps, ToolControllerState>{
     private toolSet: object;
     private selectedTool: Tool;
-    public state = {
-        selectedName: "pen" as "pen"
-    };
+    public state: ToolControllerState;
     constructor(props: ToolControllerProps) {
         super(props);
         this.toolSet = {
+            'selector': new SelectorTool(),
             'pen': new PenTool(),
             'rect': new RectTool(),
-            'fill': new FillTool(),
             'text': new TextTool(),
-            'selector': new SelectorTool(),
         }
-        this.selectedTool = this.toolSet['pen'];
+        this.state = {
+            selectedName: "selector" as "selector"
+        }
+        this.selectedTool = this.toolSet[this.state.selectedName];
         this.props.handleToolSelect(this.selectedTool);
     }
     handleChange = (event: any /*React.MouseEvent<HTMLInputElement>*/) => {
@@ -54,21 +54,19 @@ export class ToolController extends React.Component<ToolControllerProps, ToolCon
         }
     }
     toolListJSX(): Array<JSX.Element> {
-        let toolList: Array<JSX.Element> = [];
-        for (let name in this.toolSet) {
+        return Object.keys(this.toolSet).map( (name: string) => {
+
             let displayName = this.toolSet[name].displayName;
             let icon = this.toolSet[name].getIcon();
-            toolList.push(
-                <label className="btn btn-outline-secondary" key={name}>
-                    <input type="radio" value={name} id={name}
-                        checked={this.state.selectedName === name}
-                        onClick={this.handleChange}
-                        onChange={() => { }} />
-                    <i className={icon} title={displayName}></i>
-                </label>
-            );
-        }
-        return toolList;
+
+            return (<label className="btn btn-outline-secondary" key={name}>
+                <input type="radio" value={name} id={name}
+                    checked={this.state.selectedName === name}
+                    onClick={this.handleChange}
+                    onChange={() => { }} />
+                <i className={icon} title={displayName}></i>
+            </label>);
+        });
     }
     render() {
         return (

@@ -25,7 +25,8 @@ export class RectTool extends Tool {
             this.startX = xCoord;
             this.startY = yCoord;
             this.stroke.set({
-                fill: this.color,
+                stroke: this.color,
+                fill: "rgba(0,0,0,0)",
                 left: xCoord,
                 top: yCoord,
             });

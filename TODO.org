@@ -221,9 +221,12 @@
 
 
 * DevOps/Misc
-** IN-PROGRESS write Dockerfile
-   Will need to figure out how to allow users to inject API keys for mail,
-   database, etc.
+** TODO find solution for email that works with self-hosting
+** DONE write Dockerfile
+    Also created docker-compose setup to orchestrate psql database as well.
+    CLOSED: [2021-01-07 Thu 01:22]
+    Will need to figure out how to allow users to inject API keys for mail,
+    database, etc.
 
 ** DONE Figure out method for self-hosting
    Docker image seems easy enough, especially for self hosting since end users

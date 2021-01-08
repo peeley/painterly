@@ -61,7 +61,8 @@ export interface Transformation {
     left: number,
     top: number,
     scaleX: number,
-    scaleY: number
+    scaleY: number,
+    text: string // special case for changing text in IText
 }
 
 class Modification implements Change {

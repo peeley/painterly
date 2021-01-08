@@ -114,7 +114,6 @@ export class RevisionTracker {
         if(this.changes.length > CHANGE_STORAGE_MEMORY){
             this.changes.shift();
         }
-        //console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
     }
 
     registerDeletion = (deleted: UUIDObject) => {
@@ -122,7 +121,6 @@ export class RevisionTracker {
         if(this.changes.length > CHANGE_STORAGE_MEMORY){
             this.changes.shift();
         }
-        //console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
     }
 
     registerModification = (item: UUIDObject, before: Transformation, after: Transformation) => {
@@ -130,7 +128,6 @@ export class RevisionTracker {
         if(this.changes.length > CHANGE_STORAGE_MEMORY){
             this.changes.shift();
         }
-        //console.log(`changes: ${JSON.stringify(this.changes)} redos ${JSON.stringify(this.redoStack)}`);
     }
 
     setCanvas = (canvas: fabric.Canvas) => {
@@ -148,7 +145,6 @@ export class RevisionTracker {
         }
         change.performUndo(this.canvas);
         return change;
-        //console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
     }
 
     redo = (): Change | null => {
@@ -162,7 +158,14 @@ export class RevisionTracker {
         }
         change.performRedo(this.canvas);
         return change;
-        //console.log(`changes: ${JSON.stringify(this.changes)} redos ${this.redoStack}`);
+    }
+
+    undosAvailable = (): boolean => {
+        return this.changes.length > 0;
+    }
+
+    redosAvailable = (): boolean => {
+        return this.redoStack.length > 0;
     }
 
     applyRevision = (revisionType: RevisionType): OutgoingEvent | null => {

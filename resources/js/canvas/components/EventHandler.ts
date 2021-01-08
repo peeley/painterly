@@ -250,7 +250,7 @@ export class EventHandler {
     undo = () => {
         let event = this.revisionTracker.applyRevision('undo');
         if(event && event.objects){
-            // group modify, as always, is a special case
+            // need to handle group/individual modifications differently
             if(event.action === "modify"){
                 if(event.objects instanceof fabric.Group){
                     event.objects = this.applyGroupProperties(event.objects);
@@ -277,6 +277,12 @@ export class EventHandler {
             this.sendEvent(event, () => {});
         }
     }
+    canUndo = () => {
+        return this.revisionTracker.undosAvailable();
+    }
+    canRedo = () => {
+        return this.revisionTracker.redosAvailable();
+    }
     checksumMatches = (checksum: string): boolean => {
         let currentCanvasChecksum = btoa(this.drawSurface.getObjects().toString());
         return currentCanvasChecksum === checksum;
@@ -286,7 +292,6 @@ export class EventHandler {
             // TODO handle bad response?
         });
     }
-    // TODO define outgoing event type
     sendEvent = (event: OutgoingEvent, callback: Function) => {
         this.syncingCallback(true);
         axios.put(`${process.env.MIX_APP_URL}/api/p/${this.paintingId}`,

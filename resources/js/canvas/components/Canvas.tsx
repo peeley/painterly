@@ -200,12 +200,14 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                         handleToolSelect={this.handleToolSelect} />
                     <div className="btn-group pb-2 pl-3" >
                         <button className="btn btn-outline-secondary"
+                            disabled={!this.eventHandler.canUndo()}
                             onClick={() => {
                                 this.eventHandler.undo()
                             }}>
                             <i className="fas fa-undo" title="Undo"></i>
                         </button>
                         <button className="btn btn-outline-secondary"
+                            disabled={!this.eventHandler.canRedo()}
                             onClick={() => {
                                 this.eventHandler.redo()
                             }}>

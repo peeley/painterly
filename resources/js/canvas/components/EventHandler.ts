@@ -16,7 +16,9 @@ export class EventHandler {
     private drawSurface: fabric.Canvas;
     private syncingCallback: (_: boolean) => void;
     private revisionTracker: RevisionTracker;
-    constructor(id: number, drawSurface: fabric.Canvas, syncingCallback: (_: boolean) => void) {
+    constructor(id: number,
+                drawSurface: fabric.Canvas,
+                syncingCallback: (_: boolean) => void) {
         this.paintingId = id;
         this.drawSurface = drawSurface;
         this.syncingCallback = syncingCallback;

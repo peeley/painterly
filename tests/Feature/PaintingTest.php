@@ -65,32 +65,34 @@ class PaintingTest extends TestCase
     public function testAddObjects()
     {
         $painting = $this->testUser->paintings()->create();
-        $request_json = [
-            'action' => 'add',
-            'objects' => json_encode("new stroke!")
-        ];
 
+        $first_add_json = [
+            'action' => 'add',
+            'objects' => json_encode([['uuid' => 'test-uuid',
+                                       'data' => 'test-object']])
+        ];
         $first_add_response = $this->actingAs($this->testUser)
-            ->putJson("/api/p/$painting->id", $request_json);
+            ->putJson("/api/p/$painting->id", $first_add_json);
+        $first_add_response->dump();
         $first_add_response->assertStatus(200);
-        $request_json['objects'] = json_encode("new stroke two!");
+
+        $second_add_json = [
+            'action' => 'add',
+            'objects' => json_encode([['uuid' => 'second-test-uuid',
+                                       'data' => 'second test-object']])
+        ];
         $second_add_response = $this->actingAs($this->testUser)
-            ->putJson("/api/p/$painting->id", $request_json);
+            ->putJson("/api/p/$painting->id", $second_add_json);
         $second_add_response->assertStatus(200);
 
+        $all_objects = [['uuid' => 'test-uuid',
+                         'data' => 'test-object'],
+                        ['uuid' => 'second-test-uuid',
+                         'data' => 'second test-object']];
         $get_response = $this->actingAs($this->testUser)
             ->getJson("/api/p/$painting->id");
         $get_response->assertStatus(200)
-            ->assertJson(['objects' => ["new stroke!", "new stroke two!"]]);
-
-        $undo_response = $this->actingAs($this->testUser)
-            ->putJson("/api/p/$painting->id", ['action' => 'undo']);
-        $undo_response->assertStatus(200);
-
-        $get_response = $this->actingAs($this->testUser)
-            ->getJson("/api/p/$painting->id");
-        $get_response->assertStatus(200)
-            ->assertJson(['objects' => ["new stroke!"]]);
+            ->assertJson(['objects' => $all_objects]);
 
         $clear_response = $this->actingAs($this->testUser)
             ->putJson("/api/p/$painting->id", ['action' => 'clear']);

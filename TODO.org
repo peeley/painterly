@@ -165,15 +165,6 @@
 
 
 * Back End
-** TODO Deal with max size of broadcast events
-   `Pusher error 413` occurs when pushed events exceed a size of more than a few
-   KB.
-
-** TODO Work on performance of broadcast events
-   Waiting for 200 OK before showing changes locally feels really slow, bad UX.
-   Could solve by using local Redis for pub/sub, but that involves more
-   dependencies, possibly more brittle.
-
 ** TODO change backend storage of strokes to allow for O(1) modify/delete
    Should probably be simple enough to keep a hash table of uuid -> stroke
 
@@ -189,6 +180,21 @@
     just test add/deleting permissions
 *** TODO Broadcast testing?
 *** TODO Browser/API tests
+** DONE Deal with max size of broadcast events
+Now that we're using self-hosted laravel-websockets, aren't limited by
+third-party bandwidth. Performance improvements via reducing size of transmitted
+data is always a plus though.
+CLOSED: [2021-01-08 Fri 00:56]
+   `Pusher error 413` occurs when pushed events exceed a size of more than a few
+   KB.
+
+** DONE Work on performance of broadcast events
+See [[Deal with max size of broadcast events]]
+CLOSED: [2021-01-08 Fri 00:56]
+   Waiting for 200 OK before showing changes locally feels really slow, bad UX.
+   Could solve by using local Redis for pub/sub, but that involves more
+   dependencies, possibly more brittle.
+
 ** DONE Delete fabric object from painting in backend
    CLOSED: [2020-09-13 Sun 22:57] <<delete-backend>> Will require changes to
    UpdateProtocol Related: [[delete-fronted]]
@@ -221,7 +227,6 @@
 
 
 * DevOps/Misc
-** TODO find solution for email that works with self-hosting
 ** DONE write Dockerfile
     Also created docker-compose setup to orchestrate psql database as well.
     CLOSED: [2021-01-07 Thu 01:22]
@@ -241,5 +246,10 @@
 ** DONE Edit build script to detect changes in React app, build automatically
    CLOSED: [2020-08-11 Tue 01:24] Add debug .env flag for debug printing
 
+** CANCELLED find solution for email that works with self-hosting
+Just going to let sysadmins specify their own STMP hosts. Disappointing that
+email can't easily be self-hosted since it's supposed to be *the* federated
+protocol, but it's just too complicated to have an out-of-the-box,
+push-one-button solution.
 ** IDEA Maybe contribute to laravel-echo
 - Typescript typings are basically nonexistant, low hanging fruit

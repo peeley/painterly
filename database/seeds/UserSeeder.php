@@ -19,11 +19,11 @@ class UserSeeder extends Seeder
         );
         $user->save();
 
-        $user = User::firstOrCreate(
+        $user2 = User::firstOrCreate(
             ['email' => 'other@email.com'],
             ['name' => 'other',
             'password' => bcrypt('12341234')]
         );
-        $user->save();
+        $user2->save();
     }
 }

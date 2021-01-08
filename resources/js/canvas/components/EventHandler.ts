@@ -136,12 +136,28 @@ export class EventHandler {
         }
         else{
             modified = [item.toObject(['uuid'])];
+            console.log('single item', modified);
         }
-        this.revisionTracker.registerModification(
-            activeObject as UUIDObject,
-            this.getTransformation(event.transform?.original),
-            this.getTransformation(event.target)
-        );
+        console.log(activeObject);
+        if( activeObject.type === 'i-text' && !event.transform){ // if object is fabric.IText
+            console.log('text changed ',
+                this.getTextTransformation(event.target, 'before'),
+                this.getTextTransformation(event.target, 'after')
+            );
+            this.revisionTracker.registerModification(
+                activeObject as UUIDObject,
+                this.getTextTransformation(event.target, 'before'),
+                this.getTextTransformation(event.target, 'after')
+            );
+        }
+        else{
+            console.log('text transformed ', event);
+            this.revisionTracker.registerModification(
+                activeObject as UUIDObject,
+                this.getTransformation(event.transform?.original),
+                this.getTransformation(event.target)
+            );
+        }
         this.pushModification(modified)
     }
     // getting the properties of single objects once modified via group
@@ -183,7 +199,18 @@ export class EventHandler {
             top: item.top,
             scaleX: item.scaleX,
             scaleY: item.scaleY,
+            text: item.text ?? ''
         }
+    }
+    getTextTransformation = (item: any, version: 'before' | 'after'): Transformation => {
+        let transform = this.getTransformation(item);
+        if(version === 'before'){
+            transform.text = item._textBeforeEdit;
+        }
+        else{
+            transform.text = item.text;
+        }
+        return transform;
     }
     pushModification = (item: UUIDObject[]) => {
         this.sendEvent({
@@ -218,12 +245,19 @@ export class EventHandler {
             action: 'remove',
         }, () => { });
     }
+    // TODO make undo/redo store serialized UUIDObject instead of handling edge
+    // cases here
     undo = () => {
         let event = this.revisionTracker.applyRevision('undo');
-        if(event){
+        if(event && event.objects){
             // group modify, as always, is a special case
-            if(event.action === "modify" && event.objects instanceof fabric.Group){
-                event.objects = this.applyGroupProperties(event.objects);
+            if(event.action === "modify"){
+                if(event.objects instanceof fabric.Group){
+                    event.objects = this.applyGroupProperties(event.objects);
+                }
+                else{
+                    event.objects = [(event.objects as UUIDObject).toObject(['uuid'])];
+                }
             }
             this.sendEvent(event, () => {});
         }
@@ -232,8 +266,13 @@ export class EventHandler {
         let event = this.revisionTracker.applyRevision('redo');
         if(event){
             // group modify, as always, is a special case
-            if(event.action === "modify" && event.objects instanceof fabric.Group){
-                event.objects = this.applyGroupProperties(event.objects);
+            if(event.action === "modify"){
+                if(event.objects instanceof fabric.Group){
+                    event.objects = this.applyGroupProperties(event.objects);
+                }
+                else{
+                    event.objects = [(event.objects as UUIDObject).toObject(['uuid'])];
+                }
             }
             this.sendEvent(event, () => {});
         }

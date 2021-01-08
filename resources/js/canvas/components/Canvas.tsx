@@ -26,6 +26,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     private eventHandler: EventHandler;
     private panHandler: PanHandler;
     private drawSurface: fabric.Canvas;
+    // TODO remove tool from state, just get current tool from tool controller
     public state: CanvasState = {
         tool: new PenTool(),
         title: '',
@@ -79,7 +80,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             'dragover': (o: any) => {
                 console.log('dragover', o);
             },
-            'text:changed': (o) => console.log(o),
+            'text:changed': this.eventHandler.modify,
             'dragleave': (o) => console.log('dragleave', o),
             'drop': (o) => {
                 console.log("dropped file here!");
@@ -147,6 +148,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 });
             });
     }
+    // TODO refactor zoom controls into separate component
     zoom = (x: number, y: number, factor: number) => {
         if (factor > 0) {
             this.setState({

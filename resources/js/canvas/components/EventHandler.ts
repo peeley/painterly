@@ -126,7 +126,6 @@ export class EventHandler {
     }
     // TODO write/modify function for changing text items
     modify = (event: fabric.IEvent) => {
-        console.log('canvas recieved modify event');
         let item = event.target;
         if (!item) {
             return;
@@ -138,14 +137,9 @@ export class EventHandler {
         }
         else{
             modified = [item.toObject(['uuid'])];
-            console.log('single item', modified);
         }
         console.log(activeObject);
         if( activeObject.type === 'i-text' && !event.transform){ // if object is fabric.IText
-            console.log('text changed ',
-                this.getTextTransformation(event.target, 'before'),
-                this.getTextTransformation(event.target, 'after')
-            );
             this.revisionTracker.registerModification(
                 activeObject as UUIDObject,
                 this.getTextTransformation(event.target, 'before'),
@@ -153,7 +147,6 @@ export class EventHandler {
             );
         }
         else{
-            console.log('text transformed ', event);
             this.revisionTracker.registerModification(
                 activeObject as UUIDObject,
                 this.getTransformation(event.transform?.original),
@@ -195,12 +188,13 @@ export class EventHandler {
         return itemObject;
     }
     getTransformation = (item: any): Transformation => {
+        console.log('getting transformation from', item);
         return {
-            angle: item.angle,
+            angle: item.angle ?? 0,
             left: item.left,
             top: item.top,
-            scaleX: item.scaleX,
-            scaleY: item.scaleY,
+            scaleX: item.scaleX ?? 1,
+            scaleY: item.scaleY ?? 1,
             text: item.text ?? ''
         }
     }

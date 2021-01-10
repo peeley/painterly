@@ -75,16 +75,45 @@ class Modification implements Change {
         this.after = after;
     }
     performUndo(canvas: fabric.Canvas){
+        console.log('undoing to ', this.before);
+        if(this.item instanceof fabric.Group){
+            for(let obj of this.item.getObjects()){
+                if(!obj.group){
+                    console.log('groupless obj', obj)
+                    this.item.removeWithUpdate(obj);
+                    this.item.addWithUpdate(obj);
+                    obj.setCoords();
+                    console.log('adding obj to group', obj)
+                }
+            }
+            canvas.setActiveObject(this.item);
+        }
         this.item.set(this.before);
         this.item.setCoords();
-        canvas.renderAll();
+        console.log('undone to ', this.item)
+        canvas.requestRenderAll();
+        canvas.setActiveObject(this.item);
     }
     performRedo(canvas: fabric.Canvas){
+        console.log('redoing to ', this.after);
+        if(this.item instanceof fabric.Group){
+            for(let obj of this.item.getObjects()){
+                if(!obj.group){
+                    console.log('groupless obj', obj)
+                    this.item.removeWithUpdate(obj);
+                    this.item.addWithUpdate(obj);
+                    obj.setCoords();
+                    console.log('adding obj to group', obj)
+                }
+            }
+            canvas.setActiveObject(this.item);
+        }
         this.item.set(this.after);
         this.item.setCoords();
-        canvas.renderAll();
+        canvas.requestRenderAll();
+        canvas.setActiveObject(this.item);
     }
-    getEvent(revisionType: RevisionType): OutgoingEvent{
+    getEvent(_revisionType: RevisionType): OutgoingEvent{
         return {
             action: "modify",
             objects: this.item

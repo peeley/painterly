@@ -80,6 +80,11 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             'dragover': (o: any) => {
                 console.log('dragover', o);
             },
+            'selection:created': (o) => {
+                if(o.target){
+                    o.target.lockScalingFlip = true;
+                }
+            },
             // 'text:changed': this.eventHandler.modify,
             'dragleave': (o) => console.log('dragleave', o),
             'drop': (o) => {

@@ -62,7 +62,10 @@ export interface Transformation {
     top: number,
     scaleX: number,
     scaleY: number,
-    text: string // special case for changing text in IText
+    skewX: number,
+    skewY: number,
+    flipX: boolean,
+    flipY: boolean
 }
 
 class Modification implements Change {
@@ -75,40 +78,23 @@ class Modification implements Change {
         this.after = after;
     }
     performUndo(canvas: fabric.Canvas){
-        console.log('undoing to ', this.before);
-        if(this.item instanceof fabric.Group){
-            for(let obj of this.item.getObjects()){
-                if(!obj.group){
-                    console.log('groupless obj', obj)
-                    this.item.removeWithUpdate(obj);
-                    this.item.addWithUpdate(obj);
-                    obj.setCoords();
-                    console.log('adding obj to group', obj)
-                }
-            }
-            canvas.setActiveObject(this.item);
-        }
-        this.item.set(this.before);
-        this.item.setCoords();
-        console.log('undone to ', this.item)
-        canvas.requestRenderAll();
-        canvas.setActiveObject(this.item);
+        this.changeTo(canvas, this.before);
     }
     performRedo(canvas: fabric.Canvas){
-        console.log('redoing to ', this.after);
-        if(this.item instanceof fabric.Group){
-            for(let obj of this.item.getObjects()){
-                if(!obj.group){
-                    console.log('groupless obj', obj)
-                    this.item.removeWithUpdate(obj);
-                    this.item.addWithUpdate(obj);
-                    obj.setCoords();
-                    console.log('adding obj to group', obj)
-                }
-            }
+        this.changeTo(canvas, this.after);
+    }
+    changeTo(canvas: fabric.Canvas, changes: Transformation){
+        if(this.item instanceof fabric.ActiveSelection){
+            let selection: any = new fabric.ActiveSelection([], {canvas: canvas});
             canvas.setActiveObject(this.item);
+            for(let obj of this.item.getObjects()){
+                this.item.removeWithUpdate(obj);
+                selection.addWithUpdate(obj);
+                obj.setCoords();
+            }
+            this.item = selection
         }
-        this.item.set(this.after);
+        this.item.set(changes);
         this.item.setCoords();
         canvas.requestRenderAll();
         canvas.setActiveObject(this.item);

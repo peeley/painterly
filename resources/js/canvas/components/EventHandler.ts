@@ -76,14 +76,20 @@ export class EventHandler {
             });
         }, 'fabric');
     }
-    handlePeerModify = (objects: [UUIDObject]) => {
+    handlePeerModify = (objects: UUIDObject[]) => {
         this.drawSurface.off('object:modified', this.handleLocalModify);
+        this.drawSurface.discardActiveObject();
+        if(this.drawSurface.getActiveObject() instanceof fabric.ActiveSelection){
+            // prevent modifying selected object
+            this.drawSurface.discardActiveObject();
+        }
         // TODO reduce n^2 complexity
         for(let modified of objects){
             this.drawSurface.forEachObject((obj: any) => {
                 // TODO convert obj to type UUIDObject
                 if (obj.uuid === modified.uuid) {
                     obj.set(modified);
+                    obj.setCoords();
                     return;
                 }
             });
@@ -108,6 +114,7 @@ export class EventHandler {
             return;
         }
         item.selectable = false;
+        item.lockScalingFlip = true;
         item.uuid = v4();
         this.sendEvent({
             objects: [item.toObject(['uuid'])],
@@ -185,6 +192,8 @@ export class EventHandler {
         let itemObject = item.toObject(['uuid']);
         itemObject['top'] = newPoint.y;
         itemObject['left'] = newPoint.x;
+        itemObject['flipX'] = groupState.flipX;
+        itemObject['flipY'] = groupState.flipY;
         if(groupState.angle){
             itemObject['angle'] = itemObject.angle + groupState.angle;
         }
@@ -204,16 +213,19 @@ export class EventHandler {
             top: item.top,
             scaleX: item.scaleX ?? 1,
             scaleY: item.scaleY ?? 1,
-            text: item.text ?? ''
+            skewX: item.skewX,
+            skewY: item.skewY,
+            flipX: item.flipX ?? false,
+            flipY: item.flipY ?? false
         }
     }
     getTextTransformation = (item: any, version: 'before' | 'after'): Transformation => {
         let transform = this.getTransformation(item);
         if(version === 'before'){
-            transform.text = item._textBeforeEdit;
+            // transform.text = item._textBeforeEdit;
         }
         else{
-            transform.text = item.text;
+            // transform.text = item.text;
         }
         return transform;
     }

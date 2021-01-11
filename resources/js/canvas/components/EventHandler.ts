@@ -136,7 +136,7 @@ export class EventHandler {
         if(!afterModify || !beforeModify){
             return;
         }
-        if(item instanceof fabric.Group){
+        if(item instanceof fabric.ActiveSelection){
              modified = this.groupToObjects(item, afterModify);
         }
         else{
@@ -157,7 +157,12 @@ export class EventHandler {
                 afterModify
             );
         }
-        this.pushModification(modified)
+        this.sendEvent({
+            objects: modified,
+            action: 'modify',
+        }, () => {
+            this.pushPreview();
+        });
     }
     // getting the properties of single objects once modified via group
     // is really difficult in fabric, as all the coords are relative to
@@ -166,13 +171,12 @@ export class EventHandler {
     // https://github.com/fabricjs/fabric.js/issues/4206
     groupToObjects = (group: fabric.Group, groupState: Transformation): UUIDObject[] => {
         let groupObjects = group.getObjects()
-        let updatedGroup = groupObjects.map( (item: any) => {
-            let updatedItem = this.itemCoordsFromGroup(item, groupState);
-            return updatedItem;
-        });
+        let updatedGroup = groupObjects.map( (item: any) =>
+            this.itemCoordsFromGroup(item, groupState)
+        );
         return updatedGroup;
     }
-    itemCoordsFromGroup = (item: fabric.Object,
+    itemCoordsFromGroup = (item: UUIDObject,
                            groupState: Transformation): UUIDObject => {
         const itemMatrix = item.calcTransformMatrix();
         let newPoint = fabric.util.transformPoint(
@@ -213,15 +217,6 @@ export class EventHandler {
         }
         return transform;
     }
-    pushModification = (item: UUIDObject[]) => {
-        this.sendEvent({
-            objects: item,
-            action: 'modify',
-        }, () => {
-            this.pushPreview();
-        });
-    }
-    // TODO seems like this shares most code w/ modify function
     handleLocalRemove = (event: fabric.IEvent) => {
         let active: any /* UUIDObject */ = event.target;
         if(!active){

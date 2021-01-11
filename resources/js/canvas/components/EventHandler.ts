@@ -41,13 +41,13 @@ export class EventHandler {
                         if (!data.objects) {
                             throw Error('Missing object on `add` event.');
                         }
-                        this.handleAddEvent(data.objects);
+                        this.handlePeerAdd(data.objects);
                         break;
                     case 'modify':
                         if (!data.objects) {
                             throw Error('Missing object on `modify` event.');
                         }
-                        this.handleModifyEvent(data.objects);
+                        this.handlePeerModify(data.objects);
                         break;
                     case 'clear':
                         this.drawSurface.clear();
@@ -56,14 +56,14 @@ export class EventHandler {
                         if (!data.objects) {
                             throw Error('Missing object on `remove` event.');
                         }
-                        this.handleRemoveEvent(data.objects);
+                        this.handlePeerRemove(data.objects);
                         break;
                     default:
                         throw Error(`Unsupported update type: ${data.action}`);
                 }
             });
     }
-    handleAddEvent = (objects: UUIDObject[]) => {
+    handlePeerAdd = (objects: UUIDObject[]) => {
         if (!objects) {
             console.log('Received bad `add` event');
             return;
@@ -76,8 +76,8 @@ export class EventHandler {
             });
         }, 'fabric');
     }
-    handleModifyEvent = (objects: [UUIDObject]) => {
-        this.drawSurface.off('object:modified', this.modify);
+    handlePeerModify = (objects: [UUIDObject]) => {
+        this.drawSurface.off('object:modified', this.handleLocalModify);
         // TODO reduce n^2 complexity
         for(let modified of objects){
             this.drawSurface.forEachObject((obj: any) => {
@@ -89,9 +89,9 @@ export class EventHandler {
             });
         }
         this.drawSurface.renderAll();
-        this.drawSurface.on('object:modified', this.modify);
+        this.drawSurface.on('object:modified', this.handleLocalModify);
     }
-    handleRemoveEvent = (objects: [UUIDObject]) => {
+    handlePeerRemove = (objects: [UUIDObject]) => {
         for(let object of objects){
             this.drawSurface.forEachObject((obj: any) => {
                 if (obj.uuid === object.uuid) {
@@ -101,7 +101,7 @@ export class EventHandler {
             });
         }
     }
-    push = (event: any /* event w/ UUIDObject as target */) => {
+    handleLocalAdd = (event: any /* event w/ UUIDObject as target */) => {
         //console.log('pushing event to backend: ', event);
         let item = event.target;
         if (!item) {
@@ -125,32 +125,36 @@ export class EventHandler {
             });
     }
     // TODO write/modify function for changing text items
-    modify = (event: fabric.IEvent) => {
+    handleLocalModify = (event: fabric.IEvent) => {
         let item = event.target;
         if (!item) {
             return;
         }
-        let activeObject: fabric.Object | fabric.Group = this.drawSurface.getActiveObject();
         let modified: UUIDObject[];
-        if(activeObject instanceof fabric.Group){
-             modified = this.applyGroupProperties(activeObject);
+        let beforeModify = this.getTransformation(event.transform?.original);
+        let afterModify = this.getTransformation(event.target);
+        if(!afterModify || !beforeModify){
+            return;
+        }
+        if(item instanceof fabric.Group){
+             modified = this.groupToObjects(item, afterModify);
         }
         else{
             modified = [item.toObject(['uuid'])];
         }
-        console.log(activeObject);
-        if( activeObject.type === 'i-text' && !event.transform){ // if object is fabric.IText
+        console.log(item);
+        if( item.type === 'i-text' && !event.transform){ // if object is fabric.IText
             this.revisionTracker.registerModification(
-                activeObject as UUIDObject,
+                item as UUIDObject,
                 this.getTextTransformation(event.target, 'before'),
                 this.getTextTransformation(event.target, 'after')
             );
         }
         else{
             this.revisionTracker.registerModification(
-                activeObject as UUIDObject,
-                this.getTransformation(event.transform?.original),
-                this.getTransformation(event.target)
+                item as UUIDObject,
+                beforeModify,
+                afterModify
             );
         }
         this.pushModification(modified)
@@ -160,30 +164,31 @@ export class EventHandler {
     // the group center. the best way to get absolute coords matrix
     // transform a la:
     // https://github.com/fabricjs/fabric.js/issues/4206
-    applyGroupProperties = (group: fabric.Group): UUIDObject[] => {
+    groupToObjects = (group: fabric.Group, groupState: Transformation): UUIDObject[] => {
         let groupObjects = group.getObjects()
         let updatedGroup = groupObjects.map( (item: any) => {
-            let updatedItem = this.itemCoordsFromGroup(item, group);
+            let updatedItem = this.itemCoordsFromGroup(item, groupState);
             return updatedItem;
         });
         return updatedGroup;
     }
-    itemCoordsFromGroup = (item: fabric.Object, group: fabric.Group): UUIDObject => {
-        const groupMatrix = item.calcTransformMatrix();
+    itemCoordsFromGroup = (item: fabric.Object,
+                           groupState: Transformation): UUIDObject => {
+        const itemMatrix = item.calcTransformMatrix();
         let newPoint = fabric.util.transformPoint(
             new fabric.Point(-(item.width as number)/2, -(item.height as number)/2),
-            groupMatrix);
+            itemMatrix);
         let itemObject = item.toObject(['uuid']);
         itemObject['top'] = newPoint.y;
         itemObject['left'] = newPoint.x;
-        if(group.angle){
-            itemObject['angle'] = itemObject.angle + group.angle;
+        if(groupState.angle){
+            itemObject['angle'] = itemObject.angle + groupState.angle;
         }
-        if(group.scaleX){
-            itemObject['scaleX'] = itemObject.scaleX * group.scaleX;
+        if(groupState.scaleX){
+            itemObject['scaleX'] = itemObject.scaleX * groupState.scaleX;
         }
-        if(group.scaleY){
-            itemObject['scaleY'] = itemObject.scaleY * group.scaleY;
+        if(groupState.scaleY){
+            itemObject['scaleY'] = itemObject.scaleY * groupState.scaleY;
         }
         return itemObject;
     }
@@ -217,7 +222,7 @@ export class EventHandler {
         });
     }
     // TODO seems like this shares most code w/ modify function
-    remove = (event: fabric.IEvent) => {
+    handleLocalRemove = (event: fabric.IEvent) => {
         let active: any /* UUIDObject */ = event.target;
         if(!active){
             return;
@@ -249,7 +254,8 @@ export class EventHandler {
             // need to handle group/individual modifications differently
             if(event.action === "modify"){
                 if(event.objects instanceof fabric.Group){
-                    event.objects = this.applyGroupProperties(event.objects);
+                    let undoTransform = this.getTransformation(event.objects);
+                    event.objects = this.groupToObjects(event.objects, undoTransform);
                 }
                 else{
                     event.objects = [(event.objects as UUIDObject).toObject(['uuid'])];
@@ -264,7 +270,8 @@ export class EventHandler {
             // group modify, as always, is a special case
             if(event.action === "modify"){
                 if(event.objects instanceof fabric.Group){
-                    event.objects = this.applyGroupProperties(event.objects);
+                    let redoTransform = this.getTransformation(event.objects);
+                    event.objects = this.groupToObjects(event.objects, redoTransform);
                 }
                 else{
                     event.objects = [(event.objects as UUIDObject).toObject(['uuid'])];

@@ -41,7 +41,7 @@
     CLOSED: [2020-09-12 Sat 02:29] Creating text box and editing existing text
     works, need to set up [[tool options]] menu to set font/text
     color/bold/underline/etc.
-
+*** DONE Line
 *** Charts/tables
 *** TODO Create tool options menu specific to each kind of tool
     <<tool options>>

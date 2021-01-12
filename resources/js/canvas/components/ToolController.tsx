@@ -3,7 +3,7 @@ import { Tool } from './Tools/Tool';
 import { Palette } from './Palette';
 import { PenTool } from './Tools/PenTool';
 import { RectTool } from './Tools/RectTool';
-import { FillTool } from './Tools/FillTool';
+import { LineTool } from './Tools/LineTool';
 import { SelectorTool } from './Tools/SelectorTool';
 import { TextTool } from './Tools/TextTool';
 
@@ -26,6 +26,7 @@ export class ToolController extends React.Component<ToolControllerProps, ToolCon
         this.toolSet = {
             'selector': new SelectorTool(),
             'pen': new PenTool(),
+            'line': new LineTool(),
             'rect': new RectTool(),
             'text': new TextTool(),
         }

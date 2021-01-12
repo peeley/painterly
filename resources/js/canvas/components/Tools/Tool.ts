@@ -11,7 +11,7 @@ export abstract class Tool {
     constructor() {
         this.mouseDown = false;
         this.color = "rgba(255, 255, 255, 1)";
-        this.strokeWidth = 1;
+        this.strokeWidth = 3;
         this.displayName = 'tool';
         this.displayIcon = '';
     }

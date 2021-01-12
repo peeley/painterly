@@ -5,7 +5,6 @@ export class PenTool extends Tool {
     constructor() {
         super();
         this.displayName = 'Pen';
-        this.strokeWidth = 3;
         this.displayIcon = 'fas fa-pen-fancy';
     }
     select = (canvas: fabric.Canvas) => {

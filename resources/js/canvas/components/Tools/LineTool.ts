@@ -1,22 +1,22 @@
-import { Tool, MouseEventType } from './Tool';
+import {Tool, MouseEventType} from './Tool';
 import { fabric } from 'fabric';
 
-export class RectTool extends Tool {
+export class LineTool extends Tool {
     private startX: number;
     private startY: number;
-    private stroke: fabric.Rect;
-    constructor() {
+    private stroke: fabric.Line;
+    constructor(){
         super();
-        this.displayName = 'Rectangle';
-        this.displayIcon = 'fas fa-vector-square';
         this.startX = 0;
         this.startY = 0;
+        this.displayName = 'Line';
+        this.displayIcon = 'fas fa-ruler';
         this.mouseDown = false;
-        this.stroke = new fabric.Rect();
+        this.stroke = new fabric.Line;
     }
-    select = (_: fabric.Canvas) => { }
-    deselect = (_: fabric.Canvas) => { }
-    handleEvent(type: MouseEventType, event: any, context: fabric.Canvas): fabric.Rect | void {
+    select(_: fabric.Canvas){}
+    deselect(_: fabric.Canvas){}
+    handleEvent(type: MouseEventType, event: any, context: fabric.Canvas): fabric.Line | void {
         const pointer = context.getPointer(event.e);
         const xCoord = pointer.x;
         const yCoord = pointer.y;
@@ -27,8 +27,7 @@ export class RectTool extends Tool {
             this.stroke.set({
                 stroke: this.color,
                 strokeWidth: this.strokeWidth,
-                strokeLineJoin: 'round',
-                fill: "rgba(0,0,0,0)",
+                strokeLineCap: 'round',
                 left: xCoord,
                 top: yCoord,
             });
@@ -45,7 +44,7 @@ export class RectTool extends Tool {
         else if (type === 'mouse:up') {
             this.stroke.setCoords();
             context.fire('push:added', { target: this.stroke });
-            this.stroke = new fabric.Rect();
+            this.stroke = new fabric.Line();
             this.mouseDown = false;
         }
         context.renderAll();

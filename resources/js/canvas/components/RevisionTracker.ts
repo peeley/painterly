@@ -8,7 +8,7 @@ export interface OutgoingEvent {
 }
 
 interface Change {
-    item: UUIDObject,
+    items: UUIDObject | UUIDObject[],
     performUndo(canvas: fabric.Canvas): void,
     performRedo(canvas: fabric.Canvas): void,
     getEvent(revisionType: RevisionType): OutgoingEvent,
@@ -17,41 +17,47 @@ interface Change {
 type RevisionType = "undo" | "redo";
 
 class Creation implements Change {
-    public item: UUIDObject;
-    constructor(item: UUIDObject){
-        this.item = item;
+    public items: UUIDObject[];
+    constructor(items: UUIDObject[]){
+        this.items = items;
     }
     performUndo(canvas: fabric.Canvas){
-        canvas.remove(this.item);
+        for(let item of this.items){
+            canvas.remove(item);
+        }
     }
     performRedo(canvas: fabric.Canvas){
-        canvas.add(this.item);
+        for(let item of this.items){
+            canvas.add(item);
+        }
     }
     getEvent(revisionType: RevisionType): OutgoingEvent{
         return {
             action: revisionType === 'undo' ? "remove" : "add",
-            objects: [this.item.toObject(['uuid'])]
+            objects: this.items.map(obj => obj.toObject(['uuid']))
         }
     }
 }
 
 class Deletion implements Change {
-    public item: UUIDObject;
-    constructor(item: UUIDObject){
-        this.item = item;
+    public items: UUIDObject[];
+    constructor(items: UUIDObject[]){
+        this.items = items;
     }
     performUndo(canvas: fabric.Canvas){
-        console.log('undoing delete of: ', this.item);
-        canvas.add(this.item);
+        for(let item of this.items){
+            canvas.add(item);
+        }
     }
     performRedo(canvas: fabric.Canvas){
-        console.log('redoing delete of: ', this.item);
-        canvas.remove(this.item);
+        for(let item of this.items){
+            canvas.remove(item);
+        }
     }
     getEvent(revisionType: RevisionType): OutgoingEvent{
         return {
             action: revisionType === 'undo' ? "add" : "remove",
-            objects: [this.item.toObject(['uuid'])]
+            objects: this.items.map(obj => obj.toObject(['uuid']))
         }
     }
 }
@@ -69,11 +75,11 @@ export interface Transformation {
 }
 
 class Modification implements Change {
-    public item: UUIDObject;
+    public items: UUIDObject;
     private before: Transformation;
     private after: Transformation;
-    constructor(item: UUIDObject, before: Transformation, after: Transformation){
-        this.item = item;
+    constructor(items: UUIDObject, before: Transformation, after: Transformation){
+        this.items = items;
         this.before = before;
         this.after = after;
     }
@@ -84,25 +90,25 @@ class Modification implements Change {
         this.changeTo(canvas, this.after);
     }
     changeTo(canvas: fabric.Canvas, changes: Transformation){
-        if(this.item instanceof fabric.ActiveSelection){
+        if(this.items instanceof fabric.ActiveSelection){
             let selection: any = new fabric.ActiveSelection([], {canvas: canvas});
-            canvas.setActiveObject(this.item);
-            for(let obj of this.item.getObjects()){
-                this.item.removeWithUpdate(obj);
+            canvas.setActiveObject(this.items);
+            for(let obj of this.items.getObjects()){
+                this.items.removeWithUpdate(obj);
                 selection.addWithUpdate(obj);
                 obj.setCoords();
             }
-            this.item = selection
+            this.items = selection
         }
-        this.item.set(changes);
-        this.item.setCoords();
+        this.items.set(changes);
+        this.items.setCoords();
         canvas.requestRenderAll();
-        canvas.setActiveObject(this.item);
+        canvas.setActiveObject(this.items);
     }
     getEvent(_revisionType: RevisionType): OutgoingEvent{
         return {
             action: "modify",
-            objects: this.item
+            objects: this.items
         }
     }
 }
@@ -124,14 +130,14 @@ export class RevisionTracker {
         this.redoStack = [];
     }
 
-    registerCreation = (created: UUIDObject) => {
+    registerCreation = (created: UUIDObject[]) => {
         this.changes.push(new Creation(created));
         if(this.changes.length > CHANGE_STORAGE_MEMORY){
             this.changes.shift();
         }
     }
 
-    registerDeletion = (deleted: UUIDObject) => {
+    registerDeletion = (deleted: UUIDObject[]) => {
         this.changes.push(new Deletion(deleted));
         if(this.changes.length > CHANGE_STORAGE_MEMORY){
             this.changes.shift();

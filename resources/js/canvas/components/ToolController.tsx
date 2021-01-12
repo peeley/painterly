@@ -72,7 +72,7 @@ export class ToolController extends React.Component<ToolControllerProps, ToolCon
     render() {
         return (
             <>
-                <div className="col-2 btn-group btn-group-toggle pb-2"
+                <div className="col-3 btn-group btn-group-toggle pb-2"
                     data-toggle="buttons">
                     {this.toolListJSX()}
                 </div>

@@ -71,7 +71,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             'mouse:up': (o) => this.handleInput('mouse:up', o),
             'mouse:wheel': this.handleZoom,
             'path:created': (o: any) => {
-                this.eventHandler.handleLocalAdd({ target: o.path });
+                this.eventHandler.handleLocalAdd({ target: [o.path] });
             },
             'push:added': this.eventHandler.handleLocalAdd,
             'object:modified': this.eventHandler.handleLocalModify,

@@ -109,20 +109,22 @@ export class EventHandler {
     }
     handleLocalAdd = (event: any /* event w/ UUIDObject as target */) => {
         //console.log('pushing event to backend: ', event);
-        let item = event.target;
-        if (!item) {
+        let items: UUIDObject[] = event.target;
+        if (!items) {
             return;
         }
-        item.selectable = false;
-        item.lockScalingFlip = true;
-        item.uuid = v4();
+        for(let item of items){
+            item.selectable = false;
+            item.lockScalingFlip = true;
+            item.uuid = v4();
+        }
         this.sendEvent({
-            objects: [item.toObject(['uuid'])],
+            objects: items.map(obj => obj.toObject(['uuid'])),
             action: 'add'
         }, () => {
             this.pushPreview();
         });
-        this.revisionTracker.registerCreation(item);
+        this.revisionTracker.registerCreation(items);
     }
     pushPreview = () => {
         let preview = this.drawSurface.toDataURL({ format: 'png' });
@@ -236,8 +238,8 @@ export class EventHandler {
         }
         let removed: UUIDObject[];
         if(active instanceof fabric.Group){
+            this.revisionTracker.registerDeletion(active.getObjects() as UUIDObject[]);
             removed = active.getObjects().map( (item: any) => {
-                this.revisionTracker.registerDeletion(item as UUIDObject);
                 return item.toObject(['uuid']);
             });
             let allSelected = this.drawSurface.getActiveObjects();
@@ -245,7 +247,7 @@ export class EventHandler {
             this.drawSurface.discardActiveObject().renderAll();
         }
         else{
-            this.revisionTracker.registerDeletion(active as UUIDObject);
+            this.revisionTracker.registerDeletion([active]);
             removed = [active.toObject(['uuid'])];
         }
         this.sendEvent({

@@ -44,7 +44,7 @@ export class RectTool extends Tool {
         }
         else if (type === 'mouse:up') {
             this.stroke.setCoords();
-            context.fire('push:added', { target: this.stroke });
+            context.fire('push:added', { target: [this.stroke] });
             this.stroke = new fabric.Rect();
             this.mouseDown = false;
         }

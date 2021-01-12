@@ -26,7 +26,7 @@ export class TextTool extends Tool {
             context.setActiveObject(this.stroke);
         }
         if (type === 'mouse:up') {
-            context.fire('push:added', { target: this.stroke });
+            context.fire('push:added', { target: [this.stroke] });
             this.stroke = new fabric.IText('');
         }
     }

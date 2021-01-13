@@ -146,7 +146,7 @@ export class EventHandler {
             return;
         }
         if(item instanceof fabric.ActiveSelection){
-             modified = this.groupToObjects(item, afterModify);
+            modified = this.groupToObjects(item, afterModify);
         }
         else{
             modified = [item.toObject(['uuid'])];

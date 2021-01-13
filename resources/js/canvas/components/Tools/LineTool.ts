@@ -28,17 +28,17 @@ export class LineTool extends Tool {
                 stroke: this.color,
                 strokeWidth: this.strokeWidth,
                 strokeLineCap: 'round',
-                left: xCoord,
-                top: yCoord,
+                x1: xCoord,
+                y1: yCoord,
+                x2: xCoord,
+                y2: yCoord,
             });
             context.add(this.stroke);
         }
         else if (this.mouseDown && type === "mouse:move") {
-            const width = xCoord - this.startX;
-            const height = yCoord - this.startY;
             this.stroke.set({
-                width: width,
-                height: height,
+                x2: xCoord,
+                y2: yCoord,
             });
         }
         else if (type === 'mouse:up') {

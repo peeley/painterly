@@ -4,6 +4,7 @@ import { Palette } from './Palette';
 import { PenTool } from './Tools/PenTool';
 import { RectTool } from './Tools/RectTool';
 import { LineTool } from './Tools/LineTool';
+import { ArrowTool } from './Tools/ArrowTool';
 import { SelectorTool } from './Tools/SelectorTool';
 import { TextTool } from './Tools/TextTool';
 
@@ -27,8 +28,9 @@ export class ToolController extends React.Component<ToolControllerProps, ToolCon
             'selector': new SelectorTool(),
             'pen': new PenTool(),
             'line': new LineTool(),
+            'arrow': new ArrowTool(),
             'rect': new RectTool(),
-            'text': new TextTool(),
+            'text': new TextTool()
         }
         this.state = {
             selectedName: "selector" as "selector"

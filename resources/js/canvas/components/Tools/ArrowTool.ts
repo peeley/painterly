@@ -1,18 +1,14 @@
 import { Tool, MouseEventType } from './Tool';
 import { fabric } from 'fabric';
 
-const PointLength = 5;
+const PointLength = 25;
 
 export class ArrowTool extends Tool {
-    private startX: number;
-    private startY: number;
     private stem: fabric.Line;
     private leftPointHalf: fabric.Line;
     private rightPointHalf: fabric.Line;
     constructor(){
         super();
-        this.startX = 0;
-        this.startY = 0;
         this.displayName = 'Arrow';
         this.displayIcon = 'fas fa-long-arrow-alt-right';
         this.mouseDown = false;
@@ -28,8 +24,6 @@ export class ArrowTool extends Tool {
         const yCoord = pointer.y;
         if (type === "mouse:down") {
             this.mouseDown = true;
-            this.startX = xCoord;
-            this.startY = yCoord;
             this.stem.set({
                 stroke: this.color,
                 strokeWidth: this.strokeWidth,
@@ -66,19 +60,41 @@ export class ArrowTool extends Tool {
                 x2: xCoord,
                 y2: yCoord,
             });
+            let pointEnd = this.calculatePointCoords(this.stem);
+            this.leftPointHalf.set({
+                x1: xCoord,
+                y1: yCoord,
+                x2: xCoord - pointEnd.x,
+                y2: yCoord + pointEnd.y
+            });
+            this.rightPointHalf.set({
+                x1: xCoord,
+                y1: yCoord,
+                x2: xCoord + pointEnd.x,
+                y2: yCoord - pointEnd.y
+            });
         }
         else if (type === 'mouse:up') {
             this.stem.setCoords();
-            context.fire('push:added', { target: [this.stem] });
+            // TODO perhaps add all objects as a group? will fix selection, but
+            // opens up pandora's box when it comes to transforming
+            context.fire('push:added', { target: [this.stem, this.leftPointHalf, this.rightPointHalf] });
             this.stem = new fabric.Line();
+            this.leftPointHalf = new fabric.Line();
+            this.rightPointHalf = new fabric.Line();
             this.mouseDown = false;
         }
         context.renderAll();
     }
-    private calculatePointHalfCoords(point: fabric.Point,
-                                     angle: number): fabric.Point {
+    private calculatePointCoords(hypotenuse: fabric.Line): fabric.Point {
 
-        // TODO
-        return new fabric.Point(point.x, point.y);
+        // angle between X axis and stem
+        let width = (hypotenuse.x2 as number) - (hypotenuse.x1 as number);
+        let height = (hypotenuse.y1 as number) - (hypotenuse.y2 as number);
+        let theta = Math.atan(height / width);
+        let phi = Math.PI / 2;
+        let moveX = Math.cos(theta - phi) * PointLength;
+        let moveY = Math.sin(theta - phi) * PointLength;
+        return new fabric.Point(moveX, moveY);
     }
 }

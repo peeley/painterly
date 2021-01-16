@@ -1,7 +1,7 @@
 import { Tool, MouseEventType } from './Tool';
 import { fabric } from 'fabric';
 
-const PointLength = 25;
+const PointLength = 15;
 
 export class ArrowTool extends Tool {
     private stem: fabric.Line;
@@ -60,18 +60,18 @@ export class ArrowTool extends Tool {
                 x2: xCoord,
                 y2: yCoord,
             });
-            let pointEnd = this.calculatePointCoords(this.stem);
+            let pointEnd = this.calculatePointCoords(this.stem, 'left');
             this.leftPointHalf.set({
                 x1: xCoord,
                 y1: yCoord,
-                x2: xCoord - pointEnd.x,
-                y2: yCoord + pointEnd.y
+                x2: xCoord + pointEnd.y - pointEnd.x,
+                y2: yCoord + pointEnd.x + pointEnd.y
             });
             this.rightPointHalf.set({
                 x1: xCoord,
                 y1: yCoord,
-                x2: xCoord + pointEnd.x,
-                y2: yCoord - pointEnd.y
+                x2: xCoord + pointEnd.y + pointEnd.x,
+                y2: yCoord + pointEnd.x - pointEnd.y
             });
         }
         else if (type === 'mouse:up') {
@@ -86,15 +86,16 @@ export class ArrowTool extends Tool {
         }
         context.renderAll();
     }
-    private calculatePointCoords(hypotenuse: fabric.Line): fabric.Point {
-
-        // angle between X axis and stem
+    private calculatePointCoords(hypotenuse: fabric.Line, side: 'left'|'right'): fabric.Point {
         let width = (hypotenuse.x2 as number) - (hypotenuse.x1 as number);
         let height = (hypotenuse.y1 as number) - (hypotenuse.y2 as number);
-        let theta = Math.atan(height / width);
+
+        let theta = Math.atan2(height, width);
         let phi = Math.PI / 2;
+
         let moveX = Math.cos(theta - phi) * PointLength;
         let moveY = Math.sin(theta - phi) * PointLength;
+
         return new fabric.Point(moveX, moveY);
     }
 }

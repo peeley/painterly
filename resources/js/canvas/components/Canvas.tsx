@@ -27,18 +27,19 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     private panHandler: PanHandler;
     private drawSurface: fabric.Canvas;
     // TODO remove tool from state, just get current tool from tool controller
-    public state: CanvasState = {
-        tool: new PenTool(),
-        title: '',
-        loading: true,
-        scaleFactor: 1.0,
-        isSyncing: false,
-    };
+    public state: CanvasState;
     constructor(props: CanvasProps) {
         super(props);
         this.drawSurface = new fabric.Canvas(CanvasId, {
             fireMiddleClick: true,
         });
+        this.state = {
+            tool: new PenTool(),
+            title: '',
+            loading: true,
+            scaleFactor: 1.0,
+            isSyncing: false,
+        };
         this.eventHandler = new EventHandler(this.props.paintingId, this.drawSurface, this.setSyncing);
         this.panHandler = new PanHandler();
     }
@@ -49,7 +50,9 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         this.state.tool.deselect(this.drawSurface);
         this.setState({
             tool: tool
-        }, () => this.state.tool.select(this.drawSurface));
+        }, () =>
+            tool.select(this.drawSurface)
+        );
     }
     handleInput = (type: MouseEventType, event: fabric.IEvent) => {
         if (event.button === 2 || this.panHandler.isPanning()) {
@@ -64,7 +67,6 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         this.drawSurface.clear();
     }
     mountFabric = () => {
-        console.log('mounting event listeners');
         this.drawSurface.on({
             'mouse:down': (o) => this.handleInput('mouse:down', o),
             'mouse:move': (o) => this.handleInput('mouse:move', o),
@@ -100,7 +102,6 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         }
         canvasElement.tabIndex = 1000;
         canvasElement.addEventListener('keydown', (event) => {
-            console.log(event);
             if (event.ctrlKey) {
                 switch (event.key) {
                     case 'z':
@@ -147,7 +148,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                         this.eventHandler.pushPreview(); // make preview blank
                     }
                     this.eventHandler.mountChannelListener();
-                    this.handleToolSelect(this.state.tool);
+                    this.state.tool.select(this.drawSurface);
                     this.mountFabric();
                     this.setState({ isSyncing: false });
                 });

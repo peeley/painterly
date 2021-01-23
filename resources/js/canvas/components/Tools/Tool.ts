@@ -32,5 +32,8 @@ export abstract class Tool {
     getIcon(){
         return this.displayIcon;
     }
+    getDisplayName(){
+        return this.displayName;
+    }
     abstract handleEvent(_type: MouseEventType, _event: any, _canvas: fabric.Canvas): fabric.Object | void;
 }

@@ -12,30 +12,30 @@ interface ToolControllerProps {
     handleToolSelect(tool: Tool): void,
 };
 
-type ToolName = "pen" | "rect" | "fill" | "text" | "selector" | "text";
+type ToolName = 'selector' | 'pen' | 'line' | 'arrow' | 'rect' | 'text';
 
 interface ToolControllerState {
     selectedName: ToolName,
 };
 
 export class ToolController extends React.Component<ToolControllerProps, ToolControllerState>{
-    private toolSet: object;
+    private toolSet: Map<ToolName, Tool>;
     private selectedTool: Tool;
     public state: ToolControllerState;
     constructor(props: ToolControllerProps) {
         super(props);
-        this.toolSet = {
-            'selector': new SelectorTool(),
-            'pen': new PenTool(),
-            'line': new LineTool(),
-            'arrow': new ArrowTool(),
-            'rect': new RectTool(),
-            'text': new TextTool()
-        }
+        this.toolSet = new Map([
+            ['selector' as ToolName, new SelectorTool()],
+            ['pen', new PenTool()],
+            ['line', new LineTool()],
+            ['arrow', new ArrowTool()],
+            ['rect', new RectTool()],
+            ['text', new TextTool()]
+        ]);
         this.state = {
-            selectedName: "selector" as "selector"
+            selectedName: "pen" as ToolName
         }
-        this.selectedTool = this.toolSet[this.state.selectedName];
+        this.selectedTool = this.toolSet.get(this.state.selectedName) as Tool;
         this.props.handleToolSelect(this.selectedTool);
     }
     handleChange = (event: any /*React.MouseEvent<HTMLInputElement>*/) => {
@@ -45,24 +45,32 @@ export class ToolController extends React.Component<ToolControllerProps, ToolCon
         }, () => this.selectNewTool(toolName));
     }
     selectNewTool = (toolName: ToolName) => {
-        this.selectedTool = this.toolSet[toolName];
-        this.props.handleToolSelect(this.selectedTool);
+        let tool = this.toolSet.get(toolName);
+        if(!tool){
+            throw Error(`Invalid tool ${toolName} selected.`);
+        }
+        this.selectedTool = tool;
+        console.log(toolName, tool);
+        this.props.handleToolSelect(tool);
     }
     setStrokeWidth = (width: number) => {
-        this.selectedTool.setStrokeWidth(width);
+        this.toolSet.forEach( (tool: Tool, _) => {
+            tool.setStrokeWidth(width);
+        });
     }
     setColor = (color: string) => {
-        for (let toolName in this.toolSet) {
-            this.toolSet[toolName].setColor(color);
-        }
+        this.toolSet.forEach( (tool: Tool, _) => {
+            tool.setColor(color);
+        });
     }
     toolListJSX(): Array<JSX.Element> {
-        return Object.keys(this.toolSet).map( (name: string) => {
+        let toolJSX: Array<JSX.Element> = [];
+        this.toolSet.forEach((tool: Tool, name: ToolName) => {
 
-            let displayName = this.toolSet[name].displayName;
-            let icon = this.toolSet[name].getIcon();
+            let displayName = tool.getDisplayName();
+            let icon = tool.getIcon();
 
-            return (<label className="btn btn-outline-secondary" key={name}>
+            toolJSX.push(<label className="btn btn-outline-secondary" key={name}>
                 <input type="radio" value={name} id={name}
                     checked={this.state.selectedName === name}
                     onClick={this.handleChange}
@@ -70,6 +78,7 @@ export class ToolController extends React.Component<ToolControllerProps, ToolCon
                 <i className={icon} title={displayName}></i>
             </label>);
         });
+        return toolJSX;
     }
     render() {
         return (

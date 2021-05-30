@@ -1,27 +1,44 @@
-version: "3.7"
-
+# For more information: https://laravel.com/docs/sail
+version: '3'
 services:
-  app:
-    build: .
-    ports:
-      - 8000:8000
-      - 6001:6001
-    command: ["bash", "docker-entrypoint.sh"]
-    environment:
-      DB_HOST: postgres
-      DB_PASSWORD: secret
-      DB_USER: painterly
-    depends_on:
-      - postgres
-
-  postgres:
-    image: postgres:latest
-    restart: always
-    volumes:
-      - painterly-db:/var/lib/postgres
-    environment:
-      POSTGRES_USER: painterly
-      POSTGRES_PASSWORD: secret
-
+    laravel.test:
+        build:
+            context: ./vendor/laravel/sail/runtimes/8.0
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP}'
+        image: sail-8.0/app
+        ports:
+            - '${APP_PORT:-80}:80'
+        environment:
+            WWWUSER: '${WWWUSER}'
+            LARAVEL_SAIL: 1
+        volumes:
+            - '.:/var/www/html'
+        networks:
+            - sail
+        depends_on:
+            - pgsql
+    pgsql:
+        image: 'postgres:13'
+        ports:
+            - '${FORWARD_DB_PORT:-5432}:5432'
+        environment:
+            PGPASSWORD: '${DB_PASSWORD:-secret}'
+            POSTGRES_DB: '${DB_DATABASE}'
+            POSTGRES_USER: '${DB_USERNAME}'
+            POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+        volumes:
+            - 'sailpgsql:/var/lib/postgresql/data'
+        networks:
+            - sail
+        healthcheck:
+          test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
+          retries: 3
+          timeout: 5s
+networks:
+    sail:
+        driver: bridge
 volumes:
-  painterly-db:
+    sailpgsql:
+        driver: local

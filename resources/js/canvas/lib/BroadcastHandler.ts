@@ -11,7 +11,7 @@ interface PaintingUpdateEvent {
     title: string | null
 }
 
-export class EventHandler {
+export class BroadcastHandler {
     private paintingId: number;
     private drawSurface: fabric.Canvas;
     private syncingCallback: (_: boolean) => void;

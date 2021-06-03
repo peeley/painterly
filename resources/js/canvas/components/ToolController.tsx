@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Tool } from './Tools/Tool';
+import { Tool } from '../lib/Tools/Tool';
 import { Palette } from './Palette';
-import { PenTool } from './Tools/PenTool';
-import { RectTool } from './Tools/RectTool';
-import { LineTool } from './Tools/LineTool';
-import { ArrowTool } from './Tools/ArrowTool';
-import { SelectorTool } from './Tools/SelectorTool';
-import { TextTool } from './Tools/TextTool';
+import { PenTool } from '../lib/Tools/PenTool';
+import { RectTool } from '../lib/Tools/RectTool';
+import { LineTool } from '../lib/Tools/LineTool';
+import { ArrowTool } from '../lib/Tools/ArrowTool';
+import { SelectorTool } from '../lib/Tools/SelectorTool';
+import { TextTool } from '../lib/Tools/TextTool';
 
 interface ToolControllerProps {
     handleToolSelect(tool: Tool): void,

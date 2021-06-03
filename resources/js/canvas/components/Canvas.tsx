@@ -2,10 +2,10 @@ import * as React from 'react';
 import axios from 'axios';
 import { fabric } from 'fabric';
 import { ToolController } from './ToolController';
-import { Tool, MouseEventType } from './Tools/Tool';
-import { PenTool } from './Tools/PenTool';
-import { PanHandler } from './PanHandler';
-import { EventHandler } from './EventHandler';
+import { Tool, MouseEventType } from '../lib/Tools/Tool';
+import { PenTool } from '../lib/Tools/PenTool';
+import { PanHandler } from '../lib/PanHandler';
+import { BroadcastHandler } from '../lib/BroadcastHandler';
 import { MenuBar } from './MenuBar';
 
 interface CanvasProps {
@@ -23,7 +23,7 @@ interface CanvasState {
 const CanvasId = 'drawSurface'
 
 class Canvas extends React.Component<CanvasProps, CanvasState> {
-    private eventHandler: EventHandler;
+    private eventHandler: BroadcastHandler;
     private panHandler: PanHandler;
     private drawSurface: fabric.Canvas;
     // TODO remove tool from state, just get current tool from tool controller
@@ -40,7 +40,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             scaleFactor: 1.0,
             isSyncing: false,
         };
-        this.eventHandler = new EventHandler(this.props.paintingId, this.drawSurface, this.setSyncing);
+        this.eventHandler = new BroadcastHandler(this.props.paintingId, this.drawSurface, this.setSyncing);
         this.panHandler = new PanHandler();
     }
     componentDidMount() {

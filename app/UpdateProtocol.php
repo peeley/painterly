@@ -3,7 +3,7 @@
 namespace App;
 
 use App\Painting;
-use App\Events\PaintingUpdateEvent as Event;
+use App\Events\PaintingUpdateBroadcast as Broadcast;
 use Illuminate\Support\Arr;
 
 class UpdateProtocol
@@ -51,6 +51,6 @@ class UpdateProtocol
         $painting->save();
 
         // TODO error handling
-        broadcast(new Event($update, $painting))->toOthers();
+        broadcast(new Broadcast($update, $painting))->toOthers();
     }
 }

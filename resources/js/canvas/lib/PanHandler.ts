@@ -1,5 +1,5 @@
 import { fabric } from 'fabric';
-import { MouseEventType } from './Tools/Tool';
+import { MouseInputType } from "./Tools/MouseInputType";
 
 export class PanHandler {
     private lastX: number;
@@ -10,9 +10,10 @@ export class PanHandler {
         this.lastY = 0;
         this.panning = false;
     }
-    pan(type: MouseEventType, event: any, context: fabric.Canvas) {
+    pan(type: MouseInputType, event: any, canvas: fabric.Canvas) {
         const xCoord = event.e.clientX;
         const yCoord = event.e.clientY;
+
         if (type === 'mouse:down') {
             this.lastX = xCoord;
             this.lastY = yCoord;
@@ -21,13 +22,15 @@ export class PanHandler {
         else if (type === 'mouse:move') {
             const deltaX = xCoord - this.lastX;
             const deltaY = yCoord - this.lastY;
-            let transform = context.viewportTransform;
-            if (!transform) {
+            let transformationMatrix = canvas.viewportTransform;
+
+            if (!transformationMatrix) {
                 return;
             }
-            transform[4] += deltaX;
-            transform[5] += deltaY;
-            context.requestRenderAll();
+
+            transformationMatrix[4] += deltaX;
+            transformationMatrix[5] += deltaY;
+            canvas.requestRenderAll();
             this.lastX = xCoord;
             this.lastY = yCoord;
         }

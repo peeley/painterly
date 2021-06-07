@@ -130,21 +130,21 @@ export class RevisionTracker {
         this.redoStack = [];
     }
 
-    registerCreation = (created: UUIDObject[]) => {
+    storeObjectCreation = (created: UUIDObject[]) => {
         this.changes.push(new Creation(created));
         if(this.changes.length > CHANGE_STORAGE_MEMORY){
             this.changes.shift();
         }
     }
 
-    registerDeletion = (deleted: UUIDObject[]) => {
+    storeObjectDeletion = (deleted: UUIDObject[]) => {
         this.changes.push(new Deletion(deleted));
         if(this.changes.length > CHANGE_STORAGE_MEMORY){
             this.changes.shift();
         }
     }
 
-    registerModification = (item: UUIDObject, before: Transformation, after: Transformation) => {
+    storeObjectModification = (item: UUIDObject, before: Transformation, after: Transformation) => {
         this.changes.push(new Modification(item, before, after));
         if(this.changes.length > CHANGE_STORAGE_MEMORY){
             this.changes.shift();
@@ -181,11 +181,11 @@ export class RevisionTracker {
         return change;
     }
 
-    undosAvailable = (): boolean => {
+    isUndoAvailable = (): boolean => {
         return this.changes.length > 0;
     }
 
-    redosAvailable = (): boolean => {
+    isRedoAvailable = (): boolean => {
         return this.redoStack.length > 0;
     }
 

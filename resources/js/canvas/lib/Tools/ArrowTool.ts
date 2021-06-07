@@ -1,4 +1,5 @@
-import { Tool, MouseEventType } from './Tool';
+import { Tool } from './Tool';
+import { MouseInputType } from "./MouseInputType";
 import { fabric } from 'fabric';
 
 const PointLength = 15;
@@ -18,8 +19,8 @@ export class ArrowTool extends Tool {
     }
     select(_: fabric.Canvas){}
     deselect(_: fabric.Canvas){}
-    handleEvent(type: MouseEventType, event: any, context: fabric.Canvas): fabric.Line | void {
-        const pointer = context.getPointer(event.e);
+    handleEvent(type: MouseInputType, event: any, canvas: fabric.Canvas): fabric.Line | void {
+        const pointer = canvas.getPointer(event.e);
         const xCoord = pointer.x;
         const yCoord = pointer.y;
         if (type === "mouse:down") {
@@ -51,9 +52,9 @@ export class ArrowTool extends Tool {
                 x2: xCoord,
                 y2: yCoord,
             });
-            context.add(this.stem);
-            context.add(this.leftPointHalf);
-            context.add(this.rightPointHalf);
+            canvas.add(this.stem);
+            canvas.add(this.leftPointHalf);
+            canvas.add(this.rightPointHalf);
         }
         else if (this.mouseDown && type === "mouse:move") {
             this.stem.set({
@@ -78,13 +79,13 @@ export class ArrowTool extends Tool {
             this.stem.setCoords();
             // TODO perhaps add all objects as a group? will fix selection, but
             // opens up pandora's box when it comes to transforming
-            context.fire('push:added', { target: [this.stem, this.leftPointHalf, this.rightPointHalf] });
+            canvas.fire('push:added', { target: [this.stem, this.leftPointHalf, this.rightPointHalf] });
             this.stem = new fabric.Line();
             this.leftPointHalf = new fabric.Line();
             this.rightPointHalf = new fabric.Line();
             this.mouseDown = false;
         }
-        context.renderAll();
+        canvas.renderAll();
     }
     private calculatePointCoords(hypotenuse: fabric.Line, side: 'left'|'right'): fabric.Point {
         let width = (hypotenuse.x2 as number) - (hypotenuse.x1 as number);

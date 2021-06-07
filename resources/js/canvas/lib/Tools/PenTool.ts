@@ -1,6 +1,9 @@
-import { Tool, MouseEventType } from './Tool';
 import { fabric } from 'fabric';
+import { MouseInputType } from "./MouseInputType";
+import { Tool } from './Tool';
 
+// Uses fabric's builting drawing mode:
+// http://fabricjs.com/fabric-intro-part-4#free_drawing
 export class PenTool extends Tool {
     constructor() {
         super();
@@ -13,8 +16,12 @@ export class PenTool extends Tool {
     deselect = (canvas: fabric.Canvas) => {
         canvas.isDrawingMode = false;
     }
-    handleEvent(_type: MouseEventType, _event: any, context: fabric.Canvas): fabric.Path | void {
-        context.freeDrawingBrush.width = this.strokeWidth;
-        context.freeDrawingBrush.color = this.color;
+    handleEvent(
+        _type: MouseInputType,
+        _event: any,
+        canvas: fabric.Canvas
+    ): fabric.Path | void {
+        canvas.freeDrawingBrush.width = this.strokeWidth;
+        canvas.freeDrawingBrush.color = this.color;
     }
 }

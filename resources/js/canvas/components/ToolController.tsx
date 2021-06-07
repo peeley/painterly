@@ -8,21 +8,21 @@ import { ArrowTool } from '../lib/Tools/ArrowTool';
 import { SelectorTool } from '../lib/Tools/SelectorTool';
 import { TextTool } from '../lib/Tools/TextTool';
 
-interface ToolControllerProps {
+interface ToolBarProps {
     handleToolSelect(tool: Tool): void,
 };
 
 type ToolName = 'selector' | 'pen' | 'line' | 'arrow' | 'rect' | 'text';
 
-interface ToolControllerState {
+interface ToolBarState {
     selectedName: ToolName,
 };
 
-export class ToolController extends React.Component<ToolControllerProps, ToolControllerState>{
+export class ToolBar extends React.Component<ToolBarProps, ToolBarState>{
     private toolSet: Map<ToolName, Tool>;
     private selectedTool: Tool;
-    public state: ToolControllerState;
-    constructor(props: ToolControllerProps) {
+    public state: ToolBarState;
+    constructor(props: ToolBarProps) {
         super(props);
         this.toolSet = new Map([
             ['selector' as ToolName, new SelectorTool()],
@@ -38,7 +38,7 @@ export class ToolController extends React.Component<ToolControllerProps, ToolCon
         this.selectedTool = this.toolSet.get(this.state.selectedName) as Tool;
         this.props.handleToolSelect(this.selectedTool);
     }
-    handleChange = (event: any /*React.MouseEvent<HTMLInputElement>*/) => {
+    handleChange = (event: any /*React.MouseInput<HTMLInputElement>*/) => {
         let toolName = event.target.value;
         this.setState({
             selectedName: toolName

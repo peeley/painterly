@@ -8,7 +8,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class PaintingUpdateEvent implements ShouldBroadcast {
+class PaintingUpdateBroadcast implements ShouldBroadcast {
 
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

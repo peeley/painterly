@@ -1,4 +1,5 @@
-import { Tool, MouseEventType } from './Tool';
+import { Tool } from './Tool';
+import { MouseInputType } from "./MouseInputType";
 import { fabric } from 'fabric';
 
 export class SelectorTool extends Tool {
@@ -19,5 +20,5 @@ export class SelectorTool extends Tool {
             obj.set({ 'selectable': false });
         });
     }
-    handleEvent(_type: MouseEventType, _event: any, _canvas: fabric.Canvas){ }
+    handleEvent(_type: MouseInputType, _event: any, _canvas: fabric.Canvas){ }
 }

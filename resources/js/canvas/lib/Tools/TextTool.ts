@@ -1,4 +1,5 @@
-import { Tool, MouseEventType } from './Tool';
+import { Tool } from './Tool';
+import { MouseInputType } from "./MouseInputType";
 import { fabric } from 'fabric';
 
 export class TextTool extends Tool {
@@ -11,22 +12,22 @@ export class TextTool extends Tool {
     }
     select = (_canvas: fabric.Canvas) => { }
     deselect = (_canvas: fabric.Canvas) => { }
-    handleEvent(type: MouseEventType, event: any, context: fabric.Canvas) {
-        const pointer = context.getPointer(event.e);
+    handleEvent(type: MouseInputType, event: any, canvas: fabric.Canvas) {
+        const pointer = canvas.getPointer(event.e);
         let xCoord = pointer.x;
         let yCoord = pointer.y;
-        if (type === 'mouse:down' && !context.getActiveObject()) {
+        if (type === 'mouse:down' && !canvas.getActiveObject()) {
             this.stroke = new fabric.IText('text', {
                 left: xCoord,
                 top: yCoord,
                 fill: this.color,
                 fontFamily: "Akzidenz-Grotesk",
             });
-            context.add(this.stroke);
-            context.setActiveObject(this.stroke);
+            canvas.add(this.stroke);
+            canvas.setActiveObject(this.stroke);
         }
         if (type === 'mouse:up') {
-            context.fire('push:added', { target: [this.stroke] });
+            canvas.fire('push:added', { target: [this.stroke] });
             this.stroke = new fabric.IText('');
         }
     }

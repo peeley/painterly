@@ -1,6 +1,5 @@
 import { fabric } from 'fabric';
-
-export type MouseEventType = 'mouse:down' | 'mouse:move' | 'mouse:up';
+import { MouseInputType } from './MouseInputType';
 
 export abstract class Tool {
     protected mouseDown: boolean;
@@ -35,5 +34,5 @@ export abstract class Tool {
     getDisplayName(){
         return this.displayName;
     }
-    abstract handleEvent(_type: MouseEventType, _event: any, _canvas: fabric.Canvas): fabric.Object | void;
+    abstract handleEvent(_type: MouseInputType, _event: any, _canvas: fabric.Canvas): fabric.Object | void;
 }

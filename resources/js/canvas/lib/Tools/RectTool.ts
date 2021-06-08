@@ -1,4 +1,5 @@
-import { Tool, MouseEventType } from './Tool';
+import { Tool } from './Tool';
+import { MouseInputType } from "./MouseInputType";
 import { fabric } from 'fabric';
 
 export class RectTool extends Tool {
@@ -16,8 +17,12 @@ export class RectTool extends Tool {
     }
     select = (_: fabric.Canvas) => { }
     deselect = (_: fabric.Canvas) => { }
-    handleEvent(type: MouseEventType, event: any, context: fabric.Canvas): fabric.Rect | void {
-        const pointer = context.getPointer(event.e);
+    handleEvent(
+        type: MouseInputType,
+        event: any,
+        canvas: fabric.Canvas
+    ): fabric.Rect | void {
+        const pointer = canvas.getPointer(event.e);
         const xCoord = pointer.x;
         const yCoord = pointer.y;
         if (type === "mouse:down") {
@@ -32,7 +37,7 @@ export class RectTool extends Tool {
                 left: xCoord,
                 top: yCoord,
             });
-            context.add(this.stroke);
+            canvas.add(this.stroke);
         }
         else if (this.mouseDown && type === "mouse:move") {
             const width = xCoord - this.startX;
@@ -44,10 +49,10 @@ export class RectTool extends Tool {
         }
         else if (type === 'mouse:up') {
             this.stroke.setCoords();
-            context.fire('push:added', { target: [this.stroke] });
+            canvas.fire('push:added', { target: [this.stroke] });
             this.stroke = new fabric.Rect();
             this.mouseDown = false;
         }
-        context.renderAll();
+        canvas.renderAll();
     }
 }

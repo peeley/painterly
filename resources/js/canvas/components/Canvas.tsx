@@ -1,12 +1,14 @@
-import * as React from 'react';
 import axios from 'axios';
 import { fabric } from 'fabric';
-import { ToolController } from './ToolController';
-import { Tool, MouseEventType } from './Tools/Tool';
-import { PenTool } from './Tools/PenTool';
-import { PanHandler } from './PanHandler';
-import { EventHandler } from './EventHandler';
+import * as React from 'react';
+import { CanvasEventHandler } from '../lib/CanvasEventHandler';
+import { IncomingBroadcastHandler } from '../lib/IncomingBroadcastHandler';
+import { PanHandler } from "../lib/PanHandler";
+import { MouseInputType } from "../lib/Tools/MouseInputType";
+import { PenTool } from '../lib/Tools/PenTool';
+import { Tool } from '../lib/Tools/Tool';
 import { MenuBar } from './MenuBar';
+import { ToolBar } from './ToolController';
 
 interface CanvasProps {
     paintingId: number;
@@ -20,17 +22,18 @@ interface CanvasState {
     isSyncing: boolean,
 };
 
-const CanvasId = 'drawSurface'
+const CanvasElementId = 'canvasElement'
 
 class Canvas extends React.Component<CanvasProps, CanvasState> {
-    private eventHandler: EventHandler;
+    private broadcastHandler: IncomingBroadcastHandler;
+    private eventHandler: CanvasEventHandler;
     private panHandler: PanHandler;
-    private drawSurface: fabric.Canvas;
+    private canvas: fabric.Canvas;
     // TODO remove tool from state, just get current tool from tool controller
     public state: CanvasState;
     constructor(props: CanvasProps) {
         super(props);
-        this.drawSurface = new fabric.Canvas(CanvasId, {
+        this.canvas = new fabric.Canvas(CanvasElementId, {
             fireMiddleClick: true,
         });
         this.state = {
@@ -38,64 +41,76 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             title: '',
             loading: true,
             scaleFactor: 1.0,
-            isSyncing: false,
+            isSyncing: true,
         };
-        this.eventHandler = new EventHandler(this.props.paintingId, this.drawSurface, this.setSyncing);
+        this.broadcastHandler = new IncomingBroadcastHandler(
+            this.props.paintingId,
+            this.canvas,
+            this.setSyncing
+        );
+        this.eventHandler = new CanvasEventHandler(
+            this.props.paintingId,
+            this.canvas,
+            this.setSyncing
+        );
         this.panHandler = new PanHandler();
     }
     componentDidMount() {
-        this.getCanvas();
+        this.fetchCanvas();
     }
     handleToolSelect = (tool: Tool): void => {
-        this.state.tool.deselect(this.drawSurface);
+        this.state.tool.deselect(this.canvas);
         this.setState({
             tool: tool
         }, () =>
-            tool.select(this.drawSurface)
+            tool.select(this.canvas)
         );
     }
-    handleInput = (type: MouseEventType, event: fabric.IEvent) => {
+    handleInput = (type: MouseInputType, event: fabric.IEvent) => {
         if (event.button === 2 || this.panHandler.isPanning()) {
-            this.panHandler.pan(type, event, this.drawSurface);
-            this.drawSurface.forEachObject(obj => obj.setCoords());
+            this.panHandler.pan(type, event, this.canvas);
+            this.canvas.forEachObject(obj => obj.setCoords());
         }
         else {
-            this.state.tool.handleEvent(type, event, this.drawSurface);
+            this.state.tool.handleEvent(type, event, this.canvas);
         }
     }
     clearCanvas() {
-        this.drawSurface.clear();
+        this.canvas.clear();
     }
-    mountFabric = () => {
-        this.drawSurface.on({
-            'mouse:down': (o) => this.handleInput('mouse:down', o),
-            'mouse:move': (o) => this.handleInput('mouse:move', o),
-            'mouse:up': (o) => this.handleInput('mouse:up', o),
+    mountCanvasEventListeners = () => {
+        this.canvas.on({
+            'mouse:down': (event) => this.handleInput('mouse:down', event),
+            'mouse:move': (event) => this.handleInput('mouse:move', event),
+            'mouse:up': (event) => this.handleInput('mouse:up', event),
             'mouse:wheel': this.handleZoom,
-            'path:created': (o: any) => {
-                this.eventHandler.handleLocalAdd({ target: [o.path] });
+            'path:created': (event: any) => {
+                this.eventHandler.handleLocalAddEvent({ target: [event.path] });
             },
-            'push:added': this.eventHandler.handleLocalAdd,
-            'object:modified': this.eventHandler.handleLocalModify,
-            'push:removed': this.eventHandler.handleLocalRemove,
-            'dragenter': (o) => console.log('dragenter', o),
-            'dragover': (o: any) => {
-                console.log('dragover', o);
+            'push:added': this.eventHandler.handleLocalAddEvent,
+            'object:modified': this.eventHandler.handleLocalModifyEvent,
+            'finished:modified': (_) => {
+                this.canvas.on('object:modified', this.eventHandler.handleLocalModifyEvent);
             },
-            'selection:created': (o) => {
-                if(o.target){
-                    o.target.lockScalingFlip = true;
+            'push:removed': this.eventHandler.handleLocalRemoveEvent,
+            'dragenter': (event) => console.log('dragenter', event),
+            'dragover': (event: any) => {
+                console.log('dragover', event);
+            },
+            'selection:created': (event) => {
+                if(event.target){
+                    event.target.lockScalingFlip = true;
                 }
             },
             // 'text:changed': this.eventHandler.modify,
-            'dragleave': (o) => console.log('dragleave', o),
-            'drop': (o) => {
+            'dragleave': (event) => console.log('dragleave', event),
+            'drop': (event) => {
                 console.log("dropped file here!");
-                o.e.preventDefault();
-                console.log(o);
+                event.e.preventDefault();
+                console.log(event);
             }
         });
-        this.drawSurface.selection = false;
+        this.canvas.selection = false;
         const canvasElement = document.getElementById('canvasWrapper');
         if (!canvasElement) {
             throw Error("Unable to find canvas element.");
@@ -105,51 +120,48 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             if (event.ctrlKey) {
                 switch (event.key) {
                     case 'z':
-                        this.eventHandler.undo();
+                        this.eventHandler.handleUndo();
                         break;
                     case 'y':
-                        this.eventHandler.redo();
+                        this.eventHandler.handleRedo();
                         break;
                     default:
                 }
             }
             else if (event.key === 'Delete' || event.key === 'Backspace') {
-                const removedObject = this.drawSurface.getActiveObject();
-                this.drawSurface.remove(removedObject);
-                this.drawSurface.fire('push:removed', { target: removedObject });
+                const removedObject = this.canvas.getActiveObject();
+                this.canvas.remove(removedObject);
+                this.canvas.fire('push:removed', { target: removedObject });
             }
         });
-        this.drawSurface.setBackgroundColor("#181A1B", () => {});
+        this.canvas.setBackgroundColor("#181A1B", () => {});
     }
     setSyncing = (isSyncing: boolean) => {
         this.setState({
             isSyncing: isSyncing
         });
     }
-    getCanvas() {
-        this.setState({ isSyncing: true });
+    fetchCanvas() {
         axios.get(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`)
             .then(response => {
                 this.setState({
-                    title: response.data.title
-                });
-                this.setState({
+                    title: response.data.title,
                     loading: false
                 }, () => {
-                    this.drawSurface = new fabric.Canvas('drawSurface', {
+                    this.canvas = new fabric.Canvas(CanvasElementId, {
                         fireRightClick: true,
                         fireMiddleClick: true,
                         stopContextMenu: false,
                     });
-                    // need to set draw surface again after loading finishes
-                    this.eventHandler.setDrawSurface(this.drawSurface);
+                    // need to set canvas again after loading finishes
+                    this.eventHandler.setCanvas(this.canvas);
                     this.eventHandler.deserializeHistory(response.data.objects);
                     if(response.data.objects.length === 0){
                         this.eventHandler.pushPreview(); // make preview blank
                     }
-                    this.eventHandler.mountChannelListener();
-                    this.state.tool.select(this.drawSurface);
-                    this.mountFabric();
+                    this.broadcastHandler.mountChannelListener();
+                    this.state.tool.select(this.canvas);
+                    this.mountCanvasEventListeners();
                     this.setState({ isSyncing: false });
                 });
             });
@@ -160,7 +172,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             this.setState({
                 scaleFactor: factor
             }, () => {
-                this.drawSurface.zoomToPoint(new fabric.Point(x, y),
+                this.canvas.zoomToPoint(new fabric.Point(x, y),
                     this.state.scaleFactor)
             });
         }
@@ -169,8 +181,8 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         this.setState({
             scaleFactor: 1.0
         }, () => {
-            this.drawSurface.setViewportTransform([1, 0, 0, 1, 0, 0]);
-            this.drawSurface.forEachObject(obj => obj.setCoords());
+            this.canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+            this.canvas.forEachObject(obj => obj.setCoords());
         });
     }
     handleZoom = (event: any) => {
@@ -198,24 +210,24 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             <div className="container col px-5" >
                 <MenuBar
                     title={this.state.title}
-                    surface={this.drawSurface}
+                    surface={this.canvas}
                     paintingId={this.props.paintingId}
                     isCanvasSyncing={this.state.isSyncing} />
                 <div className="row d-flex justify-content-around">
-                    <ToolController
+                    <ToolBar
                         handleToolSelect={this.handleToolSelect} />
                     <div className="btn-group pb-2 pl-3" >
                         <button className="btn btn-outline-secondary"
                             disabled={!this.eventHandler.canUndo()}
                             onClick={() => {
-                                this.eventHandler.undo()
+                                this.eventHandler.handleUndo()
                             }}>
                             <i className="fas fa-undo" title="Undo"></i>
                         </button>
                         <button className="btn btn-outline-secondary"
                             disabled={!this.eventHandler.canRedo()}
                             onClick={() => {
-                                this.eventHandler.redo()
+                                this.eventHandler.handleRedo()
                             }}>
                             <i className="fas fa-redo" title="Redo"></i>
                         </button>
@@ -250,7 +262,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                     : null
                 }
                 <div id="canvasWrapper">
-                    <canvas className="row" id="drawSurface"
+                    <canvas className="row" id={CanvasElementId}
                         style={canvasStyle}
                         height={window.innerHeight * .85}
                         width={window.innerWidth * .95} />

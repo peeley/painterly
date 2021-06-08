@@ -115,7 +115,7 @@ class PaintingTest extends TestCase
             ->assertJson(['objects' => []]);
     }
 
-    public function testViewPublicSetting()
+    public function testViewWhilePublicViewEnabled()
     {
         $painting = $this->testUser->paintings()->create();
         $response = $this->actingAs($this->testUser)
@@ -135,7 +135,7 @@ class PaintingTest extends TestCase
         $auth_get_response->assertStatus(200);
     }
 
-    public function testEditPublicSetting()
+    public function testEditWhilePublicEditEnabled()
     {
         $painting = $this->testUser->paintings()->create();
         $this->assertTrue($painting->edit_public === false);

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PaintingUpdateRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Painting;
+use App\Models\Painting;
 use App\UpdateProtocol;
 
 class PaintingController extends Controller
@@ -41,7 +41,8 @@ class PaintingController extends Controller
         $painting->delete();
         return response('OK', 200);
     }
-    public function postPreview(Request $request, Painting $painting) {
+    public function postPreview(Request $request, Painting $painting)
+    {
         $validated = $request->validate([
             'data' => ['required', 'string'],
         ]);

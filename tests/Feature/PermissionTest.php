@@ -4,20 +4,19 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\User;
-use App\Permission;
+use App\Models\User;
+use App\Models\Permission;
 
 class PermissionTest extends TestCase
 {
-
     use RefreshDatabase;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->testUser = factory(User::class)->create();
-        $this->otherUser = factory(User::class)->create();
+        $this->testUser = User::factory()->create();
+        $this->otherUser = User::factory()->create();
     }
 
     public function testGetPermissionsOnNewPainting()
@@ -42,8 +41,7 @@ class PermissionTest extends TestCase
             ->postJson("/api/p/$painting->id/perms", [
                 'perms' => Permission::PERMISSION_READ_AND_WRITE,
                 'email' => $this->otherUser->email,
-            ])
-            ->assertStatus(200);
+            ])->assertStatus(200);
 
         $this->actingAs($this->testUser)
             ->getJson("/api/p/$painting->id/perms")

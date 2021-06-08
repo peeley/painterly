@@ -2,13 +2,14 @@
 
 namespace App\Events;
 
-use App\Painting;
+use App\Models\Painting;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class PaintingUpdateEvent implements ShouldBroadcast {
+class PaintingUpdateEvent implements ShouldBroadcast
+{
 
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

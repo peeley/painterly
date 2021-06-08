@@ -5,8 +5,8 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
-use App\Painting;
-use App\User;
+use App\Models\Painting;
+use App\Models\User;
 
 class PaintingTest extends TestCase
 {
@@ -26,17 +26,19 @@ class PaintingTest extends TestCase
 
         Event::fake();
 
-        $this->testUser = factory(User::class)->create();
-        $this->otherUser = factory(User::class)->create();
+        $this->testUser = User::factory()->create();
+        $this->otherUser = User::factory()->create();
     }
 
     public function testCreatePainting()
     {
         $painting = $this->testUser->paintings()->create();
+
         $this->assertTrue($this->testUser->id === $painting->user_id);
         $this->assertTrue($painting->objects === []);
         $this->assertTrue($painting->view_public === false);
         $this->assertTrue($painting->edit_public === false);
+
         $response = $this->actingAs($this->testUser)
             ->getJson("/api/p/$painting->id");
         $response->assertStatus(200)->assertJson([
@@ -68,27 +70,36 @@ class PaintingTest extends TestCase
 
         $first_add_json = [
             'action' => 'add',
-            'objects' => json_encode([['uuid' => 'test-uuid',
-                                       'data' => 'test-object']])
+            'objects' => json_encode([[
+                'uuid' => 'test-uuid',
+                'data' => 'test-object'
+            ]])
         ];
         $first_add_response = $this->actingAs($this->testUser)
             ->putJson("/api/p/$painting->id", $first_add_json);
-        $first_add_response->dump();
         $first_add_response->assertStatus(200);
 
         $second_add_json = [
             'action' => 'add',
-            'objects' => json_encode([['uuid' => 'second-test-uuid',
-                                       'data' => 'second test-object']])
+            'objects' => json_encode([[
+                'uuid' => 'second-test-uuid',
+                'data' => 'second test-object'
+            ]])
         ];
         $second_add_response = $this->actingAs($this->testUser)
             ->putJson("/api/p/$painting->id", $second_add_json);
         $second_add_response->assertStatus(200);
 
-        $all_objects = [['uuid' => 'test-uuid',
-                         'data' => 'test-object'],
-                        ['uuid' => 'second-test-uuid',
-                         'data' => 'second test-object']];
+        $all_objects = [
+            [
+                'uuid' => 'test-uuid',
+                'data' => 'test-object'
+            ],
+            [
+                'uuid' => 'second-test-uuid',
+                'data' => 'second test-object'
+            ]
+        ];
         $get_response = $this->actingAs($this->testUser)
             ->getJson("/api/p/$painting->id");
         $get_response->assertStatus(200)

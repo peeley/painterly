@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\User;
-use App\Painting;
+use App\Models\User;
+use App\Models\Painting;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PaintingPolicy

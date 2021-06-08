@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Permission;
+use App\Models\Permission;
 
 class PermissionRequest extends FormRequest
 {
@@ -26,8 +26,10 @@ class PermissionRequest extends FormRequest
     public function rules()
     {
         return [
-            'perms' => Rule::in([Permission::PERMISSION_READ_ONLY,
-                                 Permission::PERMISSION_READ_AND_WRITE]),
+            'perms' => Rule::in([
+                Permission::PERMISSION_READ_ONLY,
+                Permission::PERMISSION_READ_AND_WRITE
+            ]),
             'email' => 'exists:users,email',
         ];
     }

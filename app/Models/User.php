@@ -1,16 +1,17 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use App\Painting;
-use App\Permission;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Painting;
+use App\Models\Permission;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
     use Notifiable;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -39,11 +40,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function paintings(){
-        return $this->hasMany('App\Painting');
+    public function paintings()
+    {
+        return $this->hasMany(Painting::class);
     }
 
-    public function shared(){
+    public function shared()
+    {
         $permittedIds = Permission::where(['user_id' => $this->id])->pluck('painting_id')->toArray();
         return Painting::whereIn('id', $permittedIds);
     }

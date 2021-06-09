@@ -33,7 +33,7 @@ export class IncomingBroadcastHandler {
             disableStats: false
         });
         echo.channel(`painting.${this.paintingId}`)
-            .listen('PaintingUpdateBroadcast', (data: PaintingUpdateBroadcast) => {
+            .listen('PaintingUpdated', (data: PaintingUpdateBroadcast) => {
                 console.log(data);
                 switch (data.action) {
                     case 'add':
@@ -83,13 +83,13 @@ export class IncomingBroadcastHandler {
         this.canvas.off('object:modified');
         this.canvas.discardActiveObject();
 
-        if(this.canvas.getActiveObject() instanceof fabric.ActiveSelection){
+        if (this.canvas.getActiveObject() instanceof fabric.ActiveSelection) {
             // prevent modifying selected object
             this.canvas.discardActiveObject();
         }
 
         // TODO reduce n^2 complexity
-        for(let modified of objects){
+        for (let modified of objects) {
             this.canvas.forEachObject((obj: any) => {
                 // TODO convert obj to type UUIDObject
                 if (obj.uuid === modified.uuid) {
@@ -106,7 +106,7 @@ export class IncomingBroadcastHandler {
         this.canvas.on('finished:modified', {} as any);
     }
     handleIncomingRemoveEvent = (objects: [UUIDObject]) => {
-        for(let object of objects){
+        for (let object of objects) {
             this.canvas.forEachObject((obj: any) => {
                 if (obj.uuid === object.uuid) {
                     this.canvas.remove(obj);

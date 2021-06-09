@@ -6,10 +6,17 @@ use App\Http\Requests\PaintingUpdateRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Painting;
-use App\UpdateProtocol;
+use App\PaintingUpdateService as UpdateService;
 
 class PaintingController extends Controller
 {
+    private $paintingUpdater;
+
+    public function __construct(UpdateService $paintingUpdater)
+    {
+        $this->paintingUpdater = $paintingUpdater;
+    }
+
     public function createPainting()
     {
         $user = Auth::user();
@@ -32,7 +39,7 @@ class PaintingController extends Controller
         $this->authorize('update', $painting);
         $validated = $request->validated();
 
-        UpdateProtocol::update($painting, $validated);
+        $this->paintingUpdater->updatePainting($painting, $validated);
         $painting->save();
         return response('Painting successfully updated.', 200);
     }

@@ -5,8 +5,8 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": ">=7.3",
-        "beyondcode/laravel-websockets": "^1.9",
+        "php": ">=7.4",
+        "beyondcode/laravel-websockets": "^1.12",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^7.0.1",

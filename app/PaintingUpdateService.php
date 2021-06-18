@@ -3,7 +3,7 @@
 namespace App;
 
 use App\Models\Painting;
-use App\Events\PaintingUpdated;
+use App\Events\PaintingUpdatedEvent;
 use Illuminate\Support\Arr;
 
 class PaintingUpdateService
@@ -36,8 +36,10 @@ class PaintingUpdateService
 
         $painting->save();
 
+        $event = new PaintingUpdatedEvent($updateJson, $painting);
+
         // TODO error handling
-        broadcast(new PaintingUpdated($updateJson, $painting))->toOthers();
+        broadcast($event)->toOthers();
     }
 
     private function clearPainting(Painting $painting)

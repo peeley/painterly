@@ -30,11 +30,11 @@ export class IncomingBroadcastHandler {
             wsHost: window.location.hostname,
             wsPort: 6001,
             forceTLS: false,
-            disableStats: false
+            disableStats: true
         });
         echo.channel(`painting.${this.paintingId}`)
-            .listen('PaintingUpdated', (data: PaintingUpdateBroadcast) => {
-                console.log(data);
+            .listen('painting.updated', (data: PaintingUpdateBroadcast) => {
+                console.log(`incoming event: ${data}`);
                 switch (data.action) {
                     case 'add':
                         if (!data.objects) {

@@ -3,12 +3,13 @@
 namespace App\Events;
 
 use App\Models\Painting;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class PaintingUpdated implements ShouldBroadcast
+class PaintingUpdatedEvent implements ShouldBroadcast
 {
 
     use Dispatchable, InteractsWithSockets, SerializesModels;
@@ -28,6 +29,11 @@ class PaintingUpdated implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return ['painting.' . $this->paintingId];
+        return new Channel('painting.' . $this->paintingId);
+    }
+
+    public function broadcastAs()
+    {
+        return 'painting.updated';
     }
 }

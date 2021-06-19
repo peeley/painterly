@@ -1,7 +1,5 @@
-import axios from 'axios';
 import { fabric } from 'fabric';
-import Echo from 'laravel-echo';
-import { UUIDObject, Transformation, OutgoingEvent, UpdateAction } from './RevisionTracker';
+import { UUIDObject, UpdateAction } from './RevisionTracker';
 
 interface PaintingUpdateBroadcast {
     paintingId: number,
@@ -13,27 +11,18 @@ interface PaintingUpdateBroadcast {
 export class IncomingBroadcastHandler {
     private paintingId: number;
     private canvas: fabric.Canvas;
-    private setSyncing: (_: boolean) => void;
     constructor(
         id: number,
-        canvas: fabric.Canvas,
-        setSyncing: (_: boolean) => void
+        canvas: fabric.Canvas
     ) {
         this.paintingId = id;
         this.canvas = canvas;
-        this.setSyncing = setSyncing;
     }
     mountChannelListener = () => {
-        let echo = new Echo({
-            broadcaster: 'pusher',
-            key: process.env.MIX_PUSHER_APP_KEY,
-            wsHost: window.location.hostname,
-            wsPort: 6001,
-            forceTLS: false,
-            disableStats: true
-        });
-        echo.channel(`painting.${this.paintingId}`)
-            .listen('painting.updated', (data: PaintingUpdateBroadcast) => {
+        console.log(`even channel: painting.${this.paintingId}`);
+        // window.Echo property is set in resources/js/bootstrap.js
+        (window as any).Echo.channel(`painting.${this.paintingId}`)
+            .listen('painting.updated', (data: any) => {
                 console.log(`incoming event: ${data}`);
                 switch (data.action) {
                     case 'add':

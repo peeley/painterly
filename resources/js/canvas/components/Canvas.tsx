@@ -46,7 +46,6 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         this.broadcastHandler = new IncomingBroadcastHandler(
             this.props.paintingId,
             this.canvas,
-            this.setSyncing
         );
         this.eventHandler = new CanvasEventHandler(
             this.props.paintingId,
@@ -98,7 +97,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 console.log('dragover', event);
             },
             'selection:created': (event) => {
-                if(event.target){
+                if (event.target) {
                     event.target.lockScalingFlip = true;
                 }
             },
@@ -134,7 +133,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                 this.canvas.fire('push:removed', { target: removedObject });
             }
         });
-        this.canvas.setBackgroundColor("#181A1B", () => {});
+        this.canvas.setBackgroundColor("#181A1B", () => { });
     }
     setSyncing = (isSyncing: boolean) => {
         this.setState({
@@ -156,7 +155,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                     // need to set canvas again after loading finishes
                     this.eventHandler.setCanvas(this.canvas);
                     this.eventHandler.deserializeHistory(response.data.objects);
-                    if(response.data.objects.length === 0){
+                    if (response.data.objects.length === 0) {
                         this.eventHandler.pushPreview(); // make preview blank
                     }
                     this.broadcastHandler.mountChannelListener();
@@ -194,7 +193,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
             this.zoom(wheelEvent.offsetX, wheelEvent.offsetY, this.state.scaleFactor - 0.25);
         }
     }
-    formatScaleFactor(){
+    formatScaleFactor() {
         const scale = this.state.scaleFactor;
         return scale.toLocaleString('US-us', {
             style: "decimal",

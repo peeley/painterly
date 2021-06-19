@@ -22,8 +22,7 @@ export class IncomingBroadcastHandler {
         console.log(`even channel: painting.${this.paintingId}`);
         // window.Echo property is set in resources/js/bootstrap.js
         (window as any).Echo.channel(`painting.${this.paintingId}`)
-            .listen('painting.updated', (data: any) => {
-                console.log(`incoming event: ${data}`);
+            .listen('.painting.updated', (data: PaintingUpdateBroadcast) => {
                 switch (data.action) {
                     case 'add':
                         if (!data.objects) {
@@ -62,6 +61,7 @@ export class IncomingBroadcastHandler {
                 console.log('enlivened: ', obj);
                 this.canvas.add(obj);
             });
+            this.canvas.renderAll();
         }, 'fabric');
     }
     handleIncomingModifyEvent = (objects: UUIDObject[]) => {
@@ -107,5 +107,8 @@ export class IncomingBroadcastHandler {
     checksumMatches = (checksum: string): boolean => {
         let currentCanvasChecksum = btoa(this.canvas.getObjects().toString());
         return currentCanvasChecksum === checksum;
+    };
+    setCanvas(canvas: fabric.Canvas): void {
+        this.canvas = canvas;
     }
 }

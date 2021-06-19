@@ -158,7 +158,10 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                     if (response.data.objects.length === 0) {
                         this.eventHandler.pushPreview(); // make preview blank
                     }
+
+                    this.broadcastHandler.setCanvas(this.canvas);
                     this.broadcastHandler.mountChannelListener();
+
                     this.state.tool.select(this.canvas);
                     this.mountCanvasEventListeners();
                     this.setState({ isSyncing: false });

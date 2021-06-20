@@ -15,7 +15,7 @@ type TitleEditorState = {
 
 class TitleEditor extends React.Component<TitleEditorProps, TitleEditorState> {
     public state: TitleEditorState;
-    constructor(props: TitleEditorProps){
+    constructor(props: TitleEditorProps) {
         super(props);
         this.state = {
             title: props.title,
@@ -29,28 +29,28 @@ class TitleEditor extends React.Component<TitleEditorProps, TitleEditorState> {
         });
     }
     submitTitle = () => {
-        axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`,
-                  {title: this.state.title},
-                  {headers: { 'Content-Type': 'application/json'}})
-            .then( _ => {
+        axios.post(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}/title`,
+            { title: this.state.title },
+            { headers: { 'Content-Type': 'application/json' } })
+            .then(_ => {
                 this.setState({
                     savedTitle: this.state.title,
                     errors: null
                 });
                 this.props.titleChangeCallback(this.state.title);
                 let titleModal = $(`#titleModal${this.props.paintingId}`);
-                if(titleModal){
+                if (titleModal) {
                     titleModal.modal('hide');
                 }
             })
-            .catch( error => {
+            .catch(error => {
                 console.log(error);
                 this.setState({
                     errors: error.response.data.errors.title[0]
                 });
             });
     }
-    render(){
+    render() {
         return (
             <div className="modal fade" id={"titleModal" + this.props.paintingId} >
                 <div className="modal-dialog" >
@@ -64,15 +64,15 @@ class TitleEditor extends React.Component<TitleEditorProps, TitleEditorState> {
                         <div className="modal-body row justify-content-center">
                             <input id={"titleForm_" + this.props.paintingId} className="col-8"
                                 onChange={this.handleChange} type="text" placeholder="Edit title"
-                                value={ this.state.title } />
-                            <button id={ `${this.props.paintingId}` }
+                                value={this.state.title} />
+                            <button id={`${this.props.paintingId}`}
                                 className="btn btn-primary editTitleSubmitButton"
                                 onClick={this.submitTitle}>
                                 Submit
                             </button>
                         </div>
                     </div>
-                    { this.state.errors ?
+                    {this.state.errors ?
                         <div className="alert alert-danger alert-dismissable fade show" >
                             {this.state.errors}
                         </div> : null

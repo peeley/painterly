@@ -55,10 +55,22 @@ class PaintingController extends Controller
     public function postPreview(Request $request, Painting $painting)
     {
         $validated = $request->validate([
-            'data' => ['required', 'string'],
+            'data' => 'required|string',
         ]);
 
         $painting->preview = $validated['data'];
+        $painting->save();
+        return response('OK', 200);
+    }
+
+    public function postTitle(Request $request, Painting $painting)
+    {
+        // TODO maybe make content filter for titles?
+        $validated = $request->validate([
+            'title' => 'required|string'
+        ]);
+
+        $painting->title = $validated['title'];
         $painting->save();
         return response('OK', 200);
     }

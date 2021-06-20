@@ -15,10 +15,9 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    if(Auth::check()){
+    if (Auth::check()) {
         return redirect('/home');
-    }
-    else{
+    } else {
         return redirect('/login');
     }
 });
@@ -31,12 +30,13 @@ Route::get('/painting/{painting}', 'PaintingController@show')->middleware('auth'
 
 // putting API routes in ./web.php instead of ./api.php, since requests come
 // from user browser and we use session for authentication
-Route::prefix('api')->group(function() {
+Route::prefix('api')->group(function () {
     Route::middleware(['auth'])->group(function () {
         Route::prefix('/p')->group(function () {
             Route::post('/', 'PaintingController@createPainting');
             Route::get('/{painting}', 'PaintingController@getPainting');
             Route::put('/{painting}', 'PaintingController@putPainting');
+            Route::post('/{painting}/title', 'PaintingController@postTitle');
             Route::post('/{painting}/preview', 'PaintingController@postPreview');
             Route::delete('/{painting}', 'PaintingController@deletePainting');
 

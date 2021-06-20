@@ -22,9 +22,8 @@ class PaintingUpdatedEvent implements ShouldBroadcast
     public function __construct(Painting $painting, array $update)
     {
         $this->paintingId = $painting->id;
-        $this->action = $update['action'] ?? null;
+        $this->action = $update['action'];
         $this->objects = isset($update['objects']) ? json_decode($update['objects']) : null;
-        $this->title = $update['title'] ?? null;
     }
 
     public function broadcastOn()

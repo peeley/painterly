@@ -55,7 +55,7 @@ class PaintingTest extends TestCase
         $test_title = 'New title!';
 
         $response = $this->actingAs($this->testUser)
-            ->putJson("/api/p/$painting->id", ['title' => $test_title]);
+            ->postJson("/api/p/$painting->id/title", ['title' => $test_title]);
         $response->assertStatus(200);
 
         $response = $this->actingAs($this->testUser)

@@ -49,7 +49,7 @@ export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
             titleSelected: false,
             isTitleSyncing: true,
         });
-        axios.put(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}`,
+        axios.post(`${process.env.MIX_APP_URL}/api/p/${this.props.paintingId}/title`,
             { title: this.state.title },
             { headers: { 'Content-Type': 'application/json' } })
             .then(() => {
@@ -76,7 +76,7 @@ export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
         event.preventDefault();
     }
     render() {
-        let titleStyle = { color: this.state.isTitleSyncing ? TextColorSyncing : TextColorNormal};
+        let titleStyle = { color: this.state.isTitleSyncing ? TextColorSyncing : TextColorNormal };
         return (
             <div className="row pt-3 pb-1">
                 <div className="col-auto pt-2">
@@ -88,7 +88,7 @@ export class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
                     <div className="row">
                         {this.state.titleSelected
                             ? (<form onSubmit={this.postTitle}
-                                    onBlur={this.postTitle}>
+                                onBlur={this.postTitle}>
                                 <input type="text"
                                     value={this.state.title}
                                     onChange={this.handleTitleChange}

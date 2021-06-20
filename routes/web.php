@@ -28,16 +28,27 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/painting/{painting}', 'PaintingController@show')->middleware('auth');
-Route::post('/api/p', 'PaintingController@createPainting')->middleware('auth');
-Route::get('/api/p/{painting}', 'PaintingController@getPainting');
-Route::put('/api/p/{painting}', 'PaintingController@putPainting')->middleware('auth');
-Route::post('/api/p/{painting}/preview', 'PaintingController@postPreview')->middleware('auth');
-Route::delete('/api/p/{painting}', 'PaintingController@deletePainting')->middleware('auth');
 
-Route::get('/api/p/{painting}/perms', 'PermissionController@getPermissions')->middleware('auth');
-Route::post('/api/p/{painting}/perms', 'PermissionController@addPermission')->middleware('auth');
-Route::put('/api/p/{painting}/perms', 'PermissionController@editPublicPermissions')->middleware('auth');
-Route::delete('/api/p/{painting}/perms/{user}', 'PermissionController@removeUser')->middleware('auth');
+// putting API routes in ./web.php instead of ./api.php, since requests come
+// from user browser and we use session for authentication
+Route::prefix('api')->group(function() {
+    Route::middleware(['auth'])->group(function () {
+        Route::prefix('/p')->group(function () {
+            Route::post('/', 'PaintingController@createPainting');
+            Route::get('/{painting}', 'PaintingController@getPainting');
+            Route::put('/{painting}', 'PaintingController@putPainting');
+            Route::post('/{painting}/preview', 'PaintingController@postPreview');
+            Route::delete('/{painting}', 'PaintingController@deletePainting');
 
-Route::get('/api/u/{user}/paintings', 'UserController@getPaintings')->middleware('auth');
-Route::get('/api/u/{user}/shared', 'UserController@getShared')->middleware('auth');
+            Route::get('/{painting}/perms', 'PermissionController@getPermissions');
+            Route::post('/{painting}/perms', 'PermissionController@addPermission');
+            Route::put('/{painting}/perms', 'PermissionController@editPublicPermissions');
+            Route::delete('/{painting}/perms/{user}', 'PermissionController@removeUser');
+        });
+
+        Route::prefix('/u')->group(function () {
+            Route::get('/{user}/paintings', 'UserController@getPaintings');
+            Route::get('/{user}/shared', 'UserController@getShared');
+        });
+    });
+});

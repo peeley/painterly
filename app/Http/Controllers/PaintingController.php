@@ -41,7 +41,7 @@ class PaintingController extends Controller
         $this->authorize('update', $painting);
         $validated = $request->validated();
 
-        $this->paintingUpdater->updatePainting($painting, $validated);
+        $this->paintingUpdater->applyPaintingUpdate($painting, $validated);
         $painting->save();
         return response('Painting successfully updated.', 200);
     }

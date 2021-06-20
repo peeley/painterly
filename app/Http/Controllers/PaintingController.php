@@ -29,11 +29,13 @@ class PaintingController extends Controller
         $this->authorize('view', $painting);
         return view('app', ['title' => $painting->title, 'id' => $painting->id]);
     }
+
     public function getPainting(Painting $painting)
     {
         $this->authorize('view', $painting);
         return $painting;
     }
+
     public function putPainting(PaintingUpdateRequest $request, Painting $painting)
     {
         $this->authorize('update', $painting);
@@ -43,11 +45,13 @@ class PaintingController extends Controller
         $painting->save();
         return response('Painting successfully updated.', 200);
     }
+
     public function deletePainting(Painting $painting)
     {
         $painting->delete();
         return response('OK', 200);
     }
+
     public function postPreview(Request $request, Painting $painting)
     {
         $validated = $request->validate([

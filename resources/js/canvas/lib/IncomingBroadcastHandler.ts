@@ -77,7 +77,7 @@ export class IncomingBroadcastHandler {
             this.canvas.discardActiveObject();
         }
 
-        // TODO reduce n^2 complexity
+        // FIXME reduce n^2 complexity
         for (let modified of objects) {
             this.canvas.forEachObject((obj: any) => {
                 // TODO convert obj to type UUIDObject

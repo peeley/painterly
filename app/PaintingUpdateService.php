@@ -12,31 +12,31 @@ class PaintingUpdateService
     {
     }
 
-    public function updatePainting(Painting $painting, array $updateJson)
+    public function applyPaintingUpdate(Painting $painting, array $update)
     {
-        $action = $updateJson['action'] ?? null;
+        $action = $update['action'] ?? null;
         switch ($action) {
             case 'clear':
                 $this->clearPainting($painting);
                 break;
             case 'add':
-                $this->addStrokesToPainting($painting, $updateJson);
+                $this->addStrokesToPainting($painting, $update);
                 break;
             case 'modify':
-                $this->modifyPaintingObjects($painting, $updateJson);
+                $this->modifyPaintingObjects($painting, $update);
                 break;
             case 'remove':
-                $this->removeObjectsFromPainting($painting, $updateJson);
+                $this->removeObjectsFromPainting($painting, $update);
                 break;
         }
 
-        if (isset($updateJson['title'])) {
-            $painting->title = $updateJson['title'];
+        if (isset($update['title'])) {
+            $painting->title = $update['title'];
         }
 
         $painting->save();
 
-        $event = new PaintingUpdatedEvent($updateJson, $painting);
+        $event = new PaintingUpdatedEvent($painting, $update);
 
         // TODO error handling
         broadcast($event)->toOthers();
@@ -58,7 +58,7 @@ class PaintingUpdateService
     {
         $modified_objects = json_decode($update['objects'], true);
         $saved_objects = $painting->objects;
-        // TODO reduce n^2 complexity, will NOT scale well with big modifications
+        // FIXME reduce n^2 complexity, will NOT scale well with big modifications
         // perhaps make objects field of painting a hash table?
         foreach ($modified_objects as $modified) {
             foreach ($saved_objects as &$saved) {

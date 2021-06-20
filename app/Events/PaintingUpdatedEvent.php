@@ -19,7 +19,7 @@ class PaintingUpdatedEvent implements ShouldBroadcast
     public $objects;
     public $title;
 
-    public function __construct(array $update, Painting $painting)
+    public function __construct(Painting $painting, array $update)
     {
         $this->paintingId = $painting->id;
         $this->action = $update['action'] ?? null;

@@ -4,6 +4,8 @@
 ** TODO Fix centering of toggles in PrivacyEditor
 ** TODO make different mouse cursors for different tools and states
 ** TODO add event listener for other users joining, see who else is drawing/watching
+Can use Laravel PresenceChannels
+** TODO set up authorization on broadcast channels
 ** TODO make UI appear different when user does not have write permission
    need to make it clear when a user is able to modify a painting versus just
    view the painting. perhaps just removing the tool bar and undo/redo but
@@ -15,6 +17,7 @@
    modification, group undo/redo does not work. I think this might have to do
    with the individual item being removed from the group, or the group itself
    being removed or invalidated.
+** TODO convert css/styling from bootstrap to tailwindcss
 ** IN-PROGRESS UI/UX overhaul *ongoing*
 *** TODO Landing page
 *** DONE Tool select bar
@@ -165,12 +168,16 @@
 
 
 * Back End
+** TODO clean up PaintingUpdateRequest/PaintingUpdateService
+Just passing around arrays and indexing keys makes me nervous, would like to
+eventually create classes (or some other way to formalize data retrieval)
 ** TODO change backend storage of strokes to allow for O(1) modify/delete
    Should probably be simple enough to keep a hash table of uuid -> stroke
 
 ** TODO create emails for registration/password reset/etc
    Probably just going to use mailgun according to [[https://laravel.com/docs/8.x/mail#introduction][laravel docs]]
 
+** IN-PROGRESS move API routes to `api/routes.php`
 ** IN-PROGRESS *!!TESTING!!*
 *** DONE Painting tests
     CLOSED: [2020-08-20 Thu 14:57]
@@ -227,6 +234,8 @@ CLOSED: [2021-01-08 Fri 00:56]
 
 
 * DevOps/Misc
+** TODO setup CI for testing
+Maybe use GitHub actions?
 ** DONE write Dockerfile
     Also created docker-compose setup to orchestrate psql database as well.
     CLOSED: [2021-01-07 Thu 01:22]

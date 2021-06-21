@@ -24,25 +24,24 @@ class PaintingController extends Controller
         return response()->json($painting);
     }
 
-    public function show(Painting $painting)
+    public function index(Painting $painting)
     {
-        $this->authorize('view', $painting);
+        $this->authorize('viewPainting', $painting);
         return view('app', ['title' => $painting->title, 'id' => $painting->id]);
     }
 
     public function getPainting(Painting $painting)
     {
-        $this->authorize('view', $painting);
+        $this->authorize('viewPainting', $painting);
         return $painting;
     }
 
     public function putPainting(PaintingUpdateRequest $request, Painting $painting)
     {
-        $this->authorize('update', $painting);
+        $this->authorize('updatePainting', $painting);
         $validated = $request->validated();
 
         $this->paintingUpdater->applyPaintingUpdate($painting, $validated);
-        $painting->save();
         return response('Painting successfully updated.', 200);
     }
 

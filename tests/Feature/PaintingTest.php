@@ -64,7 +64,7 @@ class PaintingTest extends TestCase
             ->assertJson(['title' => $test_title]);
     }
 
-    public function testAddObjects()
+    public function testAddPaintingObjects()
     {
         $painting = $this->testUser->paintings()->create();
 
@@ -113,6 +113,88 @@ class PaintingTest extends TestCase
             ->getJson("/api/p/$painting->id");
         $get_response->assertStatus(200)
             ->assertJson(['objects' => []]);
+    }
+
+    public function testRemovePaintingObjects()
+    {
+        $painting = $this->testUser->paintings()->create();
+
+        $first_add_json = [
+            'action' => 'add',
+            'objects' => json_encode([[
+                'uuid' => 'test-uuid',
+                'data' => 'test-object'
+            ]])
+        ];
+        $this->actingAs($this->testUser)
+            ->putJson("/api/p/$painting->id", $first_add_json);
+
+        $second_add_json = [
+            'action' => 'add',
+            'objects' => json_encode([[
+                'uuid' => 'second-test-uuid',
+                'data' => 'second-test-object'
+            ]])
+        ];
+        $this->actingAs($this->testUser)
+            ->putJson("/api/p/$painting->id", $second_add_json);
+
+        $delete_json = [
+            'action' => 'remove',
+            'objects' => json_encode([[
+                'uuid' => 'test-uuid'
+            ]])
+        ];
+        $delete_response = $this->actingAs($this->testUser)
+            ->putJson("/api/p/$painting->id", $delete_json);
+        $delete_response->dump();
+        $delete_response->assertStatus(200);
+
+        $get_response = $this->actingAs($this->testUser)
+            ->getJson("/api/p/$painting->id");
+        $get_response->assertStatus(200)
+            ->assertJson(['objects' => [
+                [
+                    'uuid' => 'second-test-uuid',
+                    'data' => 'second-test-object'
+                ]
+            ]]);
+    }
+
+    public function testModifyPaintingObjects()
+    {
+        $painting = $this->testUser->paintings()->create();
+
+        $add_json = [
+            'action' => 'add',
+            'objects' => json_encode([[
+                'uuid' => 'test-uuid',
+                'data' => 'test-object'
+            ]])
+        ];
+        $this->actingAs($this->testUser)
+            ->putJson("/api/p/$painting->id", $add_json);
+
+        $modify_json = [
+            'action' => 'modify',
+            'objects' => json_encode([[
+                'uuid' => 'test-uuid',
+                'data' => 'modified-data'
+            ]])
+        ];
+        $modify_response = $this->actingAs($this->testUser)
+            ->putJson("/api/p/$painting->id", $modify_json);
+        $modify_response->assertStatus(200);
+
+        $get_response = $this->actingAs($this->testUser)
+            ->getJson("/api/p/$painting->id");
+        $get_response->assertStatus(200)
+            ->assertJson(['objects' => [
+                [
+                    'uuid' => 'test-uuid',
+                    'data' => 'modified-data'
+                ]
+            ]]);
     }
 
     public function testViewWhilePublicViewEnabled()

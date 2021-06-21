@@ -11,7 +11,7 @@ class PermissionController extends Controller
 {
     public function getPermissions(Painting $painting)
     {
-        $this->authorize('view', $painting);
+        $this->authorize('viewPainting', $painting);
         return response()->json($painting->permissions);
     }
     public function addPermission(PermissionRequest $request, Painting $painting)

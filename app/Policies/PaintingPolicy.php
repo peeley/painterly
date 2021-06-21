@@ -20,7 +20,7 @@ class PaintingPolicy
         //
     }
 
-    public function update(User $user, Painting $painting)
+    public function updatePainting(User $user, Painting $painting)
     {
         if ($user->id === $painting->user_id || $painting->edit_public) {
             return true;
@@ -37,7 +37,7 @@ class PaintingPolicy
     }
 
     // Defines whether user can GET painting as JSON
-    public function view(User $user, Painting $painting)
+    public function viewPainting(User $user, Painting $painting)
     {
         if ($painting->view_public) {
             return true;

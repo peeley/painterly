@@ -21,6 +21,26 @@ services:
         depends_on:
             - pgsql
             - redis
+    # laravel.websockets:
+    #     build:
+    #         context: ./vendor/laravel/sail/runtimes/8.0
+    #         dockerfile: Dockerfile
+    #         args:
+    #             WWWGROUP: '${WWWGROUP}'
+    #     image: sail-8.0/app
+    #     ports:
+    #         - 6001:6001 # used for laravel-websockets
+    #     environment:
+    #         WWWUSER: '${WWWUSER}'
+    #         LARAVEL_SAIL: 1
+    #     volumes:
+    #         - '.:/var/www/html'
+    #     networks:
+    #         - sail
+    #     depends_on:
+    #         - pgsql
+    #         - redis
+    #     command: php artisan websockets:serve
     pgsql:
         image: 'postgres:13'
         ports:

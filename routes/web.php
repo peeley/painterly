@@ -26,7 +26,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/painting/{painting}', 'PaintingController@show')->middleware('auth');
+Route::get('/painting/{painting}', 'PaintingController@index')->middleware('auth');
 
 // putting API routes in ./web.php instead of ./api.php, since requests come
 // from user browser and we use session for authentication

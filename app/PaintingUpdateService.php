@@ -20,7 +20,7 @@ class PaintingUpdateService
                 $this->clearPainting($painting);
                 break;
             case 'add':
-                $this->addStrokesToPainting($painting, $update);
+                $this->addObjectsToPainting($painting, $update);
                 break;
             case 'modify':
                 $this->modifyPaintingObjects($painting, $update);
@@ -28,10 +28,6 @@ class PaintingUpdateService
             case 'remove':
                 $this->removeObjectsFromPainting($painting, $update);
                 break;
-        }
-
-        if (isset($update['title'])) {
-            $painting->title = $update['title'];
         }
 
         $painting->save();
@@ -47,7 +43,7 @@ class PaintingUpdateService
         $painting->objects = [];
     }
 
-    private function addStrokesToPainting(Painting $painting, array $update)
+    private function addObjectsToPainting(Painting $painting, array $update)
     {
         $new_strokes = json_decode($update['objects']);
         $objects = array_merge($painting->objects, $new_strokes);
@@ -74,9 +70,11 @@ class PaintingUpdateService
     private function removeObjectsFromPainting(Painting $painting, array $update)
     {
         $objects = $painting->objects;
+
         $removed_uuids = array_map(function ($object) {
             return $object->uuid;
         }, json_decode($update['objects']));
+
         $remaining = array_values(Arr::where(
             $objects,
             function ($value, $key) use ($removed_uuids) {
@@ -84,6 +82,7 @@ class PaintingUpdateService
                 return !in_array($object_uuid, $removed_uuids);
             }
         ));
+
         $painting->objects = $remaining;
     }
 }

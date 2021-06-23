@@ -4,6 +4,7 @@ namespace App;
 
 use App\Models\Painting;
 use App\Events\PaintingUpdatedEvent;
+use Exception;
 use Illuminate\Support\Arr;
 
 class PaintingUpdateService
@@ -28,6 +29,8 @@ class PaintingUpdateService
             case 'remove':
                 $this->removeObjectsFromPainting($painting, $update);
                 break;
+            default:
+                throw new Exception("Unsupported action in PaintingUpdateService: $action");
         }
 
         $painting->save();

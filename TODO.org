@@ -232,6 +232,10 @@ CLOSED: [2021-01-08 Fri 00:56]
 ** DONE Distinguish between permissions to view/edit sketch
    CLOSED: [2020-08-11 Tue 01:42]
 
+** IDEA Move PaintingUpdateService methods into HTTP routes?
+Looking at the json, the `modify`, `add`, `remove`, etc. just look like HTTP
+verbs...
+
 
 * DevOps/Misc
 ** TODO setup CI for testing

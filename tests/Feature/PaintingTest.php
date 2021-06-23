@@ -147,7 +147,6 @@ class PaintingTest extends TestCase
         ];
         $delete_response = $this->actingAs($this->testUser)
             ->putJson("/api/p/$painting->id", $delete_json);
-        $delete_response->dump();
         $delete_response->assertStatus(200);
 
         $get_response = $this->actingAs($this->testUser)
